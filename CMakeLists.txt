@@ -37,16 +37,20 @@ find_package(Eigen3 REQUIRED)
 
 find_package(SDL2 REQUIRED)
 
+find_package(SDL2_image REQUIRED)
+
 include_directories(
   ${EIGEN_INCLUDE_DIR},
-  ${SDL2_INCLUDE_DIR})
+  ${SDL2_INCLUDE_DIR},
+  ${SDL2IMAGE_INCLUDE_DIR})
 
 set(SDL2_COMPILE_FLAGS "-I/usr/include/SDL2")
-set(SDL2_LINK_FLAGS "-lSDL2main -lSDL2")
+set(SDL2_LINK_FLAGS "-lSDL2main -lSDL2 -lSDL2_image")
 
 target_link_libraries(
   LastDitch
-  ${SDL2_LIBRARY})
+  ${SDL2_LIBRARY}
+  ${SDL2IMAGE_LIBRARY})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SDL2_COMPILE_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SDL2_LINK_FLAGS}")
