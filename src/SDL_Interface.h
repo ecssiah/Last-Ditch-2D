@@ -33,7 +33,6 @@ struct SDL_Interface
     SDL_Quit();
   }
 
-
   SDL_Window* window;
   SDL_Renderer* renderer;
 };

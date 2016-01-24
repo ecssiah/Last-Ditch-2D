@@ -15,7 +15,7 @@ LastDitch::LastDitch()
     entity_system(),
     physics_system(),
     camera_system(),
-    render_system(),
+    render_system(sdl_interface.window, map_system),
     start(chrono::steady_clock::now()),
     end(chrono::steady_clock::now())
 {
@@ -24,8 +24,6 @@ LastDitch::LastDitch()
     end = chrono::steady_clock::now();
     auto microseconds = chrono::duration_cast<chrono::microseconds>(end - start).count();
     auto dt = microseconds / 100.0;
-
-    cout << dt << endl;
 
     input_system.update();
 
