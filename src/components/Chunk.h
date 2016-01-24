@@ -17,8 +17,8 @@ struct Chunk
   {
     dest_rect.x = 0;
     dest_rect.y = 0;
-    dest_rect.w = 920;
-    dest_rect.h = 920;
+    dest_rect.w = 960;
+    dest_rect.h = 960;
   }
 
   std::string type;

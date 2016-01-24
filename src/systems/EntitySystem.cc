@@ -3,10 +3,13 @@
 #include <iostream>
 
 using namespace ld;
+using namespace Eigen;
 using namespace std;
 
-EntitySystem::EntitySystem()
-  : dynamic_entities()
+EntitySystem::EntitySystem(Input& input_)
+  : input(input_),
+    active_user(nullptr),
+    dynamic_entities()
 {
   cout << "Entity system ready" << endl;
 
@@ -21,9 +24,20 @@ EntitySystem::EntitySystem()
   kadijah.dest_rect.h = 48;
 
   dynamic_entities.push_back(kadijah);
+  active_user = &kadijah;
 }
 
 
 void EntitySystem::update()
 {
+  Vector2f direction;
+
+  if (input.up) direction[1] += 1;
+  if (input.down) direction[1] -= 1;
+  if (input.left) direction[0] -= 1;
+  if (input.right) direction[0] += 1;
+
+  direction.norm();
+
+  active_user->vel = active_user->speed * direction;
 }

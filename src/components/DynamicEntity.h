@@ -14,6 +14,8 @@ struct DynamicEntity
     : name(""),
       type(""),
       pos(0, 0),
+      vel(0, 0),
+      speed(1.0),
       floor(),
       size(1.0),
       clip_rect(),
@@ -21,7 +23,8 @@ struct DynamicEntity
   {}
 
   std::string name, type;
-  Eigen::Vector2f pos;
+  Eigen::Vector2f pos, vel;
+  double speed;
   int floor;
   double size;
   SDL_Rect clip_rect, dest_rect;

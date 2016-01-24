@@ -12,9 +12,9 @@ LastDitch::LastDitch()
     input(),
     input_system(input),
     map_system(),
-    entity_system(),
-    physics_system(),
-    camera_system(),
+    entity_system(input),
+    physics_system(entity_system),
+    camera_system(entity_system),
     render_system(sdl_interface.window, sdl_interface.renderer, entity_system, map_system),
     start(chrono::steady_clock::now()),
     end(chrono::steady_clock::now())
@@ -26,11 +26,14 @@ LastDitch::LastDitch()
     auto dt = microseconds / 100.0;
 
     input_system.update();
+    physics_system.update(dt);
+    camera_system.update();
     render_system.update();
 
     start = chrono::steady_clock::now();
   }
 
+  render_system.shutdown();
   sdl_interface.shutdown();
 }
 

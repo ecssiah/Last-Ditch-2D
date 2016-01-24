@@ -4,16 +4,20 @@
 #include <vector>
 
 #include "../components/DynamicEntity.h"
+#include "../components/Input.h"
 
 namespace ld
 {
 
 class EntitySystem
 {
+  Input& input;
+
+  DynamicEntity* active_user;
   std::vector<DynamicEntity> dynamic_entities;
 
 public:
-  EntitySystem();
+  EntitySystem(Input& input);
 
   void update();
 

@@ -9,8 +9,10 @@ namespace ld
 
 class PhysicsSystem
 {
+  EntitySystem& entity_system;
+
 public:
-  PhysicsSystem();
+  PhysicsSystem(EntitySystem& entity_system);
 
   void update(double dt);
 };

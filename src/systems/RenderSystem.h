@@ -22,6 +22,8 @@ class RenderSystem
 
   std::map<std::string, SDL_Texture*> textures;
 
+  int current_floor;
+
 public:
   RenderSystem(
     SDL_Window* window, SDL_Renderer* renderer,
@@ -31,6 +33,8 @@ public:
   SDL_Texture* load_texture(std::string name);
   void setup_textures();
   void update();
+
+  void shutdown();
 };
 
 }
