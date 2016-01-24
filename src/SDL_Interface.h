@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 using namespace std;
 
@@ -19,9 +20,14 @@ struct SDL_Interface
       cout << "SDL_Init error: " << SDL_GetError() << endl;
 
     window =
-      SDL_CreateWindow("Last Ditch", 100, 100, 800, 600, SDL_WINDOW_SHOWN);
+      SDL_CreateWindow(
+	"Last Ditch", 100, 100, 800, 600, SDL_WINDOW_SHOWN);
     renderer =
-      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+      SDL_CreateRenderer(
+	window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+    int img_flags = IMG_INIT_PNG;
+    IMG_Init(img_flags);
   }
 
 
@@ -30,6 +36,7 @@ struct SDL_Interface
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 
+    IMG_Quit();
     SDL_Quit();
   }
 

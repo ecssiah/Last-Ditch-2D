@@ -19,7 +19,40 @@ void InputSystem::update()
 
   while (SDL_PollEvent(&e))
   {
-    if (e.type == SDL_QUIT) input.exit = true;
-    if (e.type == SDL_KEYDOWN) input.exit = true;
+    switch (e.type)
+    {
+    case SDL_QUIT:
+      input.exit = true; break;
+    case SDL_KEYDOWN:
+      switch (e.key.keysym.sym)
+      {
+      case SDLK_ESCAPE:
+	input.exit = true; break;
+      case SDLK_w:
+	input.up = true; break;
+      case SDLK_a:
+	input.left = true; break;
+      case SDLK_s:
+	input.down = true; break;
+      case SDLK_d:
+	input.right = true; break;
+      default:
+	break;
+      }
+    case SDL_KEYUP:
+      switch (e.key.keysym.sym)
+      {
+      case SDLK_w:
+	input.up = false; break;
+      case SDLK_a:
+	input.left = false; break;
+      case SDLK_s:
+	input.down = false; break;
+      case SDLK_d:
+	input.right = false; break;
+      default:
+	break;
+      }
+    }
   }
 }
