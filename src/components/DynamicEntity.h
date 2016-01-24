@@ -16,14 +16,15 @@ struct DynamicEntity
       pos(0, 0),
       floor(),
       size(1.0),
-      clip_rect()
+      clip_rect(),
+      dest_rect()
   {}
 
   std::string name, type;
   Eigen::Vector2f pos;
   int floor;
   double size;
-  SDL_Rect clip_rect;
+  SDL_Rect clip_rect, dest_rect;
 };
 
 }

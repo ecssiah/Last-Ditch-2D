@@ -28,6 +28,7 @@ RenderSystem::RenderSystem(
 void RenderSystem::setup_textures()
 {
   textures["kadijah"] = load_texture("kadijah");
+  textures["chunk_floor1"] = load_texture("chunk_floor1");
 
 }
 
@@ -44,16 +45,17 @@ void RenderSystem::update()
 {
   SDL_RenderClear(renderer);
 
-  for (auto& entity : entity_system.get_dynamic_entities())
-  {
-    SDL_Rect dest;
-    dest.x = entity.pos.x();
-    dest.y = entity.pos.y();
-    dest.w = entity.clip_rect.w;
-    dest.h = entity.clip_rect.h;
+  for (auto floor = 0; floor < NUM_FLOORS; ++floor)
+    for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+      for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+      {
+	auto& chunk = map_system.get_chunk(x, y, floor);
 
-    SDL_RenderCopy(renderer, textures[entity.type], &entity.clip_rect, &dest);
-  }
+	SDL_RenderCopy(renderer, textures[chunk.type], nullptr, &chunk.dest_rect);
+      }
+
+  for (auto& entity : entity_system.get_dynamic_entities())
+    SDL_RenderCopy(renderer, textures[entity.type], &entity.clip_rect, &entity.dest_rect);
 
   SDL_RenderPresent(renderer);
 }

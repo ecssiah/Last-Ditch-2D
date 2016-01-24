@@ -6,7 +6,7 @@ using namespace ld;
 using namespace std;
 
 MapSystem::MapSystem()
-  : chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, Chunk()}),
+  : chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
     tiles(MAP_SIZE_X, {MAP_SIZE_Y, Tiles(NUM_FLOORS)})
 {
   setup_map();

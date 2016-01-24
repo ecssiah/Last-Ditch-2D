@@ -28,12 +28,13 @@ class MapSystem
   void layout_room(int x, int y, int w, int h, int floor);
   void set_tile(std::string type, int x, int y, int floor, bool solid = false);
 
-  std::vector<std::vector<Chunk>> chunks;
+  std::vector<std::vector<std::vector<Chunk>>> chunks;
   std::vector<std::vector<Tiles>> tiles;
 
 public:
   MapSystem();
 
+  Chunk& get_chunk(int x, int y, int floor) { return chunks[x][y][floor]; }
   Tile& get_tile(int x, int y, int floor) { return tiles[x][y][floor]; }
 };
 

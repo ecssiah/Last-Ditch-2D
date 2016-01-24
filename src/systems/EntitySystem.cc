@@ -13,12 +13,12 @@ EntitySystem::EntitySystem()
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {2.3, 2.1};
+  kadijah.pos = {10.3, 2.1};
   kadijah.floor = 0;
-  kadijah.clip_rect.x = 0;
-  kadijah.clip_rect.y = 0;
   kadijah.clip_rect.w = 48;
   kadijah.clip_rect.h = 48;
+  kadijah.dest_rect.w = 48;
+  kadijah.dest_rect.h = 48;
 
   dynamic_entities.push_back(kadijah);
 }

@@ -17,7 +17,7 @@ public:
 
   void update();
 
-  const std::vector<DynamicEntity>& get_dynamic_entities() { return dynamic_entities; }
+  std::vector<DynamicEntity>& get_dynamic_entities() { return dynamic_entities; }
 };
 
 }
