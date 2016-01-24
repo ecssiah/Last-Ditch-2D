@@ -7,11 +7,13 @@ using namespace ld;
 using namespace std;
 
 RenderSystem::RenderSystem(
-  SDL_Window* window_, SDL_Renderer* renderer_, MapSystem& map_system_
+  SDL_Window* window_, SDL_Renderer* renderer_,
+  EntitySystem& entity_system_,
+  MapSystem& map_system_
 )
   : window(window_),
     renderer(renderer_),
-    screen(SDL_GetWindowSurface(window)),
+    entity_system(entity_system_),
     map_system(map_system_),
     textures()
 {
@@ -32,7 +34,7 @@ void RenderSystem::setup_textures()
 
 SDL_Texture* RenderSystem::load_texture(std::string name)
 {
-  string path = "media/textures/" + name + ".png";
+  auto path = "media/textures/" + name + ".png";
 
   return IMG_LoadTexture(renderer, path.c_str());
 }
@@ -42,6 +44,16 @@ void RenderSystem::update()
 {
   SDL_RenderClear(renderer);
 
-  SDL_RenderCopy(renderer, textures["kadijah"], nullptr, nullptr);
+  for (auto& entity : entity_system.get_dynamic_entities())
+  {
+    SDL_Rect dest;
+    dest.x = entity.pos.x();
+    dest.y = entity.pos.y();
+    dest.w = entity.clip_rect.w;
+    dest.h = entity.clip_rect.h;
+
+    SDL_RenderCopy(renderer, textures[entity.type], &entity.clip_rect, &dest);
+  }
+
   SDL_RenderPresent(renderer);
 }

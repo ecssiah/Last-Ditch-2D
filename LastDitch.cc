@@ -15,7 +15,7 @@ LastDitch::LastDitch()
     entity_system(),
     physics_system(),
     camera_system(),
-    render_system(sdl_interface.window, sdl_interface.renderer, map_system),
+    render_system(sdl_interface.window, sdl_interface.renderer, entity_system, map_system),
     start(chrono::steady_clock::now()),
     end(chrono::steady_clock::now())
 {
