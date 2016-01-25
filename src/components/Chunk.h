@@ -7,24 +7,22 @@
 
 #include "Tile.h"
 
+namespace ld
+{
+
 struct Chunk
 {
   Chunk()
     : type("chunk_floor1"),
       pos(0, 0),
-      tiles(),
-      dest_rect()
-  {
-    dest_rect.x = 0;
-    dest_rect.y = 0;
-    dest_rect.w = 960;
-    dest_rect.h = 960;
-  }
+      tiles()
+  {}
 
   std::string type;
   Eigen::Vector2i pos;
   std::vector<Tile> tiles;
-  SDL_Rect dest_rect;
 };
+
+}
 
 #endif /* CHUNK_H */

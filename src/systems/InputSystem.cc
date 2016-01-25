@@ -22,7 +22,8 @@ void InputSystem::update()
     switch (e.type)
     {
     case SDL_QUIT:
-      input.exit = true; break;
+      input.exit = true;
+      break;
     case SDL_KEYDOWN:
       switch (e.key.keysym.sym)
       {
@@ -33,6 +34,7 @@ void InputSystem::update()
       case SDLK_d: input.right = true; break;
       default: break;
       }
+      break;
     case SDL_KEYUP:
       switch (e.key.keysym.sym)
       {
@@ -42,6 +44,7 @@ void InputSystem::update()
       case SDLK_d: input.right = false; break;
       default: break;
       }
+      break;
     }
   }
 }

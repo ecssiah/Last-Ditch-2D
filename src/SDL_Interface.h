@@ -5,6 +5,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include "constants/RenderConstants.h"
+
 using namespace std;
 
 namespace ld
@@ -21,7 +23,7 @@ struct SDL_Interface
 
     window =
       SDL_CreateWindow(
-	"Last Ditch", 100, 100, 800, 600, SDL_WINDOW_SHOWN);
+	"Last Ditch", 100, 100, SCREEN_SIZE_X, SCREEN_SIZE_Y, SDL_WINDOW_SHOWN);
     renderer =
       SDL_CreateRenderer(
 	window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);

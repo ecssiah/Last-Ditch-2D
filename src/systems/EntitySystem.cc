@@ -1,6 +1,10 @@
 #include "EntitySystem.h"
 
+#include <eigen3/Eigen/Geometry>
 #include <iostream>
+
+#include "../constants/MapConstants.h"
+#include "../constants/RenderConstants.h"
 
 using namespace ld;
 using namespace Eigen;
@@ -16,28 +20,35 @@ EntitySystem::EntitySystem(Input& input_)
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {10.3, 2.1};
+  kadijah.pos = {1.0, 2.0};
   kadijah.floor = 0;
-  kadijah.clip_rect.w = 48;
-  kadijah.clip_rect.h = 48;
-  kadijah.dest_rect.w = 48;
-  kadijah.dest_rect.h = 48;
+  kadijah.clip_rect.w = TILE_SIZE;
+  kadijah.clip_rect.h = TILE_SIZE;
+  kadijah.dest_rect.x = SCREEN_SIZE_X / 2;
+  kadijah.dest_rect.y = SCREEN_SIZE_Y / 2;
+  kadijah.dest_rect.w = TILE_SIZE;
+  kadijah.dest_rect.h = TILE_SIZE;
 
   dynamic_entities.push_back(kadijah);
-  active_user = &kadijah;
+  active_user = &dynamic_entities.back();
 }
 
 
 void EntitySystem::update()
 {
-  Vector2f direction;
+  Vector2f direction(0, 0);
 
-  if (input.up) direction[1] += 1;
-  if (input.down) direction[1] -= 1;
-  if (input.left) direction[0] -= 1;
-  if (input.right) direction[0] += 1;
+  if (input.left) direction.x() -= 1;
+  if (input.right) direction.x() += 1;
+  if (input.up) direction.y() += 1;
+  if (input.down) direction.y() -= 1;
 
-  direction.norm();
+  if (direction.x() != 0 || direction.y() != 0)
+  {
+    direction.normalize();
 
-  active_user->vel = active_user->speed * direction;
+    active_user->vel = active_user->speed * direction;
+  }
+  else
+    active_user->vel = Vector2f::Zero();
 }

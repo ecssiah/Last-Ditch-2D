@@ -2,20 +2,17 @@
 
 #include <iostream>
 
+#include "../constants/MapConstants.h"
+#include "../constants/RenderConstants.h"
 
 using namespace ld;
 using namespace std;
 
 CameraSystem::CameraSystem(EntitySystem& entity_system_)
   : entity_system(entity_system_),
-    main_view(),
+    pos(0, 0),
     target(nullptr)
 {
-  main_view.x = 0;
-  main_view.y = 0;
-  main_view.w = 800;
-  main_view.h = 600;
-
   for (auto& entity : entity_system.get_dynamic_entities())
     if (entity.name == "Kadijah") target = &entity;
 
@@ -25,6 +22,5 @@ CameraSystem::CameraSystem(EntitySystem& entity_system_)
 
 void CameraSystem::update()
 {
-  main_view.x = target->pos.x();
-  main_view.y = target->pos.y();
+  pos = target->pos;
 }
