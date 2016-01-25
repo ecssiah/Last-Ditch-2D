@@ -40,8 +40,8 @@ void EntitySystem::update()
 
   if (input.left) direction.x() -= 1;
   if (input.right) direction.x() += 1;
-  if (input.up) direction.y() += 1;
-  if (input.down) direction.y() -= 1;
+  if (input.up) direction.y() -= 1;
+  if (input.down) direction.y() += 1;
 
   if (direction.x() != 0 || direction.y() != 0)
   {

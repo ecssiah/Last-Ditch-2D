@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "../constants/MapConstants.h"
+#include "../constants/RenderConstants.h"
 
 using namespace ld;
 using namespace std;
@@ -57,10 +58,12 @@ void RenderSystem::update()
       auto& chunk = map_system.get_chunk(x, y, current_floor);
 
       SDL_Rect dest_rect;
-      dest_rect.x = TILE_SIZE * (chunk.pos.x() + camera_system.get_pos().x());
-      dest_rect.y = TILE_SIZE * (chunk.pos.y() + camera_system.get_pos().y());
-      dest_rect.w = TILES_PER_CHUNK_X;
-      dest_rect.h = TILES_PER_CHUNK_Y;
+      dest_rect.x =
+	TILE_SIZE * (chunk.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      dest_rect.y =
+	TILE_SIZE * (chunk.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      dest_rect.w = TILE_SIZE * TILES_PER_CHUNK_X;
+      dest_rect.h = TILE_SIZE * TILES_PER_CHUNK_Y;
 
       SDL_RenderCopy(renderer, textures[chunk.type], nullptr, &dest_rect);
     }
@@ -69,8 +72,10 @@ void RenderSystem::update()
   for (auto& entity : entity_system.get_dynamic_entities())
   {
     SDL_Rect dest_rect;
-    dest_rect.x = TILE_SIZE * (entity.pos.x() + camera_system.get_pos().x());
-    dest_rect.y = TILE_SIZE * (entity.pos.y() + camera_system.get_pos().y());
+    dest_rect.x =
+      TILE_SIZE * (entity.pos.x() - .5 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+    dest_rect.y =
+      TILE_SIZE * (entity.pos.y() - .5 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
     dest_rect.w = TILE_SIZE;
     dest_rect.h = TILE_SIZE;
 
