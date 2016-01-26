@@ -13,7 +13,7 @@ LastDitch::LastDitch()
     input_system(input),
     map_system(),
     entity_system(input),
-    physics_system(entity_system),
+    physics_system(map_system, entity_system),
     camera_system(entity_system),
     render_system(
       sdl_interface.window, sdl_interface.renderer,

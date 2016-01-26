@@ -21,6 +21,7 @@ public:
 
   void update();
 
+  DynamicEntity* get_active_user() { return active_user; }
   std::vector<DynamicEntity>& get_dynamic_entities() { return dynamic_entities; }
 };
 

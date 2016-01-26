@@ -68,10 +68,11 @@ Tile& MapSystem::get_tile(int x, int y, int floor)
 }
 
 
-void MapSystem::set_tile(std::string type, int x, int y, int floor, float rotation)
+void MapSystem::set_tile(string type, int x, int y, int floor, float rotation, bool solid)
 {
-  Tile& tile = get_tile(x, y, floor);
+  auto& tile = get_tile(x, y, floor);
   tile.type = type;
-  tile.pos = Vector2i(x, y);
+  tile.pos = {x, y};
+  tile.solid = solid;
   tile.rotation = rotation;
 }
