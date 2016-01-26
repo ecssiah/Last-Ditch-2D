@@ -10,7 +10,8 @@ using namespace Eigen;
 using namespace std;
 
 MapSystem::MapSystem()
-  : chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}})
+  : chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
+    rooms(NUM_FLOORS)
 {
   setup_map();
 
@@ -32,16 +33,45 @@ void MapSystem::setup_map()
       }
     }
   }
+
+  layout_room(2, 2, 8, 8, 0);
 }
 
 
-void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor)
+void MapSystem::layout_room(int x, int y, int w, int h, int floor)
 {
-  for (auto x = x_; x < x_ + w_; ++x)
+  Room room(x, y, w, h, floor);
+
+  for (auto x = room.x; x < room.x + room.w; ++x)
   {
+    set_tile("wall1", x, room.y, floor);
+    set_tile("wall1", x, room.y + room.h - 1, floor);
   }
 
-  for (auto y = y_; y < y_ + h_; ++y)
+  for (auto y = room.y; y < room.y + room.h; ++y)
   {
+    set_tile("wall1", room.x, y, floor);
+    set_tile("wall1", room.x + room.w - 1, y, floor);
   }
+
+  set_tile("door1", room.x, room.y + room.h / 2, floor);
+
+  rooms[floor].push_back(room);
+}
+
+
+Tile& MapSystem::get_tile(int x, int y, int floor)
+{
+  auto& chunk = chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor];
+
+  return chunk.tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
+}
+
+
+void MapSystem::set_tile(std::string type, int x, int y, int floor, float rotation)
+{
+  Tile& tile = get_tile(x, y, floor);
+  tile.type = type;
+  tile.pos = Vector2i(x, y);
+  tile.rotation = rotation;
 }

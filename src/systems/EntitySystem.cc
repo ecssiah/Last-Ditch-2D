@@ -20,7 +20,7 @@ EntitySystem::EntitySystem(Input& input_)
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {1.0, 2.0};
+  kadijah.pos = {0.0, 0.0};
   kadijah.floor = 0;
   kadijah.clip_rect.w = TILE_SIZE;
   kadijah.clip_rect.h = TILE_SIZE;

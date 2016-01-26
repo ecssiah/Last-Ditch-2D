@@ -15,12 +15,12 @@ struct Chunk
   Chunk()
     : type("chunk_floor1"),
       pos(0, 0),
-      tiles()
+      tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()})
   {}
 
   std::string type;
   Eigen::Vector2i pos;
-  std::vector<Tile> tiles;
+  std::vector<std::vector<Tile>> tiles;
 };
 
 }

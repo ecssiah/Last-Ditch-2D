@@ -1,6 +1,7 @@
 #ifndef RENDERSYSTEM_H
 #define RENDERSYSTEM_H
 
+#include <eigen3/Eigen/Geometry>
 #include <map>
 #include <SDL2/SDL.h>
 
@@ -13,6 +14,13 @@ namespace ld
 
 class RenderSystem
 {
+  void setup_textures();
+  SDL_Texture* load_texture(std::string name);
+
+  void render_chunks();
+  void render_tiles(Chunk& chunk);
+  void render_entities();
+
   SDL_Window* window;
   SDL_Renderer* renderer;
 
@@ -21,6 +29,7 @@ class RenderSystem
   CameraSystem& camera_system;
 
   std::map<std::string, SDL_Texture*> textures;
+  std::map<std::string, Eigen::Vector2i> tileset1_coords;
 
   int current_floor;
 
@@ -31,10 +40,7 @@ public:
     MapSystem& map_system,
     CameraSystem& camera_system);
 
-  SDL_Texture* load_texture(std::string name);
-  void setup_textures();
   void update();
-
   void shutdown();
 };
 
