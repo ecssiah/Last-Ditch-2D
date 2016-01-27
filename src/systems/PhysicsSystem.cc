@@ -53,21 +53,17 @@ void PhysicsSystem::resolve_collision(DynamicEntity& entity, int x, int y)
   Vector2f max(x + 1, y + 1);
   Vector2f nearest(user_pos);
 
-  if (nearest.x() < min.x())
-    nearest.x() = min.x();
-  else if (nearest.x() > max.x())
-    nearest.x() = max.x();
+  if (nearest.x() < min.x()) nearest.x() = min.x();
+  else if (nearest.x() > max.x()) nearest.x() = max.x();
 
-  if (nearest.y() < min.y())
-    nearest.y() = min.y();
-  else if (nearest.y() > max.y())
-    nearest.y() = max.y();
+  if (nearest.y() < min.y()) nearest.y() = min.y();
+  else if (nearest.y() > max.y()) nearest.y() = max.y();
 
   Vector2f normal(user_pos - nearest);
   auto dist = normal.norm();
-  auto depth = entity.size - dist;
-
   normal.normalize();
+
+  auto depth = entity.size - dist;
 
   if (depth > 0)
     entity.pos += depth * Vector2f(normal.x(), normal.y());

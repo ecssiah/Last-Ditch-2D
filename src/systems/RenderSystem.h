@@ -5,9 +5,11 @@
 #include <map>
 #include <SDL2/SDL.h>
 
-#include "EntitySystem.h"
+#include "../SDL_Interface.h"
 #include "MapSystem.h"
+#include "EntitySystem.h"
 #include "CameraSystem.h"
+#include "InterfaceSystem.h"
 
 namespace ld
 {
@@ -21,12 +23,15 @@ class RenderSystem
   void render_tiles(Chunk& chunk);
   void render_entities();
 
+  SDL_Interface& sdl_interface;
+
   SDL_Window* window;
   SDL_Renderer* renderer;
 
-  EntitySystem& entity_system;
   MapSystem& map_system;
+  EntitySystem& entity_system;
   CameraSystem& camera_system;
+  InterfaceSystem& interface_system;
 
   std::map<std::string, SDL_Texture*> textures;
   std::map<std::string, Eigen::Vector2i> tileset1_coords;
@@ -35,10 +40,11 @@ class RenderSystem
 
 public:
   RenderSystem(
-    SDL_Window* window, SDL_Renderer* renderer,
-    EntitySystem& entity_system,
+    SDL_Interface& sdl_interface,
     MapSystem& map_system,
-    CameraSystem& camera_system);
+    EntitySystem& entity_system,
+    CameraSystem& camera_system,
+    InterfaceSystem& interface_system);
 
   void update();
   void shutdown();

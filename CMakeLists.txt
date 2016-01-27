@@ -5,21 +5,25 @@ project(LastDitch)
 set(
   HEADERS
   ./LastDitch.h
+  ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
   ./src/systems/EntitySystem.h
   ./src/systems/PhysicsSystem.h
   ./src/systems/MapSystem.h
   ./src/systems/CameraSystem.h
+  ./src/systems/InterfaceSystem.h
   ./src/systems/RenderSystem.h)
 
 set(
   SOURCES
   ./LastDitch.cc
+  ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
   ./src/systems/EntitySystem.cc
   ./src/systems/PhysicsSystem.cc
   ./src/systems/MapSystem.cc
   ./src/systems/CameraSystem.cc
+  ./src/systems/InterfaceSystem.cc
   ./src/systems/RenderSystem.cc)
 
 add_executable(LastDitch ${HEADERS} ${SOURCES})
@@ -52,8 +56,12 @@ target_link_libraries(
   ${SDL2_IMAGE_LIBRARY}
   ${SDL2_TTF_LIBRARY})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${SDL2_COMPILE_FLAGS}")
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${SDL2_LINK_FLAGS}")
+set(
+  CMAKE_CXX_FLAGS
+  "${CMAKE_CXX_FLAGS} ${SDL2_COMPILE_FLAGS}")
+set(
+  CMAKE_EXE_LINKER_FLAGS
+  "${CMAKE_EXE_LINKER_FLAGS} ${SDL2_LINK_FLAGS}")
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
 

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "constants/RenderConstants.h"
 
@@ -28,6 +29,8 @@ struct SDL_Interface
       SDL_CreateRenderer(
 	window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
+    TTF_Init();
+
     int img_flags = IMG_INIT_PNG;
     IMG_Init(img_flags);
   }
@@ -38,6 +41,7 @@ struct SDL_Interface
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
 
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
   }

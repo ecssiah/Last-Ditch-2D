@@ -12,21 +12,22 @@ using namespace Eigen;
 using namespace std;
 
 RenderSystem::RenderSystem(
-  SDL_Window* window_, SDL_Renderer* renderer_,
-  EntitySystem& entity_system_,
+  SDL_Interface& sdl_interface_,
   MapSystem& map_system_,
-  CameraSystem& camera_system_
+  EntitySystem& entity_system_,
+  CameraSystem& camera_system_,
+  InterfaceSystem& interface_system_
 )
-  : window(window_),
-    renderer(renderer_),
-    entity_system(entity_system_),
+  : sdl_interface(sdl_interface_),
     map_system(map_system_),
+    entity_system(entity_system_),
     camera_system(camera_system_),
+    interface_system(interface_system_),
     textures(),
     tileset1_coords(),
     current_floor(0)
 {
-  SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+  SDL_SetRenderDrawColor(sdl_interface.renderer, 0x00, 0x00, 0x00, 0x00);
 
   setup_textures();
 
@@ -49,7 +50,7 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 {
   auto path = "media/textures/" + name + ".png";
 
-  return IMG_LoadTexture(renderer, path.c_str());
+  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }
 
 
@@ -69,7 +70,7 @@ void RenderSystem::render_chunks()
       dest_rect.w = TILE_SIZE * TILES_PER_CHUNK_X;
       dest_rect.h = TILE_SIZE * TILES_PER_CHUNK_Y;
 
-      SDL_RenderCopy(renderer, textures[chunk.type], nullptr, &dest_rect);
+      SDL_RenderCopy(sdl_interface.renderer, textures[chunk.type], nullptr, &dest_rect);
 
       render_tiles(chunk);
     }
@@ -100,7 +101,7 @@ void RenderSystem::render_tiles(Chunk& chunk)
       dest_rect.h = TILE_SIZE;
 
       SDL_RenderCopyEx(
-	renderer,
+	sdl_interface.renderer,
 	textures["tileset1"],
 	&clip_rect, &dest_rect,
 	tile.rotation,
@@ -123,19 +124,24 @@ void RenderSystem::render_entities()
     dest_rect.w = TILE_SIZE;
     dest_rect.h = TILE_SIZE;
 
-    SDL_RenderCopy(renderer, textures[entity.type], &entity.clip_rect, &dest_rect);
+    SDL_RenderCopy(
+      sdl_interface.renderer,
+      textures[entity.type],
+      &entity.clip_rect, &dest_rect);
   }
 }
 
 
 void RenderSystem::update()
 {
-  SDL_RenderClear(renderer);
+  SDL_RenderClear(sdl_interface.renderer);
 
   render_chunks();
   render_entities();
 
-  SDL_RenderPresent(renderer);
+  interface_system.render();
+
+  SDL_RenderPresent(sdl_interface.renderer);
 }
 
 
