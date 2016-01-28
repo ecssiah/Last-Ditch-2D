@@ -9,7 +9,6 @@ using namespace std;
 InterfaceSystem::InterfaceSystem(SDL_Interface& sdl_interface_, EntitySystem& entity_system_)
   : sdl_interface(sdl_interface_),
     entity_system(entity_system_),
-    debug_text("testing"),
     debug_text_texture(nullptr),
     fonts()
 {
@@ -23,10 +22,9 @@ void InterfaceSystem::update()
 
   stringstream ss;
   ss << active_user->pos.x() << " " << active_user->pos.y();
-  debug_text = ss.str();
 
   auto surface = TTF_RenderText_Blended(
-    fonts["jura-medium"], debug_text.c_str(), {220, 255, 255});
+    fonts["jura-medium"], ss.str().c_str(), {220, 255, 255});
 
   debug_text_texture = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 }

@@ -4,6 +4,8 @@
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 
+#include "../constants/MapConstants.h"
+#include "../constants/RenderConstants.h"
 #include "../components/DynamicEntity.h"
 #include "EntitySystem.h"
 
@@ -23,8 +25,19 @@ public:
 
   void update();
 
-  Eigen::Vector2f get_pos() { return pos; }
+  inline Eigen::Vector2f get_pos() { return pos; }
+  inline Eigen::Vector2i get_pos_in_pixels();
 };
+
+
+Eigen::Vector2i CameraSystem::get_pos_in_pixels()
+{
+  Eigen::Vector2i pixel_pos(
+    TILE_SIZE * pos.x() + SCREEN_SIZE_X / 2,
+    TILE_SIZE * pos.y() + SCREEN_SIZE_Y / 2);
+
+  return pixel_pos;
+}
 
 }
 

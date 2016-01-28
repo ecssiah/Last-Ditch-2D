@@ -20,14 +20,10 @@ EntitySystem::EntitySystem(Input& input_)
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {0.0, 0.0};
+  kadijah.pos = {0, 0};
   kadijah.floor = 0;
   kadijah.clip_rect.w = TILE_SIZE;
   kadijah.clip_rect.h = TILE_SIZE;
-  kadijah.dest_rect.x = SCREEN_SIZE_X / 2;
-  kadijah.dest_rect.y = SCREEN_SIZE_Y / 2;
-  kadijah.dest_rect.w = TILE_SIZE;
-  kadijah.dest_rect.h = TILE_SIZE;
 
   dynamic_entities.push_back(kadijah);
   active_user = &dynamic_entities.back();
@@ -43,10 +39,9 @@ void EntitySystem::update()
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
-  if (direction.x() != 0 || direction.y() != 0)
+  if (direction.squaredNorm() != 0)
   {
     direction.normalize();
-
     active_user->vel = active_user->speed * direction;
   }
   else

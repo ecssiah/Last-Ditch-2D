@@ -34,7 +34,7 @@ void MapSystem::setup_map()
     }
   }
 
-  layout_room(2, 2, 8, 8, 0);
+  layout_room(2, 2, 4, 4, 0);
 }
 
 

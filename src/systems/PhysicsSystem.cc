@@ -66,5 +66,7 @@ void PhysicsSystem::resolve_collision(DynamicEntity& entity, int x, int y)
   auto depth = entity.size - dist;
 
   if (depth > 0)
+  {
     entity.pos += depth * Vector2f(normal.x(), normal.y());
+  }
 }
