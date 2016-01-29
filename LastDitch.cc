@@ -14,7 +14,7 @@ LastDitch::LastDitch()
     entity_system(input),
     physics_system(map_system, entity_system),
     camera_system(entity_system),
-    interface_system(sdl_interface, entity_system),
+    interface_system(sdl_interface, time_system, entity_system),
     render_system(sdl_interface, map_system, entity_system, camera_system, interface_system)
 {
   cout << endl << "Starting Last Ditch..." << endl << endl;

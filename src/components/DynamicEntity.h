@@ -15,11 +15,10 @@ struct DynamicEntity
       type(""),
       pos(0, 0),
       vel(0, 0),
-      speed(10.0),
-      floor(),
-      size(.9),
-      clip_rect(),
-      dest_rect()
+      speed(28.0),
+      floor(0),
+      size(.96),
+      clip_rect()
   {}
 
   std::string name, type;
@@ -27,7 +26,7 @@ struct DynamicEntity
   double speed;
   int floor;
   double size;
-  SDL_Rect clip_rect, dest_rect;
+  SDL_Rect clip_rect;
 };
 
 }

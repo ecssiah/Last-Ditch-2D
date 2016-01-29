@@ -6,6 +6,7 @@
 #include <map>
 
 #include "../SDL_Interface.h"
+#include "TimeSystem.h"
 #include "EntitySystem.h"
 
 namespace ld
@@ -15,15 +16,15 @@ class InterfaceSystem
 {
   SDL_Interface& sdl_interface;
 
-  SDL_Texture* debug_text_texture;
-
+  TimeSystem& time_system;
   EntitySystem& entity_system;
 
-  std::string debug_text;
   std::map<std::string, TTF_Font*> fonts;
+  std::map<std::string, SDL_Texture*> textures;
 
 public:
-  InterfaceSystem(SDL_Interface& sdl_interface, EntitySystem& entity_system);
+  InterfaceSystem(
+    SDL_Interface& sdl_interface, TimeSystem& time_system, EntitySystem& entity_system);
 
   void update();
   void render();
