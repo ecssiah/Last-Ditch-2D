@@ -11,8 +11,8 @@ namespace ld
 struct DynamicEntity
 {
   DynamicEntity()
-    : name(""),
-      type(""),
+    : name(std::string()),
+      type(std::string()),
       pos(0, 0),
       vel(0, 0),
       speed(48.0),
