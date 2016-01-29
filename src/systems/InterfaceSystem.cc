@@ -33,7 +33,7 @@ void InterfaceSystem::update()
   surface = TTF_RenderText_Blended(
     fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
 
-  textures["debug text"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
+  textures["debug"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 
   ss.str(string());
   ss << time_system.get_hour() << ":" << time_system.get_minute();
@@ -46,29 +46,23 @@ void InterfaceSystem::update()
 
 void InterfaceSystem::render()
 {
-  auto& debug_texture = textures["debug text"];
+  render_texture_at("debug", 10, SCREEN_SIZE_Y - 20);
+  render_texture_at("time", SCREEN_SIZE_X - 40, 6);
+}
+
+
+void InterfaceSystem::render_texture_at(string texture_name, int x, int y)
+{
+  auto& texture = textures[texture_name];
 
   int w, h;
-  SDL_QueryTexture(debug_texture, nullptr, nullptr, &w, &h);
+  SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
   SDL_Rect dest_rect;
-  dest_rect.x = 10;
-  dest_rect.y = SCREEN_SIZE_Y - h;
+  dest_rect.x = x;
+  dest_rect.y = y;
   dest_rect.w = w;
   dest_rect.h = h;
 
-  SDL_RenderCopy(sdl_interface.renderer, debug_texture, nullptr, &dest_rect);
-
-  auto& time_texture = textures["time"];
-
-  int tw, th;
-  SDL_QueryTexture(time_texture, nullptr, nullptr, &tw, &th);
-
-  SDL_Rect t_dest_rect;
-  t_dest_rect.x = SCREEN_SIZE_X - tw - 10;
-  t_dest_rect.y = 6;
-  t_dest_rect.w = tw;
-  t_dest_rect.h = th;
-
-  SDL_RenderCopy(sdl_interface.renderer, time_texture, nullptr, &t_dest_rect);
+  SDL_RenderCopy(sdl_interface.renderer, texture, nullptr, &dest_rect);
 }

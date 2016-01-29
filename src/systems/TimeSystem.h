@@ -13,7 +13,8 @@ class TimeSystem
   std::chrono::steady_clock::time_point start;
   std::chrono::steady_clock::time_point end;
 
-  double dt, game_minute_counter, game_time, game_time_rate;
+  double dt, game_time, game_time_rate;
+  double game_minute_counter;
   int year, month, day;
   int hour, minute;
 

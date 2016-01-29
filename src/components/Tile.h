@@ -7,7 +7,7 @@
 struct Tile
 {
   Tile()
-    : type(""),
+    : type(std::string()),
       pos(0, 0),
       solid(false),
       rotation(0.0)

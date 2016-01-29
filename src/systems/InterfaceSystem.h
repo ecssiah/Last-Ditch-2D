@@ -14,6 +14,8 @@ namespace ld
 
 class InterfaceSystem
 {
+  void render_texture_at(std::string texture_name, int x, int y);
+
   SDL_Interface& sdl_interface;
 
   TimeSystem& time_system;

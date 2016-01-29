@@ -34,29 +34,27 @@ void MapSystem::setup_map()
     }
   }
 
-  layout_room(2, 2, 4, 4, 0);
+  layout_room(8, 8, 8, 8, 0);
 }
 
 
-void MapSystem::layout_room(int x, int y, int w, int h, int floor)
+void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 {
-  Room room(x, y, w, h, floor);
-
-  for (auto x = room.x; x < room.x + room.w; ++x)
+  for (auto x = x_; x < x_ + w_; ++x)
   {
-    set_tile("wall1", x, room.y, floor);
-    set_tile("wall1", x, room.y + room.h - 1, floor);
+    set_tile("wall1", x, y_, floor_);
+    set_tile("wall1", x, y_ + h_ - 1, floor_);
   }
 
-  for (auto y = room.y; y < room.y + room.h; ++y)
+  for (auto y = y_; y < y_ + h_; ++y)
   {
-    set_tile("wall1", room.x, y, floor);
-    set_tile("wall1", room.x + room.w - 1, y, floor);
+    set_tile("wall1", x_, y, floor_);
+    set_tile("wall1", x_ + w_ - 1, y, floor_);
   }
 
-  set_tile("door1", room.x, room.y + room.h / 2, floor);
+  set_tile("door1", x_, y_ + h_ / 2, floor_);
 
-  rooms[floor].push_back(room);
+  rooms[floor_].push_back({x_, y_, w_, h_, floor_});
 }
 
 
