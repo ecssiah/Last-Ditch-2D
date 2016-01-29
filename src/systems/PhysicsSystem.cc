@@ -47,11 +47,11 @@ void PhysicsSystem::scan_collisions(DynamicEntity& entity)
 
 void PhysicsSystem::resolve_collision(DynamicEntity& entity, int x, int y)
 {
-  Vector2f tile_pos(x, y);
-  Vector2f user_pos(entity.pos.x(), entity.pos.y());
-  Vector2f min(x, y);
-  Vector2f max(x + 1, y + 1);
-  Vector2f nearest(user_pos);
+  Vector2f tile_pos(x + .5, y + .5);
+  Vector2f entity_pos(entity.pos.x() + .5, entity.pos.y() + .5);
+  Vector2f min(x - .5, y - .5);
+  Vector2f max(x + .5, y + .5);
+  Vector2f nearest(entity_pos);
 
   if (nearest.x() < min.x()) nearest.x() = min.x();
   else if (nearest.x() > max.x()) nearest.x() = max.x();
@@ -59,14 +59,20 @@ void PhysicsSystem::resolve_collision(DynamicEntity& entity, int x, int y)
   if (nearest.y() < min.y()) nearest.y() = min.y();
   else if (nearest.y() > max.y()) nearest.y() = max.y();
 
-  Vector2f normal(user_pos - nearest);
+  Vector2f normal(entity_pos - nearest);
   auto dist = normal.norm();
-  normal.normalize();
-
   auto depth = entity.size - dist;
 
   if (depth > 0)
   {
-    entity.pos += depth * Vector2f(normal.x(), normal.y());
+    cout << "Player:" << entity.pos.x() << " " << entity.pos.y() << endl;
+    cout << "Collision:" << x << " " << y << endl;
+
+    if (dist != 0)
+      normal.normalize();
+
+    entity.pos += depth * normal;
+
+    cout << "Player after:" << entity.pos.x() << " " << entity.pos.y() << endl;
   }
 }
