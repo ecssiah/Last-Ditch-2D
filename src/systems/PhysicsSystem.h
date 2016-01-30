@@ -2,6 +2,7 @@
 #define PHYSICSSYSTEM_H
 
 #include <eigen3/Eigen/Geometry>
+#include <SDL2/SDL.h>
 
 #include "MapSystem.h"
 #include "EntitySystem.h"
@@ -13,8 +14,10 @@ constexpr int ITERATIONS = 1;
 
 class PhysicsSystem
 {
-  void scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
+  bool scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
   float swept_AABB(DynamicEntity& entity, int x, int y, Eigen::Vector2f& normal);
+  SDL_Rect get_broadphase_bounds(DynamicEntity& entity);
+  bool AABB_intersect(SDL_Rect r1, SDL_Rect r2);
 
   MapSystem& map_system;
   EntitySystem& entity_system;

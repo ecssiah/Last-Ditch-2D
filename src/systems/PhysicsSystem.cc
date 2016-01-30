@@ -1,6 +1,7 @@
 #include "PhysicsSystem.h"
 
 #include <eigen3/Eigen/Geometry>
+#include <SDL2/SDL.h>
 #include <iostream>
 
 using namespace ld;
@@ -23,73 +24,57 @@ void PhysicsSystem::update(double dt)
 
     if (step.norm() != 0)
       for (auto i = 0; i < ITERATIONS; ++i)
-	scan_collisions(step, entity);
+	if (scan_collisions(step, entity) == false)
+	  entity.pos += step;
   }
 }
 
 
-void PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
+bool PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
 {
   int px, py;
 
   px = (int)std::floor(entity.pos.x());
   py = (int)std::floor(entity.pos.y());
 
-  if (entity.vel.x() > 0)
+  for (auto x = px - 1; x <= px + 1; ++x)
   {
-    for (auto y = py; y <= py + 1; ++y)
+    for (auto y = py - 1; y <= py + 1; ++y)
     {
-      if (px + 1 < 0 || px + 1 >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
-	continue;
-
-      if (map_system.get_tile(px + 1, y, entity.floor).solid)
+      if (map_system.get_tile(x, y, entity.floor).solid)
       {
-	Vector2f normal;
-	float collision_time = swept_AABB(entity, px + 1, y, normal);
+	SDL_Rect broadphase_box = get_broadphase_bounds(entity);
 
-	entity.pos += collision_time * entity.vel;
+	SDL_Rect entity_box;
+	entity_box.x = entity.pos.x();
+	entity_box.y = entity.pos.y();
+	entity_box.w = entity.size;
+	entity_box.h = entity.size;
 
-	float remaining_time = 1.f - collision_time;
+	if (AABB_intersect(broadphase_box, entity_box))
+	{
+	  Vector2f normal;
+	  float collision_time = swept_AABB(entity, x, y, normal);
+
+	  entity.pos += collision_time * step;
+
+	  if (collision_time < 1.f)
+	  {
+	    float remaining_time = 1.f - collision_time;
+
+	    float dot_prod = remaining_time * step.dot(normal);
+	    Vector2f adjustment(dot_prod * normal);
+
+	    entity.pos += adjustment;
+
+	    return true;
+	  }
+	}
       }
     }
   }
-  else
-  {
-    for (auto y = py; y <= py + 1; ++y)
-    {
-      if (px < 0 || px >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
-	continue;
 
-      if (map_system.get_tile(px, y, entity.floor).solid)
-      {}
-    }
-  }
-
-  px = (int)std::floor(entity.pos.x());
-  py = (int)std::floor(entity.pos.y());
-
-  if (entity.vel.y() > 0)
-  {
-    for (auto x = px; x <= px + 1; ++x)
-    {
-      if (x < 0 || x >= MAP_SIZE_X || py + 1 < 0 || py + 1 >= MAP_SIZE_Y)
-	continue;
-
-      if (map_system.get_tile(x, py + 1, entity.floor).solid)
-      {}
-    }
-  }
-  else
-  {
-    for (auto x = px; x <= px + 1; ++x)
-    {
-      if (x < 0 || x >= MAP_SIZE_X || py < 0 || py >= MAP_SIZE_Y)
-	continue;
-
-      if (map_system.get_tile(x, py, entity.floor).solid)
-      {}
-    }
-  }
+  return false;
 }
 
 
@@ -176,4 +161,30 @@ float PhysicsSystem::swept_AABB(DynamicEntity& entity, int x, int y, Eigen::Vect
 
     return entry_time;
   }
+}
+
+
+SDL_Rect PhysicsSystem::get_broadphase_bounds(DynamicEntity& entity)
+{
+  SDL_Rect broadphase_bounds;
+  broadphase_bounds.x =
+    entity.vel.x() > 0 ? entity.pos.x() : entity.pos.x() + entity.vel.x();
+  broadphase_bounds.y =
+    entity.vel.y() > 0 ? entity.pos.y() : entity.pos.y() + entity.vel.y();
+  broadphase_bounds.w =
+    entity.vel.x() > 0 ? entity.vel.x() + entity.size : entity.size - entity.vel.x();
+  broadphase_bounds.h =
+    entity.vel.y() > 0 ? entity.vel.y() + entity.size : entity.size - entity.vel.y();
+
+  return broadphase_bounds;
+}
+
+
+bool PhysicsSystem::AABB_intersect(SDL_Rect r1, SDL_Rect r2)
+{
+  auto intersect =
+    !(r1.x + r1.w < r2.x || r1.x > r2.x + r2.w ||
+      r1.y + r1.h < r2.y || r1.y > r2.y + r2.h);
+
+  return intersect;
 }
