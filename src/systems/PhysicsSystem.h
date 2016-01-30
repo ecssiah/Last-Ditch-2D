@@ -1,18 +1,20 @@
 #ifndef PHYSICSSYSTEM_H
 #define PHYSICSSYSTEM_H
 
+#include <eigen3/Eigen/Geometry>
+
 #include "MapSystem.h"
 #include "EntitySystem.h"
 
 namespace ld
 {
 
-constexpr int ITERATIONS = 2;
+constexpr int ITERATIONS = 1;
 
 class PhysicsSystem
 {
-  void scan_collisions(DynamicEntity& entity);
-  void resolve_collision(DynamicEntity& entity, int x, int y);
+  void scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
+  float swept_AABB(DynamicEntity& entity, int x, int y, Eigen::Vector2f& normal);
 
   MapSystem& map_system;
   EntitySystem& entity_system;

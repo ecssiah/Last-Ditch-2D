@@ -34,7 +34,9 @@ void MapSystem::setup_map()
     }
   }
 
-  layout_room(8, 8, 8, 8, 0);
+  set_tile("wall1", 8, 8, 0);
+  set_tile("wall1", 8, 9, 0);
+  set_tile("wall1", 8, 10, 0);
 }
 
 
