@@ -19,27 +19,71 @@ void PhysicsSystem::update(double dt)
 {
   for (auto& entity : entity_system.get_dynamic_entities())
   {
-    entity.pos += dt * entity.vel;
+    auto step = dt * entity.vel / ITERATIONS;
 
-    scan_collisions(entity);
+    for (auto i = 0; i < ITERATIONS; ++i)
+    {
+      entity.pos += step;
+
+      scan_collisions(entity);
+    }
   }
 }
 
 
 void PhysicsSystem::scan_collisions(DynamicEntity& entity)
 {
-  auto px = (int)std::floor(entity.pos.x());
-  auto py = (int)std::floor(entity.pos.y());
+  int px, py;
 
-  for (auto x = px - 1; x <= px + 1; ++x)
+  px = (int)std::floor(entity.pos.x());
+  py = (int)std::floor(entity.pos.y());
+
+  if (entity.vel.x() > 0)
   {
     for (auto y = py - 1; y <= py + 1; ++y)
     {
-      if (x < 0 || x >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
+      if ((px + 1) < 0 || (px + 1) >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
 	continue;
 
-      if (map_system.get_tile(x, y, entity.floor).solid)
-	resolve_collision(entity, x, y);
+      if (map_system.get_tile((px + 1), y, entity.floor).solid)
+	resolve_collision(entity, (px + 1), y);
+    }
+  }
+  else if (entity.vel.x() < 0)
+  {
+    for (auto y = py - 1; y <= py + 1; ++y)
+    {
+      if ((px - 1) < 0 || (px - 1) >= MAP_SIZE_X || y < 0 || y >= MAP_SIZE_Y)
+	continue;
+
+      if (map_system.get_tile((px - 1), y, entity.floor).solid)
+	resolve_collision(entity, (px - 1), y);
+    }
+  }
+
+  px = (int)std::floor(entity.pos.x());
+  py = (int)std::floor(entity.pos.y());
+
+  if (entity.vel.y() > 0)
+  {
+    for (auto x = px - 1; x <= px + 1; ++x)
+    {
+      if (x < 0 || x >= MAP_SIZE_X || (py + 1) < 0 || (py + 1) >= MAP_SIZE_Y)
+	continue;
+
+      if (map_system.get_tile(x, (py + 1), entity.floor).solid)
+	resolve_collision(entity, x, (py + 1));
+    }
+  }
+  else if (entity.vel.y() < 0)
+  {
+    for (auto x = px - 1; x <= px + 1; ++x)
+    {
+      if (x < 0 || x >= MAP_SIZE_X || (py - 1) < 0 || (py - 1) >= MAP_SIZE_Y)
+	continue;
+
+      if (map_system.get_tile(x, (py - 1), entity.floor).solid)
+	resolve_collision(entity, x, (py - 1));
     }
   }
 }

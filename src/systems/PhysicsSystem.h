@@ -7,6 +7,8 @@
 namespace ld
 {
 
+constexpr int ITERATIONS = 2;
+
 class PhysicsSystem
 {
   void scan_collisions(DynamicEntity& entity);
