@@ -1,7 +1,6 @@
 #include "PhysicsSystem.h"
 
 #include <eigen3/Eigen/Geometry>
-#include <SDL2/SDL.h>
 #include <iostream>
 
 using namespace ld;
@@ -20,12 +19,10 @@ void PhysicsSystem::update(double dt)
 {
   for (auto& entity : entity_system.get_dynamic_entities())
   {
-    Vector2f step = dt * entity.vel / ITERATIONS;
+    auto step = dt * entity.vel;
 
-    if (step.norm() != 0)
-      for (auto i = 0; i < ITERATIONS; ++i)
-	if (scan_collisions(step, entity) == false)
-	  entity.pos += step;
+    if (scan_collisions(step, entity) == false)
+      entity.pos += step;
   }
 }
 
@@ -43,32 +40,11 @@ bool PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
     {
       if (map_system.get_tile(x, y, entity.floor).solid)
       {
-	SDL_Rect broadphase_box = get_broadphase_bounds(entity);
+	float u0, u1;
 
-	SDL_Rect entity_box;
-	entity_box.x = entity.pos.x();
-	entity_box.y = entity.pos.y();
-	entity_box.w = entity.size;
-	entity_box.h = entity.size;
-
-	if (AABB_intersect(broadphase_box, entity_box))
+	if (aabb_sweep(entity, x, y, u0, u1))
 	{
-	  Vector2f normal;
-	  float collision_time = swept_AABB(entity, x, y, normal);
-
-	  entity.pos += collision_time * step;
-
-	  if (collision_time < 1.f)
-	  {
-	    float remaining_time = 1.f - collision_time;
-
-	    float dot_prod = remaining_time * step.dot(normal);
-	    Vector2f adjustment(dot_prod * normal);
-
-	    entity.pos += adjustment;
-
-	    return true;
-	  }
+	  cout << x << " " << y << endl;
 	}
       }
     }
@@ -78,113 +54,46 @@ bool PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
 }
 
 
-float PhysicsSystem::swept_AABB(DynamicEntity& entity, int x, int y, Eigen::Vector2f& normal)
+const bool PhysicsSystem::aabb_sweep(
+  DynamicEntity& entity, int x, int y, float& u0, float& u1)
 {
-  float inv_x_entry, inv_y_entry;
-  float inv_x_exit, inv_y_exit;
+  Rect A(entity.pos.x(), entity.pos.y(), entity.size, entity.size);
+  Rect B(x, y, 1, 1);
 
-  if (entity.vel.x() > 0.f)
+  Vector2f va(entity.pos - Vector2f(x, y));
+  Vector2f uxy0(0, 0);
+  Vector2f uxy1(1, 1);
+
+  if (A.overlaps(B))
   {
-    inv_x_entry = x - (entity.pos.x() + entity.size);
-    inv_x_exit = (x + 1) - entity.pos.x();
+    u0 = u1 = 0;
+    return true;
   }
   else
   {
-    inv_x_entry = (x + 1) - entity.pos.x();
-    inv_x_exit = x - (entity.pos.x() + entity.size);
+    if (A.x + A.w < B.x && -va.x() < 0)
+      uxy0.x() = (A.x + A.w - B.x) / -va.x();
+    else if (B.x + B.w < A.x && -va.x() > 0)
+      uxy0.x() = (A.x - B.x + B.w) / -va.x();
+
+    if (B.x + B.w > A.x && -va.x() < 0)
+      uxy1.x() = (A.x - B.x + B.w) / -va.x();
+    else if (A.x + A.w > B.x && -va.x() > 0)
+      uxy1.x() = (A.x + A.w - B.x) / -va.x();
+
+    if (A.y + A.w < B.y && -va.y() < 0)
+      uxy0.y() = (A.y + A.w - B.y) / -va.y();
+    else if (B.y + B.w < A.y && -va.y() > 0)
+      uxy0.y() = (A.y - B.y + B.w) / -va.y();
+
+    if (B.y + B.w > A.y && -va.y() < 0)
+      uxy1.y() = (A.y - B.y + B.w) / -va.y();
+    else if (A.y + A.w > B.y && -va.y() > 0)
+      uxy1.y() = (A.y + A.w - B.y) / -va.y();
   }
 
-  if (entity.vel.y() > 0.f)
-  {
-    inv_y_entry = y - (entity.pos.y() + entity.size);
-    inv_y_exit = (y + 1) - entity.pos.y();
-  }
-  else
-  {
-    inv_y_entry = (y + 1) - entity.pos.y();
-    inv_y_exit = y - (entity.pos.y() + entity.size);
-  }
+  u0 = std::max(uxy0.x(), uxy0.y());
+  u1 = std::min(uxy1.x(), uxy1.y());
 
-  float x_entry, y_entry;
-  float x_exit, y_exit;
-
-  if (entity.vel.x() == 0.f)
-  {
-    x_entry = -std::numeric_limits<float>::infinity();
-    x_exit = std::numeric_limits<float>::infinity();
-  }
-  else
-  {
-    x_entry = inv_x_entry / entity.vel.x();
-    x_exit = inv_x_exit / entity.vel.x();
-  }
-
-  if (entity.vel.y() == 0.f)
-  {
-    y_entry = -std::numeric_limits<float>::infinity();
-    y_exit = std::numeric_limits<float>::infinity();
-  }
-  else
-  {
-    y_entry = inv_y_entry / entity.vel.y();
-    y_exit = inv_y_exit / entity.vel.y();
-  }
-
-  float entry_time = std::max(x_entry, y_entry);
-  float exit_time = std::min(x_exit, y_exit);
-
-  bool exit_before_entry = entry_time > exit_time;
-  bool x_out_of_range = x_entry < 0.f || x_entry > 1.f;
-  bool y_out_of_range = y_entry < 0.f || y_entry > 1.f;
-
-  if (exit_before_entry || x_out_of_range || y_out_of_range)
-  {
-    normal = Vector2f::Zero();
-    return 1.f;
-  }
-  else
-  {
-    if (x_entry > y_entry)
-    {
-      if (inv_x_entry < 0.f)
-	normal = {1.f, 0.f};
-      else
-	normal = {-1.f, 0.f};
-    }
-    else
-    {
-      if (inv_y_entry < 0.f)
-	normal = {0.f, 1.f};
-      else
-	normal = {0.f, -1.f};
-    }
-
-    return entry_time;
-  }
-}
-
-
-SDL_Rect PhysicsSystem::get_broadphase_bounds(DynamicEntity& entity)
-{
-  SDL_Rect broadphase_bounds;
-  broadphase_bounds.x =
-    entity.vel.x() > 0 ? entity.pos.x() : entity.pos.x() + entity.vel.x();
-  broadphase_bounds.y =
-    entity.vel.y() > 0 ? entity.pos.y() : entity.pos.y() + entity.vel.y();
-  broadphase_bounds.w =
-    entity.vel.x() > 0 ? entity.vel.x() + entity.size : entity.size - entity.vel.x();
-  broadphase_bounds.h =
-    entity.vel.y() > 0 ? entity.vel.y() + entity.size : entity.size - entity.vel.y();
-
-  return broadphase_bounds;
-}
-
-
-bool PhysicsSystem::AABB_intersect(SDL_Rect r1, SDL_Rect r2)
-{
-  auto intersect =
-    !(r1.x + r1.w < r2.x || r1.x > r2.x + r2.w ||
-      r1.y + r1.h < r2.y || r1.y > r2.y + r2.h);
-
-  return intersect;
+  return u0 <= u1;
 }

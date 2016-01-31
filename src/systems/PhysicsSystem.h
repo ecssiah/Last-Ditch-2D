@@ -2,7 +2,6 @@
 #define PHYSICSSYSTEM_H
 
 #include <eigen3/Eigen/Geometry>
-#include <SDL2/SDL.h>
 
 #include "MapSystem.h"
 #include "EntitySystem.h"
@@ -10,14 +9,30 @@
 namespace ld
 {
 
+struct Rect
+{
+  Rect(float x_, float y_, float w_, float h_)
+    : x(x_),
+      y(y_),
+      w(w_),
+      h(h_)
+  {}
+
+  bool overlaps(Rect& rect)
+  {
+    return !(rect.x > x + w || rect.x + w < x || rect.y > y + h || rect.y + rect.h < y);
+  }
+
+  float x, y;
+  float w, h;
+};
+
 constexpr int ITERATIONS = 1;
 
 class PhysicsSystem
 {
   bool scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
-  float swept_AABB(DynamicEntity& entity, int x, int y, Eigen::Vector2f& normal);
-  SDL_Rect get_broadphase_bounds(DynamicEntity& entity);
-  bool AABB_intersect(SDL_Rect r1, SDL_Rect r2);
+  const bool aabb_sweep(DynamicEntity& entity, int x, int y, float& u0, float& u1);
 
   MapSystem& map_system;
   EntitySystem& entity_system;
