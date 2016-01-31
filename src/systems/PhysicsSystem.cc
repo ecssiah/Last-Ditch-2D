@@ -33,32 +33,27 @@ void PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
   px = (int)std::floor(entity.pos.x());
   py = (int)std::floor(entity.pos.y());
 
+  float u0, u1;
+  Vector2f Ea(entity.size, entity.size);
+  Vector2f Eb(1, 1);
+  Vector2f A0(entity.pos);
+  Vector2f A1(entity.pos + step);
+
+  entity.pos += step;
+
   for (auto x = px - 1; x <= px + 1; ++x)
   {
     for (auto y = py - 1; y <= py + 1; ++y)
     {
-      bool collision = false;
-
       if (map_system.get_tile(x, y, entity.floor).solid)
       {
-	float u0, u1;
-	Vector2f Ea(entity.size, entity.size);
-	Vector2f Eb(1, 1);
-
-	Vector2f A0(entity.pos.x() + .5, entity.pos.y() + .5);
-	Vector2f A1(entity.pos.x() + step.x() + .5, entity.pos.y() + step.y() + .5);
-	Vector2f B0(x + .5, y + .5);
-	Vector2f B1(x + .5, y + .5);
+	Vector2f B0(x, y);
+	Vector2f B1(x, y);
 
 	if (aabb_sweep(Ea, A0, A1, Eb, B0, B1, u0, u1))
 	{
-	  cout << u0 << " " << u1 << endl;
-	  collision = true;
 	}
       }
-
-      if (!collision)
-	entity.pos += step;
     }
   }
 }

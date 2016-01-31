@@ -27,12 +27,12 @@ struct AABB
 
   const float min(long i) const
   {
-    return (P[i] - E[i]);
+    return P[i];
   }
 
   const float max(long i) const
   {
-    return (P[i] + E[i]);
+    return P[i] + E[i];
   }
 
   Eigen::Vector2f P;
