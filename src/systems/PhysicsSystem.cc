@@ -21,13 +21,12 @@ void PhysicsSystem::update(double dt)
   {
     auto step = dt * entity.vel;
 
-    if (scan_collisions(step, entity) == false)
-      entity.pos += step;
+    scan_collisions(step, entity);
   }
 }
 
 
-bool PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
+void PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
 {
   int px, py;
 
@@ -38,62 +37,69 @@ bool PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
   {
     for (auto y = py - 1; y <= py + 1; ++y)
     {
+      bool collision = false;
+
       if (map_system.get_tile(x, y, entity.floor).solid)
       {
 	float u0, u1;
+	Vector2f Ea(entity.size, entity.size);
+	Vector2f Eb(1, 1);
 
-	if (aabb_sweep(entity, x, y, u0, u1))
+	Vector2f A0(entity.pos.x() + .5, entity.pos.y() + .5);
+	Vector2f A1(entity.pos.x() + step.x() + .5, entity.pos.y() + step.y() + .5);
+	Vector2f B0(x + .5, y + .5);
+	Vector2f B1(x + .5, y + .5);
+
+	if (aabb_sweep(Ea, A0, A1, Eb, B0, B1, u0, u1))
 	{
-	  cout << x << " " << y << endl;
+	  cout << u0 << " " << u1 << endl;
+	  collision = true;
 	}
       }
+
+      if (!collision)
+	entity.pos += step;
     }
   }
-
-  return false;
 }
 
 
 const bool PhysicsSystem::aabb_sweep(
-  DynamicEntity& entity, int x, int y, float& u0, float& u1)
+  Vector2f& Ea, Vector2f& A0, Vector2f& A1,
+  Vector2f& Eb, Vector2f& B0, Vector2f& B1,
+  float& u0, float& u1)
 {
-  Rect A(entity.pos.x(), entity.pos.y(), entity.size, entity.size);
-  Rect B(x, y, 1, 1);
+  AABB A(A0, Ea);
+  AABB B(B0, Eb);
 
-  Vector2f va(entity.pos - Vector2f(x, y));
-  Vector2f uxy0(0, 0);
-  Vector2f uxy1(1, 1);
+  Vector2f va(A1 - A0);
+  Vector2f vb(B1 - B0);
+  Vector2f v(vb - va);
+
+  Vector2f u_0(0, 0);
+  Vector2f u_1(1, 1);
 
   if (A.overlaps(B))
   {
     u0 = u1 = 0;
     return true;
   }
-  else
+
+  for (auto i = 0; i < 2; ++i)
   {
-    if (A.x + A.w < B.x && -va.x() < 0)
-      uxy0.x() = (A.x + A.w - B.x) / -va.x();
-    else if (B.x + B.w < A.x && -va.x() > 0)
-      uxy0.x() = (A.x - B.x + B.w) / -va.x();
+    if (A.max(i) < B.min(i) && v[i] < 0)
+      u_0[i] = (A.max(i) - B.min(i)) / v[i];
+    else if (B.max(i) < A.min(i) && v[i] > 0)
+      u_0[i] = (A.min(i) - B.max(i)) / v[i];
 
-    if (B.x + B.w > A.x && -va.x() < 0)
-      uxy1.x() = (A.x - B.x + B.w) / -va.x();
-    else if (A.x + A.w > B.x && -va.x() > 0)
-      uxy1.x() = (A.x + A.w - B.x) / -va.x();
-
-    if (A.y + A.w < B.y && -va.y() < 0)
-      uxy0.y() = (A.y + A.w - B.y) / -va.y();
-    else if (B.y + B.w < A.y && -va.y() > 0)
-      uxy0.y() = (A.y - B.y + B.w) / -va.y();
-
-    if (B.y + B.w > A.y && -va.y() < 0)
-      uxy1.y() = (A.y - B.y + B.w) / -va.y();
-    else if (A.y + A.w > B.y && -va.y() > 0)
-      uxy1.y() = (A.y + A.w - B.y) / -va.y();
+    if (B.max(i) > A.min(i) && v[i] < 0)
+      u_1[i] = (A.min(i) - B.max(i)) / v[i];
+    else if (A.max(i) > B.min(i) && v[i] > 0)
+      u_1[i] = (A.max(i) - B.min(i)) / v[i];
   }
 
-  u0 = std::max(uxy0.x(), uxy0.y());
-  u1 = std::min(uxy1.x(), uxy1.y());
+  u0 = std::max(u_0.x(), u_0.y());
+  u1 = std::min(u_1.x(), u_1.y());
 
   return u0 <= u1;
 }

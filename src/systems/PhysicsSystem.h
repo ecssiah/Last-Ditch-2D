@@ -9,30 +9,45 @@
 namespace ld
 {
 
-struct Rect
+struct AABB
 {
-  Rect(float x_, float y_, float w_, float h_)
-    : x(x_),
-      y(y_),
-      w(w_),
-      h(h_)
+  AABB(Eigen::Vector2f P_, Eigen::Vector2f E_)
+    : P(P_),
+      E(E_)
   {}
 
-  bool overlaps(Rect& rect)
+  const bool overlaps(const AABB& b)
   {
-    return !(rect.x > x + w || rect.x + w < x || rect.y > y + h || rect.y + rect.h < y);
+    const Eigen::Vector2f T(b.P - P);
+
+    return
+      fabs(T.x()) <= (E.x() + b.E.x()) &&
+      fabs(T.y()) <= (E.y() + b.E.y());
   }
 
-  float x, y;
-  float w, h;
+  const float min(long i) const
+  {
+    return (P[i] - E[i]);
+  }
+
+  const float max(long i) const
+  {
+    return (P[i] + E[i]);
+  }
+
+  Eigen::Vector2f P;
+  Eigen::Vector2f E;
 };
 
 constexpr int ITERATIONS = 1;
 
 class PhysicsSystem
 {
-  bool scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
-  const bool aabb_sweep(DynamicEntity& entity, int x, int y, float& u0, float& u1);
+  void scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
+  const bool aabb_sweep(
+    Eigen::Vector2f& Ea, Eigen::Vector2f& A0, Eigen::Vector2f& A1,
+    Eigen::Vector2f& Eb, Eigen::Vector2f& B0, Eigen::Vector2f& B1,
+    float& u0, float& u1);
 
   MapSystem& map_system;
   EntitySystem& entity_system;
