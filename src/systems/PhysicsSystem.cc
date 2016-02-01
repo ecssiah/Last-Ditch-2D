@@ -3,98 +3,93 @@
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 
+#include "../constants/MapConstants.h"
+
 using namespace ld;
 using namespace Eigen;
 using namespace std;
 
 PhysicsSystem::PhysicsSystem(MapSystem& map_system_, EntitySystem& entity_system_)
   : map_system(map_system_),
-    entity_system(entity_system_)
+    entity_system(entity_system_),
+    world(new b2World({0, 0})),
+    dynamic_bodies(),
+    tile_bodies()
 {
+  setup_entity_bodies();
+  setup_tile_bodies();
+
   cout << "Physics system ready" << endl;
+}
+
+
+PhysicsSystem::~PhysicsSystem()
+{
+  delete world;
 }
 
 
 void PhysicsSystem::update(double dt)
 {
   for (auto& entity : entity_system.get_dynamic_entities())
-  {
-    auto step = dt * entity.vel;
+    entity.pos += dt * entity.vel;
 
-    scan_collisions(step, entity);
+  world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
+}
+
+
+void PhysicsSystem::setup_entity_bodies()
+{
+  for (auto& entity : entity_system.get_dynamic_entities())
+  {
+    b2BodyDef body_def;
+    body_def.type = b2_dynamicBody;
+    body_def.position.Set(entity.pos.x(), entity.pos.y());
+    body_def.allowSleep = true;
+    body_def.fixedRotation = true;
+    body_def.active = true;
+
+    auto body = world->CreateBody(&body_def);
+
+    b2CircleShape circle_shape;
+    circle_shape.m_radius = entity.size;
+
+    b2FixtureDef fixture_def;
+    fixture_def.shape = &circle_shape;
+    fixture_def.density = 1.f;
+    fixture_def.friction = .3f;
+
+    body->CreateFixture(&fixture_def);
+
+    dynamic_bodies.push_back(body);
   }
 }
 
 
-void PhysicsSystem::scan_collisions(const Vector2f& step, DynamicEntity& entity)
+void PhysicsSystem::setup_tile_bodies()
 {
-  int px, py;
-
-  px = (int)std::floor(entity.pos.x());
-  py = (int)std::floor(entity.pos.y());
-
-  float u0, u1;
-  Vector2f Ea(entity.size, entity.size);
-  Vector2f Eb(1, 1);
-  Vector2f A0(entity.pos);
-  Vector2f A1(entity.pos + step);
-
-  entity.pos += step;
-
-  for (auto x = px - 1; x <= px + 1; ++x)
+  for (auto x = 0; x < MAP_SIZE_X; ++x)
   {
-    for (auto y = py - 1; y <= py + 1; ++y)
+    for (auto y = 0; y < MAP_SIZE_Y; ++y)
     {
-      if (map_system.get_tile(x, y, entity.floor).solid)
-      {
-	Vector2f B0(x, y);
-	Vector2f B1(x, y);
+      b2BodyDef body_def;
+      body_def.type = b2_staticBody;
+      body_def.position.Set(x, y);
+      body_def.allowSleep = true;
+      body_def.fixedRotation = true;
+      body_def.active = true;
 
-	if (aabb_sweep(Ea, A0, A1, Eb, B0, B1, u0, u1))
-	{
-	}
-      }
+      auto body = world->CreateBody(&body_def);
+
+      b2PolygonShape polygon_shape;
+      polygon_shape.SetAsBox(1, 1);
+
+      b2FixtureDef fixture_def;
+      fixture_def.shape = &polygon_shape;
+
+      body->CreateFixture(&fixture_def);
+
+      tile_bodies.push_back(body);
     }
   }
-}
-
-
-const bool PhysicsSystem::aabb_sweep(
-  Vector2f& Ea, Vector2f& A0, Vector2f& A1,
-  Vector2f& Eb, Vector2f& B0, Vector2f& B1,
-  float& u0, float& u1)
-{
-  AABB A(A0, Ea);
-  AABB B(B0, Eb);
-
-  Vector2f va(A1 - A0);
-  Vector2f vb(B1 - B0);
-  Vector2f v(vb - va);
-
-  Vector2f u_0(0, 0);
-  Vector2f u_1(1, 1);
-
-  if (A.overlaps(B))
-  {
-    u0 = u1 = 0;
-    return true;
-  }
-
-  for (auto i = 0; i < 2; ++i)
-  {
-    if (A.max(i) < B.min(i) && v[i] < 0)
-      u_0[i] = (A.max(i) - B.min(i)) / v[i];
-    else if (B.max(i) < A.min(i) && v[i] > 0)
-      u_0[i] = (A.min(i) - B.max(i)) / v[i];
-
-    if (B.max(i) > A.min(i) && v[i] < 0)
-      u_1[i] = (A.min(i) - B.max(i)) / v[i];
-    else if (A.max(i) > B.min(i) && v[i] > 0)
-      u_1[i] = (A.max(i) - B.min(i)) / v[i];
-  }
-
-  u0 = std::max(u_0.x(), u_0.y());
-  u1 = std::min(u_1.x(), u_1.y());
-
-  return u0 <= u1;
 }

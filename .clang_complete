@@ -1,3 +1,4 @@
 -I/usr/include/eigen3/Eigen
 -I/usr/include/SDL2
+-I/usr/include/Box2D
 -I/home/kabbotta/workspace/sdl/projects/lastditch

@@ -1,6 +1,7 @@
 #ifndef PHYSICSSYSTEM_H
 #define PHYSICSSYSTEM_H
 
+#include <Box2D/Box2D.h>
 #include <eigen3/Eigen/Geometry>
 
 #include "MapSystem.h"
@@ -9,51 +10,26 @@
 namespace ld
 {
 
-struct AABB
-{
-  AABB(Eigen::Vector2f P_, Eigen::Vector2f E_)
-    : P(P_),
-      E(E_)
-  {}
-
-  const bool overlaps(const AABB& b)
-  {
-    const Eigen::Vector2f T(b.P - P);
-
-    return
-      fabs(T.x()) <= (E.x() + b.E.x()) &&
-      fabs(T.y()) <= (E.y() + b.E.y());
-  }
-
-  const float min(long i) const
-  {
-    return P[i];
-  }
-
-  const float max(long i) const
-  {
-    return P[i] + E[i];
-  }
-
-  Eigen::Vector2f P;
-  Eigen::Vector2f E;
-};
-
-constexpr int ITERATIONS = 1;
+constexpr float32 B2D_TIMESTEP = 1 / 30.f;
+constexpr int32 B2D_VELOCITY_ITERATIONS = 1;
+constexpr int32 B2D_POSITION_ITERATIONS = 1;
 
 class PhysicsSystem
 {
-  void scan_collisions(const Eigen::Vector2f& step, DynamicEntity& entity);
-  const bool aabb_sweep(
-    Eigen::Vector2f& Ea, Eigen::Vector2f& A0, Eigen::Vector2f& A1,
-    Eigen::Vector2f& Eb, Eigen::Vector2f& B0, Eigen::Vector2f& B1,
-    float& u0, float& u1);
+  void setup_tile_bodies();
+  void setup_entity_bodies();
 
   MapSystem& map_system;
   EntitySystem& entity_system;
 
+  b2World* world;
+
+  std::vector<b2Body*> dynamic_bodies;
+  std::vector<b2Body*> tile_bodies;
+
 public:
   PhysicsSystem(MapSystem& map_system, EntitySystem& entity_system);
+  ~PhysicsSystem();
 
   void update(double dt);
 };

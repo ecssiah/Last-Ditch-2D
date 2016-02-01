@@ -40,12 +40,14 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/dist")
 find_package(Eigen3 REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(Box2D REQUIRED)
 
 include_directories(
   ${EIGEN_INCLUDE_DIR}
   ${SDL2_INCLUDE_DIR}
   ${SDL2_IMAGE_INCLUDE_DIR}
-  ${SDL2_TTF_INCLUDE_DIR})
+  ${SDL2_TTF_INCLUDE_DIR}
+  ${BOX2D_INCLUDE_DIR})
 
 set(SDL2_COMPILE_FLAGS "-I/usr/include/SDL2")
 set(SDL2_LINK_FLAGS "-lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf")
@@ -54,7 +56,8 @@ target_link_libraries(
   LastDitch
   ${SDL2_LIBRARY}
   ${SDL2_IMAGE_LIBRARY}
-  ${SDL2_TTF_LIBRARY})
+  ${SDL2_TTF_LIBRARY}
+  ${BOX2D_LIBRARY})
 
 set(
   CMAKE_CXX_FLAGS

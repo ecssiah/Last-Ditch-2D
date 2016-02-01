@@ -17,7 +17,7 @@ struct DynamicEntity
       vel(0, 0),
       speed(80.0),
       floor(0),
-      size(.96),
+      size(.48),
       clip_rect()
   {}
 
