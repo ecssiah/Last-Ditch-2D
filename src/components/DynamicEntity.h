@@ -1,6 +1,7 @@
 #ifndef DYNAMICENTITY_H
 #define DYNAMICENTITY_H
 
+#include <Box2D/Box2D.h>
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 #include <string>
@@ -15,10 +16,11 @@ struct DynamicEntity
       type(std::string()),
       pos(0, 0),
       vel(0, 0),
-      speed(80.0),
+      speed(340.0),
       floor(0),
       size(.48),
-      clip_rect()
+      clip_rect(),
+      body(nullptr)
   {}
 
   std::string name, type;
@@ -27,6 +29,7 @@ struct DynamicEntity
   int floor;
   double size;
   SDL_Rect clip_rect;
+  b2Body* body;
 };
 
 }
