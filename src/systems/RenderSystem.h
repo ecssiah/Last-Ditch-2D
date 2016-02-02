@@ -5,11 +5,13 @@
 #include <map>
 #include <SDL2/SDL.h>
 
+#include "../DebugDraw.h"
 #include "../SDL_Interface.h"
 #include "MapSystem.h"
 #include "EntitySystem.h"
 #include "CameraSystem.h"
 #include "InterfaceSystem.h"
+#include "PhysicsSystem.h"
 
 namespace ld
 {
@@ -25,13 +27,13 @@ class RenderSystem
 
   SDL_Interface& sdl_interface;
 
-  SDL_Window* window;
-  SDL_Renderer* renderer;
+  DebugDraw debug_draw;
 
   MapSystem& map_system;
   EntitySystem& entity_system;
   CameraSystem& camera_system;
   InterfaceSystem& interface_system;
+  PhysicsSystem& physics_system;
 
   std::map<std::string, SDL_Texture*> textures;
   std::map<std::string, Eigen::Vector2i> tileset1_coords;
@@ -44,7 +46,8 @@ public:
     MapSystem& map_system,
     EntitySystem& entity_system,
     CameraSystem& camera_system,
-    InterfaceSystem& interface_system);
+    InterfaceSystem& interface_system,
+    PhysicsSystem& physics_system);
 
   void update();
   void shutdown();

@@ -3,9 +3,11 @@
 
 #include <Box2D/Box2D.h>
 #include <eigen3/Eigen/Geometry>
+#include <SDL2/SDL.h>
 
-#include "MapSystem.h"
+#include "../DebugDraw.h"
 #include "EntitySystem.h"
+#include "MapSystem.h"
 
 namespace ld
 {
@@ -28,10 +30,13 @@ class PhysicsSystem
   std::vector<b2Body*> tile_bodies;
 
 public:
-  PhysicsSystem(MapSystem& map_system, EntitySystem& entity_system);
+  PhysicsSystem(SDL_Renderer* renderer, MapSystem& map_system, EntitySystem& entity_system);
   ~PhysicsSystem();
 
   void update(double dt);
+
+  void set_debug_draw(DebugDraw& debug_draw);
+  void render_debug();
 };
 
 }

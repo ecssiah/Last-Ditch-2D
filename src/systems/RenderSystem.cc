@@ -16,20 +16,25 @@ RenderSystem::RenderSystem(
   MapSystem& map_system_,
   EntitySystem& entity_system_,
   CameraSystem& camera_system_,
-  InterfaceSystem& interface_system_
+  InterfaceSystem& interface_system_,
+  PhysicsSystem& physics_system_
 )
   : sdl_interface(sdl_interface_),
     map_system(map_system_),
     entity_system(entity_system_),
     camera_system(camera_system_),
     interface_system(interface_system_),
+    physics_system(physics_system_),
+    debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     tileset1_coords(),
     current_floor(0)
 {
-  SDL_SetRenderDrawColor(sdl_interface.renderer, 0x00, 0x00, 0x00, 0x00);
-
   setup_textures();
+
+  debug_draw.SetFlags(b2Draw::e_shapeBit);
+
+  physics_system.set_debug_draw(debug_draw);
 
   cout << "Render system ready" << endl;
 }
@@ -134,12 +139,16 @@ void RenderSystem::render_entities()
 
 void RenderSystem::update()
 {
+  SDL_SetRenderDrawColor(sdl_interface.renderer, 0, 0, 0, 0);
+
   SDL_RenderClear(sdl_interface.renderer);
 
   render_chunks();
   render_entities();
 
   interface_system.render();
+
+  physics_system.render_debug();
 
   SDL_RenderPresent(sdl_interface.renderer);
 }

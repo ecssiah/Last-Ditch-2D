@@ -9,7 +9,9 @@ using namespace ld;
 using namespace Eigen;
 using namespace std;
 
-PhysicsSystem::PhysicsSystem(MapSystem& map_system_, EntitySystem& entity_system_)
+PhysicsSystem::PhysicsSystem(
+  SDL_Renderer* renderer, MapSystem& map_system_, EntitySystem& entity_system_
+)
   : map_system(map_system_),
     entity_system(entity_system_),
     world(new b2World({0, 0})),
@@ -35,6 +37,18 @@ void PhysicsSystem::update(double dt)
     entity.pos += dt * entity.vel;
 
   world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
+}
+
+
+void PhysicsSystem::set_debug_draw(DebugDraw& debug_draw)
+{
+  world->SetDebugDraw(&debug_draw);
+}
+
+
+void PhysicsSystem::render_debug()
+{
+  world->DrawDebugData();
 }
 
 
@@ -72,24 +86,27 @@ void PhysicsSystem::setup_tile_bodies()
   {
     for (auto y = 0; y < MAP_SIZE_Y; ++y)
     {
-      b2BodyDef body_def;
-      body_def.type = b2_staticBody;
-      body_def.position.Set(x, y);
-      body_def.allowSleep = true;
-      body_def.fixedRotation = true;
-      body_def.active = true;
+      if (map_system.get_tile(x, y, 0).type != "")
+      {
+	b2BodyDef body_def;
+	body_def.type = b2_staticBody;
+	body_def.position.Set(x, y);
+	body_def.allowSleep = true;
+	body_def.fixedRotation = true;
+	body_def.active = true;
 
-      auto body = world->CreateBody(&body_def);
+	auto body = world->CreateBody(&body_def);
 
-      b2PolygonShape polygon_shape;
-      polygon_shape.SetAsBox(1, 1);
+	b2PolygonShape polygon_shape;
+	polygon_shape.SetAsBox(1, 1);
 
-      b2FixtureDef fixture_def;
-      fixture_def.shape = &polygon_shape;
+	b2FixtureDef fixture_def;
+	fixture_def.shape = &polygon_shape;
 
-      body->CreateFixture(&fixture_def);
+	body->CreateFixture(&fixture_def);
 
-      tile_bodies.push_back(body);
+	tile_bodies.push_back(body);
+      }
     }
   }
 }

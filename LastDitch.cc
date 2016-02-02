@@ -12,10 +12,12 @@ LastDitch::LastDitch()
     input_system(input),
     map_system(),
     entity_system(input),
-    physics_system(map_system, entity_system),
+    physics_system(sdl_interface.renderer, map_system, entity_system),
     camera_system(entity_system),
     interface_system(sdl_interface, time_system, entity_system),
-    render_system(sdl_interface, map_system, entity_system, camera_system, interface_system)
+    render_system(
+      sdl_interface, map_system, entity_system, camera_system,
+      interface_system, physics_system)
 {
   cout << endl << "Starting Last Ditch..." << endl << endl;
 
