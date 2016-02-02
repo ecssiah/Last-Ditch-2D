@@ -33,7 +33,9 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(double dt)
 {
-  for (auto& entity : entity_system.get_dynamic_entities())
+  auto& dynamic_entities = entity_system.get_dynamic_entities();
+
+  for (auto& entity : dynamic_entities)
   {
     b2Vec2 impulse(dt * entity.vel.x(), dt * entity.vel.y());
     entity.body->ApplyLinearImpulse(impulse, entity.body->GetWorldCenter(), true);
@@ -42,7 +44,7 @@ void PhysicsSystem::update(double dt)
   world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
   world->ClearForces();
 
-  for (auto& entity : entity_system.get_dynamic_entities())
+  for (auto& entity : dynamic_entities)
     entity.pos = {entity.body->GetPosition().x, entity.body->GetPosition().y};
 }
 
@@ -66,7 +68,7 @@ void PhysicsSystem::setup_entity_bodies()
     b2BodyDef body_def;
     body_def.type = b2_dynamicBody;
     body_def.position.Set(entity.pos.x(), entity.pos.y());
-    body_def.linearDamping = 4;
+    body_def.linearDamping = 8;
     body_def.allowSleep = true;
     body_def.fixedRotation = true;
     body_def.active = true;
@@ -78,6 +80,7 @@ void PhysicsSystem::setup_entity_bodies()
 
     b2FixtureDef fixture_def;
     fixture_def.shape = &circle_shape;
+    fixture_def.friction = 0;
 
     body->CreateFixture(&fixture_def);
 
@@ -105,10 +108,11 @@ void PhysicsSystem::setup_tile_bodies()
 	auto body = world->CreateBody(&body_def);
 
 	b2PolygonShape polygon_shape;
-	polygon_shape.SetAsBox(1, 1);
+	polygon_shape.SetAsBox(.5, .5);
 
 	b2FixtureDef fixture_def;
 	fixture_def.shape = &polygon_shape;
+	fixture_def.friction = 0;
 
 	body->CreateFixture(&fixture_def);
 

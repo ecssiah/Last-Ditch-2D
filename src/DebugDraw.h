@@ -35,8 +35,10 @@ public:
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
     SDL_Rect rect;
-    rect.x = TILE_SIZE * (vertices[0].x + 1 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
-    rect.y = TILE_SIZE * (vertices[0].y + 1 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    rect.x =
+      TILE_SIZE * (vertices[0].x + .5 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+    rect.y =
+      TILE_SIZE * (vertices[0].y + .5 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
     rect.w = TILE_SIZE;
     rect.h = TILE_SIZE;
 

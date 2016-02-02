@@ -16,7 +16,7 @@ struct DynamicEntity
       type(std::string()),
       pos(0, 0),
       vel(0, 0),
-      speed(340.0),
+      speed(100.0),
       floor(0),
       size(.48),
       clip_rect(),

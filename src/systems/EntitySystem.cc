@@ -22,6 +22,7 @@ EntitySystem::EntitySystem(Input& input_)
   kadijah.type = "kadijah";
   kadijah.pos = {4, 9};
   kadijah.floor = 0;
+  kadijah.speed = 800;
   kadijah.clip_rect.w = TILE_SIZE;
   kadijah.clip_rect.h = TILE_SIZE;
 
