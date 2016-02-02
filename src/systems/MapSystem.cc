@@ -37,6 +37,10 @@ void MapSystem::setup_map()
   set_tile("wall1", 8, 8, 0);
   set_tile("wall1", 8, 9, 0);
   set_tile("wall1", 8, 10, 0);
+
+  set_tile("wall1", 12, 8, 0);
+  set_tile("door1", 13, 9, 0, 90);
+  set_tile("wall1", 14, 10, 0);
 }
 
 

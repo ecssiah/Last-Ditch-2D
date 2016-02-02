@@ -35,8 +35,8 @@ public:
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
     SDL_Rect rect;
-    rect.x = TILE_SIZE * (vertices[0].x - camera_system.get_pos().x());
-    rect.y = TILE_SIZE * (vertices[0].y - camera_system.get_pos().y());
+    rect.x = TILE_SIZE * (vertices[0].x + 1 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+    rect.y = TILE_SIZE * (vertices[0].y + 1 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
     rect.w = TILE_SIZE;
     rect.h = TILE_SIZE;
 
@@ -56,12 +56,17 @@ public:
 
     for (auto alpha = 0.0; alpha < 2 * M_PI; alpha += step)
     {
+      auto x1 = center.x + .5 + radius * cos(alpha) - camera_system.get_pos().x();
+      auto y1 = center.y + .5 + radius * sin(alpha) - camera_system.get_pos().y();
+      auto x2 = center.x + .5 + radius * cos(alpha + step) - camera_system.get_pos().x();
+      auto y2 = center.y + .5 + radius * sin(alpha + step) - camera_system.get_pos().y();
+
       SDL_RenderDrawLine(
 	renderer,
-	TILE_SIZE * radius * (center.x + cos(alpha) - camera_system.get_pos().x()),
-	TILE_SIZE * radius * (center.y + sin(alpha) - camera_system.get_pos().y()),
-	TILE_SIZE * radius * (center.x + cos(alpha + step) - camera_system.get_pos().x()),
-	TILE_SIZE * radius * (center.y + sin(alpha + step) - camera_system.get_pos().y()));
+	TILE_SIZE * x1 + SCREEN_SIZE_X / 2,
+	TILE_SIZE * y1 + SCREEN_SIZE_Y / 2,
+	TILE_SIZE * x2 + SCREEN_SIZE_X / 2,
+	TILE_SIZE * y2 + SCREEN_SIZE_Y / 2);
     }
   }
 
