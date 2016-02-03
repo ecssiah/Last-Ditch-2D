@@ -29,21 +29,12 @@ void MapSystem::setup_map()
       {
 	auto& chunk = chunks[x][y][floor];
 
-	chunk.pos = Vector2i(x * TILES_PER_CHUNK_X, y * TILES_PER_CHUNK_Y);
+	chunk.pos = {x * TILES_PER_CHUNK_X, y * TILES_PER_CHUNK_Y};
       }
     }
   }
 
-  set_tile("wall1", 4, 4, 0);
-  set_tile("wall1", 6, 4, 0);
-
-  set_tile("wall1", 8, 8, 0);
-  set_tile("wall1", 8, 9, 0);
-  set_tile("wall1", 8, 10, 0);
-
-  set_tile("wall1", 12, 8, 0);
-  set_tile("door1", 13, 9, 0, 90);
-  set_tile("wall1", 14, 10, 0);
+  layout_room(4, 4, 6, 6, 0);
 }
 
 

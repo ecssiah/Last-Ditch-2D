@@ -148,7 +148,7 @@ void RenderSystem::update()
 
   interface_system.render();
 
-  physics_system.render_debug();
+  // physics_system.render_debug();
 
   SDL_RenderPresent(sdl_interface.renderer);
 }

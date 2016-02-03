@@ -11,7 +11,7 @@ TimeSystem::TimeSystem()
     dt(0.0),
     game_time(0.0),
     game_minute_counter(0.0),
-    game_time_rate(2.1),
+    game_time_rate(62.f),
     year(3212),
     month(1),
     day(28),
@@ -28,6 +28,9 @@ double TimeSystem::update()
   auto microseconds = chrono::duration_cast<chrono::microseconds>(end - start).count();
 
   dt = microseconds / 1000.0;
+
+  if (dt > .01) dt = .01;
+
   game_time += dt * game_time_rate;
   game_minute_counter += dt * game_time_rate;
 
