@@ -31,8 +31,10 @@ double TimeSystem::update()
 
   if (dt > .01) dt = .01;
 
-  game_time += dt * game_time_rate;
-  game_minute_counter += dt * game_time_rate;
+  auto step = game_time_rate * dt;
+
+  game_time += step;
+  game_minute_counter += step;
 
   update_game_time();
 

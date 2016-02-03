@@ -1,5 +1,6 @@
 #include "LastDitch.h"
 
+#include <chrono>
 #include <iostream>
 
 using namespace ld;
@@ -8,10 +9,11 @@ using namespace std;
 LastDitch::LastDitch()
   : sdl_interface(),
     input(),
+    rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
     time_system(),
     input_system(input),
     map_system(),
-    entity_system(input),
+    entity_system(rng, input, map_system),
     physics_system(sdl_interface.renderer, map_system, entity_system),
     camera_system(entity_system),
     interface_system(sdl_interface, time_system, entity_system),

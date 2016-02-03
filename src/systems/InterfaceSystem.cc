@@ -36,6 +36,10 @@ void InterfaceSystem::update()
   textures["debug"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 
   ss.str(string());
+  ss <<
+    time_system.get_day() << "/" <<
+    time_system.get_month() << "/" <<
+    time_system.get_year() << " ";
   ss << time_system.get_hour() << ":" << time_system.get_minute();
 
   surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
@@ -47,7 +51,7 @@ void InterfaceSystem::update()
 void InterfaceSystem::render()
 {
   render_texture_at("debug", 10, SCREEN_SIZE_Y - 20);
-  render_texture_at("time", SCREEN_SIZE_X - 40, 6);
+  render_texture_at("time", SCREEN_SIZE_X - 120, 6);
 }
 
 

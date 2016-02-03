@@ -2,6 +2,7 @@
 #define LASTDITCH_H
 
 #include <chrono>
+#include <random>
 #include <SDL2/SDL.h>
 
 #include "src/SDL_Interface.h"
@@ -18,11 +19,15 @@
 namespace ld
 {
 
+constexpr long SEED = 1234567890;
+
 class LastDitch
 {
   SDL_Interface sdl_interface;
 
   Input input;
+
+  std::mt19937 rng;
 
   TimeSystem time_system;
   InputSystem input_system;

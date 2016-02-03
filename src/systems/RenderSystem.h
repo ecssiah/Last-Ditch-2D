@@ -23,6 +23,7 @@ class RenderSystem
 
   void render_chunks();
   void render_tiles(Chunk& chunk);
+  void render_items();
   void render_entities();
 
   SDL_Interface& sdl_interface;
@@ -37,6 +38,7 @@ class RenderSystem
 
   std::map<std::string, SDL_Texture*> textures;
   std::map<std::string, Eigen::Vector2i> tileset1_coords;
+  std::map<std::string, SDL_Rect> items1_coords;
 
   int current_floor;
 

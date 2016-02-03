@@ -53,6 +53,7 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
   }
 
   set_tile("door1", x_, y_ + h_ / 2, floor_);
+  set_tile("stairs1", x_ + w_ / 2, y_ + h_ / 2, floor_);
 
   rooms[floor_].push_back({x_, y_, w_, h_, floor_});
 }

@@ -28,6 +28,7 @@ RenderSystem::RenderSystem(
     debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     tileset1_coords(),
+    items1_coords(),
     current_floor(0)
 {
   setup_textures();
@@ -48,6 +49,11 @@ void RenderSystem::setup_textures()
   textures["tileset1"] = load_texture("tileset1");
   tileset1_coords["wall1"] = {0, 0};
   tileset1_coords["door1"] = {0, 1};
+  tileset1_coords["stairs1"] = {0, 2};
+
+  textures["items1"] = load_texture("items1");
+  items1_coords["scrub1"] = {0, 0, 48, 48};
+  items1_coords["container1"] = {53, 5, 19, 13};
 }
 
 
@@ -117,6 +123,27 @@ void RenderSystem::render_tiles(Chunk& chunk)
 }
 
 
+void RenderSystem::render_items()
+{
+  for (auto& item : entity_system.get_items())
+  {
+    SDL_Rect dest_rect;
+    dest_rect.x =
+      TILE_SIZE * (item.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+    dest_rect.y =
+      TILE_SIZE * (item.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    dest_rect.w = items1_coords[item.type].w;
+    dest_rect.h = items1_coords[item.type].h;
+
+    SDL_RenderCopy(
+      sdl_interface.renderer,
+      textures["items1"],
+      &items1_coords[item.type],
+      &dest_rect);
+  }
+}
+
+
 void RenderSystem::render_entities()
 {
   for (auto& entity : entity_system.get_dynamic_entities())
@@ -144,6 +171,7 @@ void RenderSystem::update()
   SDL_RenderClear(sdl_interface.renderer);
 
   render_chunks();
+  render_items();
   render_entities();
 
   interface_system.render();
