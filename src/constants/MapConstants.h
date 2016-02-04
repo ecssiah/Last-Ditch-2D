@@ -4,7 +4,6 @@
 namespace ld
 {
 
-constexpr int TILE_SIZE = 48;
 constexpr int NUM_CHUNKS_X = 2;
 constexpr int NUM_CHUNKS_Y = 2;
 constexpr int TILES_PER_CHUNK_X = 20;

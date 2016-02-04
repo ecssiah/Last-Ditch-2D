@@ -59,6 +59,15 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 }
 
 
+Chunk& MapSystem::get_chunk(float x, float y, int floor)
+{
+  int ix(std::floor(x / TILES_PER_CHUNK_X));
+  int iy(std::floor(y / TILES_PER_CHUNK_Y));
+
+  return get_chunk(ix, iy, floor);
+}
+
+
 Tile& MapSystem::get_tile(int x, int y, int floor)
 {
   auto& chunk = chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor];

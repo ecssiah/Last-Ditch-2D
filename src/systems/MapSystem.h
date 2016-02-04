@@ -26,6 +26,7 @@ public:
   MapSystem();
 
   Chunk& get_chunk(int x, int y, int floor) { return chunks[x][y][floor]; }
+  Chunk& get_chunk(float x, float y, int floor);
 
   Tile& get_tile(int x, int y, int floor);
   Tile& get_tile(float x, float y, int floor);

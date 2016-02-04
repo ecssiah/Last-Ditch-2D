@@ -36,8 +36,8 @@ void EntitySystem::setup_users()
   kadijah.floor = 0;
   kadijah.size = .48;
   kadijah.speed = 240;
-  kadijah.clip_rect.w = TILE_SIZE;
-  kadijah.clip_rect.h = TILE_SIZE;
+  kadijah.clip_rect.w = PIXELS_PER_UNIT;
+  kadijah.clip_rect.h = PIXELS_PER_UNIT;
 
   dynamic_entities.push_back(kadijah);
   active_user = &dynamic_entities.back();
@@ -62,25 +62,26 @@ void EntitySystem::setup_items()
     uniform_real_distribution<> x_position_choice(0, MAP_SIZE_X - 1);
     uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
 
+    StaticEntity item;
+    item.type = get_random_type();
+
     for (auto found = false; !found; )
     {
       float x = x_position_choice(rng);
       float y = y_position_choice(rng);
 
-      StaticEntity item;
-
-      bool clear =
+      auto clear =
 	!map_system.get_tile(x, y, 0).solid &&
+	!map_system.get_tile(x + 2.f * item.size, y, 0).solid &&
+	!map_system.get_tile(x, y + 2.f * item.size, 0).solid &&
 	!map_system.get_tile(x + 2.f * item.size, y + 2.f * item.size, 0).solid;
 
       if (clear)
       {
 	found = true;
-
-	item.type = get_random_type();
 	item.pos = {x, y};
 
-	items.push_back(item);
+	map_system.get_chunk(x, y, 0).items.push_back(item);
       }
     }
   }

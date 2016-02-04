@@ -1,5 +1,4 @@
 #include "RenderSystem.h"
-
 #include <iostream>
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL_image.h>
@@ -75,15 +74,13 @@ void RenderSystem::render_chunks()
 
       SDL_Rect dest_rect;
       dest_rect.x =
-	TILE_SIZE * (chunk.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+	PIXELS_PER_UNIT * (chunk.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
       dest_rect.y =
-	TILE_SIZE * (chunk.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-      dest_rect.w = TILE_SIZE * TILES_PER_CHUNK_X;
-      dest_rect.h = TILE_SIZE * TILES_PER_CHUNK_Y;
+	PIXELS_PER_UNIT * (chunk.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
+      dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
 
       SDL_RenderCopy(sdl_interface.renderer, textures[chunk.type], nullptr, &dest_rect);
-
-      render_tiles(chunk);
     }
   }
 }
@@ -98,18 +95,20 @@ void RenderSystem::render_tiles(Chunk& chunk)
       auto& tile = chunk.tiles[x][y];
 
       SDL_Rect clip_rect;
-      clip_rect.x = TILE_SIZE * (tileset1_coords[tile.type].x());
-      clip_rect.y = TILE_SIZE * (tileset1_coords[tile.type].y());
-      clip_rect.w = TILE_SIZE;
-      clip_rect.h = TILE_SIZE;
+      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
+      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[tile.type].y());
+      clip_rect.w = PIXELS_PER_UNIT;
+      clip_rect.h = PIXELS_PER_UNIT;
 
       SDL_Rect dest_rect;
       dest_rect.x =
-	TILE_SIZE * (chunk.pos.x() + x - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+	PIXELS_PER_UNIT *
+	(chunk.pos.x() + x - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
       dest_rect.y =
-	TILE_SIZE * (chunk.pos.y() + y - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-      dest_rect.w = TILE_SIZE;
-      dest_rect.h = TILE_SIZE;
+	PIXELS_PER_UNIT *
+	(chunk.pos.y() + y - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      dest_rect.w = PIXELS_PER_UNIT;
+      dest_rect.h = PIXELS_PER_UNIT;
 
       SDL_RenderCopyEx(
 	sdl_interface.renderer,
@@ -123,23 +122,23 @@ void RenderSystem::render_tiles(Chunk& chunk)
 }
 
 
-void RenderSystem::render_items()
+void RenderSystem::render_items(Chunk& chunk)
 {
-  for (auto& item : entity_system.get_items())
+  for (auto& item : chunk.items)
   {
     SDL_Rect clip_rect;
-    clip_rect.x = TILE_SIZE / 2 * (items1_coords[item.type].x());
-    clip_rect.y = TILE_SIZE / 2 * (items1_coords[item.type].y());
-    clip_rect.w = TILE_SIZE / 2;
-    clip_rect.h = TILE_SIZE / 2;
+    clip_rect.x = PIXELS_PER_UNIT / 2 * (items1_coords[item.type].x());
+    clip_rect.y = PIXELS_PER_UNIT / 2 * (items1_coords[item.type].y());
+    clip_rect.w = PIXELS_PER_UNIT / 2;
+    clip_rect.h = PIXELS_PER_UNIT / 2;
 
     SDL_Rect dest_rect;
     dest_rect.x =
-      TILE_SIZE * (item.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
     dest_rect.y =
-      TILE_SIZE * (item.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-    dest_rect.w = TILE_SIZE / 2;
-    dest_rect.h = TILE_SIZE / 2;
+      PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    dest_rect.w = PIXELS_PER_UNIT / 2;
+    dest_rect.h = PIXELS_PER_UNIT / 2;
 
     SDL_RenderCopy(sdl_interface.renderer, textures["items1"], &clip_rect, &dest_rect);
   }
@@ -148,15 +147,26 @@ void RenderSystem::render_items()
 
 void RenderSystem::render_entities()
 {
+  for (int x = 0; x < NUM_CHUNKS_X; ++x)
+  {
+    for (int y = 0; y < NUM_CHUNKS_Y; ++y)
+    {
+      auto& chunk = map_system.get_chunk(x, y, current_floor);
+
+      render_tiles(chunk);
+      render_items(chunk);
+    }
+  }
+
   for (auto& entity : entity_system.get_dynamic_entities())
   {
     SDL_Rect dest_rect;
     dest_rect.x =
-      TILE_SIZE * (entity.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (entity.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
     dest_rect.y =
-      TILE_SIZE * (entity.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-    dest_rect.w = TILE_SIZE;
-    dest_rect.h = TILE_SIZE;
+      PIXELS_PER_UNIT * (entity.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    dest_rect.w = PIXELS_PER_UNIT;
+    dest_rect.h = PIXELS_PER_UNIT;
 
     SDL_RenderCopy(
       sdl_interface.renderer,
@@ -173,7 +183,6 @@ void RenderSystem::update()
   SDL_RenderClear(sdl_interface.renderer);
 
   render_chunks();
-  render_items();
   render_entities();
 
   interface_system.render();

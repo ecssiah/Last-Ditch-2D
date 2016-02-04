@@ -23,7 +23,7 @@ class RenderSystem
 
   void render_chunks();
   void render_tiles(Chunk& chunk);
-  void render_items();
+  void render_items(Chunk& chunk);
   void render_entities();
 
   SDL_Interface& sdl_interface;

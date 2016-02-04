@@ -33,8 +33,8 @@ public:
 Eigen::Vector2i CameraSystem::get_pos_in_pixels()
 {
   Eigen::Vector2i pixel_pos(
-    TILE_SIZE * pos.x() + SCREEN_SIZE_X / 2,
-    TILE_SIZE * pos.y() + SCREEN_SIZE_Y / 2);
+    PIXELS_PER_UNIT * pos.x() + SCREEN_SIZE_X / 2,
+    PIXELS_PER_UNIT * pos.y() + SCREEN_SIZE_Y / 2);
 
   return pixel_pos;
 }

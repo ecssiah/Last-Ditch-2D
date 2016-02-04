@@ -36,11 +36,11 @@ public:
 
     SDL_Rect rect;
     rect.x =
-      TILE_SIZE * (vertices[0].x + .5 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (vertices[0].x + .5 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
     rect.y =
-      TILE_SIZE * (vertices[0].y + .5 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-    rect.w = TILE_SIZE;
-    rect.h = TILE_SIZE;
+      PIXELS_PER_UNIT * (vertices[0].y + .5 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    rect.w = PIXELS_PER_UNIT;
+    rect.h = PIXELS_PER_UNIT;
 
     SDL_RenderDrawRect(renderer, &rect);
   }
@@ -65,10 +65,10 @@ public:
 
       SDL_RenderDrawLine(
 	renderer,
-	TILE_SIZE * x1 + SCREEN_SIZE_X / 2,
-	TILE_SIZE * y1 + SCREEN_SIZE_Y / 2,
-	TILE_SIZE * x2 + SCREEN_SIZE_X / 2,
-	TILE_SIZE * y2 + SCREEN_SIZE_Y / 2);
+	PIXELS_PER_UNIT * x1 + SCREEN_SIZE_X / 2,
+	PIXELS_PER_UNIT * y1 + SCREEN_SIZE_Y / 2,
+	PIXELS_PER_UNIT * x2 + SCREEN_SIZE_X / 2,
+	PIXELS_PER_UNIT * y2 + SCREEN_SIZE_Y / 2);
     }
   }
 
