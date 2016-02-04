@@ -12,12 +12,12 @@ struct StaticEntity
   StaticEntity()
     : type(std::string()),
       pos(0, 0),
-      size(.5)
+      size(.25f)
   {}
 
   std::string type;
   Eigen::Vector2f pos;
-  double size;
+  float size;
 };
 
 }

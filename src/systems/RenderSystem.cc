@@ -52,8 +52,8 @@ void RenderSystem::setup_textures()
   tileset1_coords["stairs1"] = {0, 2};
 
   textures["items1"] = load_texture("items1");
-  items1_coords["scrub1"] = {0, 0, 48, 48};
-  items1_coords["container1"] = {53, 5, 19, 13};
+  items1_coords["scrub1"] = {0, 0};
+  items1_coords["container1"] = {1, 0};
 }
 
 
@@ -127,19 +127,21 @@ void RenderSystem::render_items()
 {
   for (auto& item : entity_system.get_items())
   {
+    SDL_Rect clip_rect;
+    clip_rect.x = TILE_SIZE / 2 * (items1_coords[item.type].x());
+    clip_rect.y = TILE_SIZE / 2 * (items1_coords[item.type].y());
+    clip_rect.w = TILE_SIZE / 2;
+    clip_rect.h = TILE_SIZE / 2;
+
     SDL_Rect dest_rect;
     dest_rect.x =
       TILE_SIZE * (item.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
     dest_rect.y =
       TILE_SIZE * (item.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-    dest_rect.w = items1_coords[item.type].w;
-    dest_rect.h = items1_coords[item.type].h;
+    dest_rect.w = TILE_SIZE / 2;
+    dest_rect.h = TILE_SIZE / 2;
 
-    SDL_RenderCopy(
-      sdl_interface.renderer,
-      textures["items1"],
-      &items1_coords[item.type],
-      &dest_rect);
+    SDL_RenderCopy(sdl_interface.renderer, textures["items1"], &clip_rect, &dest_rect);
   }
 }
 

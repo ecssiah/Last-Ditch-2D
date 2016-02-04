@@ -59,14 +59,30 @@ void EntitySystem::setup_items()
 
   for (auto i = 0; i < NUM_ITEMS; ++i)
   {
-    uniform_real_distribution<> x_position_choice(0, 20);
-    uniform_real_distribution<> y_position_choice(0, 20);
+    uniform_real_distribution<> x_position_choice(0, MAP_SIZE_X - 1);
+    uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
 
-    StaticEntity item;
-    item.type = get_random_type();
-    item.pos = {x_position_choice(rng), y_position_choice(rng)};
+    for (auto found = false; !found; )
+    {
+      float x = x_position_choice(rng);
+      float y = y_position_choice(rng);
 
-    items.push_back(item);
+      StaticEntity item;
+
+      bool clear =
+	!map_system.get_tile(x, y, 0).solid &&
+	!map_system.get_tile(x + 2.f * item.size, y + 2.f * item.size, 0).solid;
+
+      if (clear)
+      {
+	found = true;
+
+	item.type = get_random_type();
+	item.pos = {x, y};
+
+	items.push_back(item);
+      }
+    }
   }
 }
 

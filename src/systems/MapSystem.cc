@@ -67,6 +67,15 @@ Tile& MapSystem::get_tile(int x, int y, int floor)
 }
 
 
+Tile& MapSystem::get_tile(float x, float y, int floor)
+{
+  int ix(std::floor(x));
+  int iy(std::floor(y));
+
+  return get_tile(ix, iy, floor);
+}
+
+
 void MapSystem::set_tile(string type, int x, int y, int floor, float rotation, bool solid)
 {
   auto& tile = get_tile(x, y, floor);

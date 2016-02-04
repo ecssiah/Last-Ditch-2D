@@ -38,7 +38,7 @@ class RenderSystem
 
   std::map<std::string, SDL_Texture*> textures;
   std::map<std::string, Eigen::Vector2i> tileset1_coords;
-  std::map<std::string, SDL_Rect> items1_coords;
+  std::map<std::string, Eigen::Vector2i> items1_coords;
 
   int current_floor;
 

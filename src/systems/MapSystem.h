@@ -28,6 +28,7 @@ public:
   Chunk& get_chunk(int x, int y, int floor) { return chunks[x][y][floor]; }
 
   Tile& get_tile(int x, int y, int floor);
+  Tile& get_tile(float x, float y, int floor);
   void set_tile(
     std::string type, int x, int y, int floor, float rotation = 0, bool solid = true);
 };
