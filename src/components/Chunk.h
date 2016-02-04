@@ -17,12 +17,14 @@ struct Chunk
     : type("chunk_floor1"),
       pos(0, 0),
       tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
+      floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       items()
   {}
 
   std::string type;
   Eigen::Vector2i pos;
   std::vector<std::vector<Tile>> tiles;
+  std::vector<std::vector<Tile>> floor_tiles;
   std::vector<StaticEntity> items;
 };
 

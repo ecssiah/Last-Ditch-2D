@@ -23,6 +23,7 @@ class RenderSystem
 
   void render_chunks();
   void render_tiles(Chunk& chunk);
+  void render_floor_tiles(Chunk& chunk);
   void render_items(Chunk& chunk);
   void render_entities();
 

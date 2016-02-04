@@ -48,7 +48,9 @@ void RenderSystem::setup_textures()
   textures["tileset1"] = load_texture("tileset1");
   tileset1_coords["wall1"] = {0, 0};
   tileset1_coords["door1"] = {0, 1};
-  tileset1_coords["stairs1"] = {0, 2};
+  tileset1_coords["stairs_down1"] = {0, 2};
+  tileset1_coords["stairs_up1"] = {1, 2};
+  tileset1_coords["floor1"] = {0, 3};
 
   textures["items1"] = load_texture("items1");
   items1_coords["scrub1"] = {0, 0};
@@ -122,6 +124,42 @@ void RenderSystem::render_tiles(Chunk& chunk)
 }
 
 
+void RenderSystem::render_floor_tiles(Chunk& chunk)
+{
+  for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
+  {
+    for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
+    {
+      auto& tile = chunk.floor_tiles[x][y];
+
+      SDL_Rect clip_rect;
+      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
+      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[tile.type].y());
+      clip_rect.w = PIXELS_PER_UNIT;
+      clip_rect.h = PIXELS_PER_UNIT;
+
+      SDL_Rect dest_rect;
+      dest_rect.x =
+	PIXELS_PER_UNIT *
+	(chunk.pos.x() + x - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      dest_rect.y =
+	PIXELS_PER_UNIT *
+	(chunk.pos.y() + y - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      dest_rect.w = PIXELS_PER_UNIT;
+      dest_rect.h = PIXELS_PER_UNIT;
+
+      SDL_RenderCopyEx(
+	sdl_interface.renderer,
+	textures["tileset1"],
+	&clip_rect, &dest_rect,
+	tile.rotation,
+	nullptr,
+	SDL_FLIP_NONE);
+    }
+  }
+}
+
+
 void RenderSystem::render_items(Chunk& chunk)
 {
   for (auto& item : chunk.items)
@@ -153,6 +191,7 @@ void RenderSystem::render_entities()
     {
       auto& chunk = map_system.get_chunk(x, y, current_floor);
 
+      render_floor_tiles(chunk);
       render_tiles(chunk);
       render_items(chunk);
     }

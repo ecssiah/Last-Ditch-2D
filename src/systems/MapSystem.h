@@ -32,6 +32,11 @@ public:
   Tile& get_tile(float x, float y, int floor);
   void set_tile(
     std::string type, int x, int y, int floor, float rotation = 0, bool solid = true);
+
+  Tile& get_floor_tile(int x, int y, int floor);
+  Tile& get_floor_tile(float x, float y, int floor);
+  void set_floor_tile(
+    std::string type, int x, int y, int floor, float rotation = 0, bool solid = true);
 };
 
 }
