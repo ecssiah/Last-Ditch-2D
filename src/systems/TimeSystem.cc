@@ -16,7 +16,7 @@ TimeSystem::TimeSystem()
     month(1),
     day(28),
     hour(11),
-    minute(10)
+    minute(50)
 {
   cout << endl << "Time system ready" << endl;
 }

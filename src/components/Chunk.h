@@ -18,7 +18,8 @@ struct Chunk
       pos(0, 0),
       tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
-      items()
+      items(),
+      update(false)
   {}
 
   std::string type;
@@ -26,6 +27,7 @@ struct Chunk
   std::vector<std::vector<Tile>> tiles;
   std::vector<std::vector<Tile>> floor_tiles;
   std::vector<StaticEntity> items;
+  bool update;
 };
 
 }

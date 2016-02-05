@@ -11,12 +11,14 @@ struct Input
       down(false),
       left(false),
       right(false),
-      exit(false)
+      exit(false),
+      activate(false)
   {}
 
   bool up, down;
   bool left, right;
   bool exit;
+  bool activate;
 };
 
 }

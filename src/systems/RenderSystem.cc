@@ -60,7 +60,7 @@ void RenderSystem::setup_textures()
 
 SDL_Texture* RenderSystem::load_texture(std::string name)
 {
-  auto path = "media/textures/" + name + ".png";
+  auto path("media/textures/" + name + ".png");
 
   return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }
@@ -72,7 +72,7 @@ void RenderSystem::render_chunks()
   {
     for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
     {
-      auto& chunk = map_system.get_chunk(x, y, current_floor);
+      auto& chunk(map_system.get_chunk(x, y, current_floor));
 
       SDL_Rect dest_rect;
       dest_rect.x =
@@ -94,7 +94,7 @@ void RenderSystem::render_tiles(Chunk& chunk)
   {
     for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
     {
-      auto& tile = chunk.tiles[x][y];
+      auto& tile(chunk.tiles[x][y]);
 
       SDL_Rect clip_rect;
       clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
@@ -130,7 +130,7 @@ void RenderSystem::render_floor_tiles(Chunk& chunk)
   {
     for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
     {
-      auto& tile = chunk.floor_tiles[x][y];
+      auto& tile(chunk.floor_tiles[x][y]);
 
       SDL_Rect clip_rect;
       clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
@@ -189,7 +189,7 @@ void RenderSystem::render_entities()
   {
     for (int y = 0; y < NUM_CHUNKS_Y; ++y)
     {
-      auto& chunk = map_system.get_chunk(x, y, current_floor);
+      auto& chunk(map_system.get_chunk(x, y, current_floor));
 
       render_floor_tiles(chunk);
       render_tiles(chunk);

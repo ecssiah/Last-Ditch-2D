@@ -14,9 +14,7 @@ PhysicsSystem::PhysicsSystem(
 )
   : map_system(map_system_),
     entity_system(entity_system_),
-    world(new b2World({0, 0})),
-    dynamic_bodies(),
-    tile_bodies()
+    world(new b2World({0, 0}))
 {
   setup_entity_bodies();
   setup_tile_bodies();
@@ -76,7 +74,7 @@ void PhysicsSystem::setup_entity_bodies()
     auto body = world->CreateBody(&body_def);
 
     b2CircleShape circle_shape;
-    circle_shape.m_radius = entity.size;
+    circle_shape.m_radius = entity.radius;
 
     b2FixtureDef fixture_def;
     fixture_def.shape = &circle_shape;
@@ -85,7 +83,6 @@ void PhysicsSystem::setup_entity_bodies()
     body->CreateFixture(&fixture_def);
 
     entity.body = body;
-    dynamic_bodies.push_back(body);
   }
 }
 
@@ -96,7 +93,9 @@ void PhysicsSystem::setup_tile_bodies()
   {
     for (auto y = 0; y < MAP_SIZE_Y; ++y)
     {
-      if (map_system.get_tile(x, y, 0).type != "")
+      auto& tile(map_system.get_tile(x, y, 0));
+
+      if (tile.solid)
       {
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
@@ -116,8 +115,14 @@ void PhysicsSystem::setup_tile_bodies()
 
 	body->CreateFixture(&fixture_def);
 
-	tile_bodies.push_back(body);
+	tile.body = body;
       }
     }
   }
+}
+
+
+void PhysicsSystem::destroy_body(b2Body* body)
+{
+  world->DestroyBody(body);
 }

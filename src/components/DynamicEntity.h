@@ -18,7 +18,7 @@ struct DynamicEntity
       vel(0, 0),
       speed(100),
       floor(0),
-      size(.5),
+      radius(.5),
       clip_rect(),
       body(nullptr)
   {}
@@ -27,7 +27,7 @@ struct DynamicEntity
   Eigen::Vector2f pos, vel;
   double speed;
   int floor;
-  double size;
+  double radius;
   SDL_Rect clip_rect;
   b2Body* body;
 };

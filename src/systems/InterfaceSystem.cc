@@ -40,7 +40,10 @@ void InterfaceSystem::update()
     time_system.get_day() << "/" <<
     time_system.get_month() << "/" <<
     time_system.get_year() << " ";
-  ss << time_system.get_hour() << ":" << time_system.get_minute();
+  ss << time_system.get_hour() << ":";
+
+  auto minute = time_system.get_minute();
+  minute < 10 ? ss << "0" << minute : ss << minute;
 
   surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
 

@@ -19,6 +19,7 @@ class MapSystem
 
   void layout_room(int x, int y, int w, int h, int floor);
 
+  bool update;
   std::vector<std::vector<std::vector<Chunk>>> chunks;
   std::vector<std::vector<Room>> rooms;
 

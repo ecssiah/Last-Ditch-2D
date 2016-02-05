@@ -34,7 +34,7 @@ void EntitySystem::setup_users()
   kadijah.type = "kadijah";
   kadijah.pos = {2, 3};
   kadijah.floor = 0;
-  kadijah.size = .48;
+  kadijah.radius = .48;
   kadijah.speed = 240;
   kadijah.clip_rect.w = PIXELS_PER_UNIT;
   kadijah.clip_rect.h = PIXELS_PER_UNIT;
@@ -67,14 +67,15 @@ void EntitySystem::setup_items()
 
     for (auto found = false; !found; )
     {
-      float x = x_position_choice(rng);
-      float y = y_position_choice(rng);
+      float x(x_position_choice(rng));
+      float y(y_position_choice(rng));
+      float size(2.f * item.radius);
 
-      auto clear =
-	!map_system.get_tile(x, y, 0).solid &&
-	!map_system.get_tile(x + 2.f * item.size, y, 0).solid &&
-	!map_system.get_tile(x, y + 2.f * item.size, 0).solid &&
-	!map_system.get_tile(x + 2.f * item.size, y + 2.f * item.size, 0).solid;
+      auto clear(
+	!map_system.get_tile(x,        y,        0).solid &&
+	!map_system.get_tile(x + size, y,        0).solid &&
+	!map_system.get_tile(x,        y + size, 0).solid &&
+	!map_system.get_tile(x + size, y + size, 0).solid);
 
       if (clear)
       {
@@ -104,4 +105,10 @@ void EntitySystem::update()
   }
   else
     active_user->vel = Vector2f::Zero();
+
+  if (input.activate)
+  {
+    input.activate = false;
+    cout << "HEY-O!" << endl;
+  }
 }

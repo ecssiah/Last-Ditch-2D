@@ -38,6 +38,7 @@ void InputSystem::update()
     case SDL_KEYUP:
       switch (e.key.keysym.sym)
       {
+      case SDLK_e: input.activate = true; break;
       case SDLK_w: input.up = false; break;
       case SDLK_a: input.left = false; break;
       case SDLK_s: input.down = false; break;

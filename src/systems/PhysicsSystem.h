@@ -26,15 +26,13 @@ class PhysicsSystem
 
   b2World* world;
 
-  std::vector<b2Body*> dynamic_bodies;
-  std::vector<b2Body*> tile_bodies;
-
 public:
   PhysicsSystem(SDL_Renderer* renderer, MapSystem& map_system, EntitySystem& entity_system);
   ~PhysicsSystem();
 
   void update(double dt);
 
+  void destroy_body(b2Body* body);
   void set_debug_draw(DebugDraw& debug_draw);
   void render_debug();
 };
