@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
+#include "Door.h"
 #include "Tile.h"
 #include "StaticEntity.h"
 
@@ -19,6 +20,7 @@ struct Chunk
       tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       items(),
+      doors(),
       update(false)
   {}
 
@@ -27,6 +29,7 @@ struct Chunk
   std::vector<std::vector<Tile>> tiles;
   std::vector<std::vector<Tile>> floor_tiles;
   std::vector<StaticEntity> items;
+  std::vector<Door> doors;
   bool update;
 };
 

@@ -109,6 +109,7 @@ void EntitySystem::update()
   if (input.activate)
   {
     input.activate = false;
-    cout << "HEY-O!" << endl;
+
+    cout << input.mx << " " << input.my << endl;
   }
 }

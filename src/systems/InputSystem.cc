@@ -38,7 +38,6 @@ void InputSystem::update()
     case SDL_KEYUP:
       switch (e.key.keysym.sym)
       {
-      case SDLK_e: input.activate = true; break;
       case SDLK_w: input.up = false; break;
       case SDLK_a: input.left = false; break;
       case SDLK_s: input.down = false; break;
@@ -46,6 +45,34 @@ void InputSystem::update()
       default: break;
       }
       break;
+    case SDL_MOUSEBUTTONDOWN:
+      switch (e.button.button)
+      {
+      case SDL_BUTTON_LEFT: break;
+      case SDL_BUTTON_RIGHT: break;
+      default: break;
+      }
+      break;
+    case SDL_MOUSEBUTTONUP:
+      switch (e.button.button)
+      {
+      case SDL_BUTTON_LEFT: left_click(e.button.x, e.button.y); break;
+      case SDL_BUTTON_RIGHT: input.sub_menu = true; break;
+      default: break;
+      }
+      break;
+    case SDL_MOUSEMOTION:
+      break;
+    default:
+      break;
     }
   }
+}
+
+
+void InputSystem::left_click(Sint32 mx, Sint32 my)
+{
+  input.activate = true;
+  input.mx = mx;
+  input.my = my;
 }

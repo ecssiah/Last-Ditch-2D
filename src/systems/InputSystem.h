@@ -8,6 +8,8 @@ namespace ld
 
 class InputSystem
 {
+  void left_click(Sint32 mx, Sint32 my);
+
   Input& input;
 
 public:
