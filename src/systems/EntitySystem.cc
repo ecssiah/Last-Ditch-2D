@@ -110,6 +110,14 @@ void EntitySystem::update()
   {
     input.activate = false;
 
-    cout << input.mx << " " << input.my << endl;
+    for (auto& door : map_system.get_chunk(active_user->pos.x(), active_user->pos.y(), active_user->floor).doors)
+    {
+      auto displacement((active_user->pos - door.pos).squaredNorm());
+
+      if (displacement < 1.5f)
+      {
+	cout << "Doors are close..." << endl;
+      }
+    }
   }
 }
