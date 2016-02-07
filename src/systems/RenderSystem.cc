@@ -68,9 +68,9 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 
 void RenderSystem::render_chunks()
 {
-  for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+  for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
-    for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+    for (int y = 0; y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
     {
       auto& chunk(map_system.get_chunk(x, y, current_floor));
 
@@ -185,9 +185,9 @@ void RenderSystem::render_items(Chunk& chunk)
 
 void RenderSystem::render_entities()
 {
-  for (int x = 0; x < NUM_CHUNKS_X; ++x)
+  for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
-    for (int y = 0; y < NUM_CHUNKS_Y; ++y)
+    for (int y = 0; y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
     {
       auto& chunk(map_system.get_chunk(x, y, current_floor));
 
@@ -226,7 +226,7 @@ void RenderSystem::update()
 
   interface_system.render();
 
-  // physics_system.render_debug();
+  physics_system.render_debug();
 
   SDL_RenderPresent(sdl_interface.renderer);
 }

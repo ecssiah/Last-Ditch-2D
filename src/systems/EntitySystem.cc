@@ -32,7 +32,7 @@ void EntitySystem::setup_users()
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {2, 3};
+  kadijah.pos = {1, 2};
   kadijah.floor = 0;
   kadijah.radius = .48;
   kadijah.speed = 240;
@@ -108,19 +108,24 @@ void EntitySystem::update()
 
   if (input.activate)
   {
-    Input.activate = false;
+    input.activate = false;
+
+    Vector2f pos_center(active_user->pos.x() + .5f, active_user->pos.y() + .5f);
 
     auto& chunk(
-      map_system.get_chunk(
-	active_user->pos.x(), active_user->pos.y(), active_user->floor));
+      map_system.get_chunk(pos_center.x(), pos_center.y(), active_user->floor));
 
     for (auto& door : chunk.doors)
     {
-      auto dist_sqrd((active_user->pos - door.pos).squaredNorm());
+      auto dist_sqrd((pos_center - door.pos).squaredNorm());
 
-      if (dist_sqrd < 1.5f)
+      if (dist_sqrd < 1.f)
       {
-	cout << "Doors are close..." << endl;
+	if (!door.locked)
+	{
+	  door.open = !door.open;
+	  map_system.request_tile_update(door.pos.x(), door.pos.y(), active_user->floor);
+	}
       }
     }
   }

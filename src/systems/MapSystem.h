@@ -26,7 +26,9 @@ class MapSystem
 public:
   MapSystem();
 
-  Chunk& get_chunk(int x, int y, int floor) { return chunks[x][y][floor]; }
+  void request_tile_update(int x, int y, int floor);
+
+  Chunk& get_chunk(int x, int y, int floor);
   Chunk& get_chunk(float x, float y, int floor);
 
   Tile& get_tile(int x, int y, int floor);

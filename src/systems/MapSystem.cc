@@ -36,7 +36,7 @@ void MapSystem::setup_map()
     }
   }
 
-  layout_room(4, 4, 9, 11, 0);
+  layout_room(5, 4, 9, 11, 0);
 }
 
 
@@ -60,15 +60,33 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 
   float x = x_;
   float y = y_ + h_ / 2.f;
-
   get_chunk(x, y, floor_).doors.push_back({x, y});
-  set_tile("door1", x, y, floor_, 0);
+
+  set_tile("door1", x_, y_ + h_ / 2, floor_, 0);
 
   set_floor_tile("floor1", x_, y_ + h_ / 2, floor_, 0);
   set_tile("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
   set_tile("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
 
   rooms[floor_].push_back({x_, y_, w_, h_, floor_});
+}
+
+
+void MapSystem::request_tile_update(int x, int y, int floor)
+{
+  update = true;
+
+  auto& chunk(get_chunk(x, y, floor));
+  chunk.update = true;
+
+  auto& tile(chunk.tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y]);
+  tile.update = true;
+}
+
+
+Chunk& MapSystem::get_chunk(int x, int y, int floor)
+{
+  return chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor];
 }
 
 
