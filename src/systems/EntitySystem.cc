@@ -108,13 +108,17 @@ void EntitySystem::update()
 
   if (input.activate)
   {
-    input.activate = false;
+    Input.activate = false;
 
-    for (auto& door : map_system.get_chunk(active_user->pos.x(), active_user->pos.y(), active_user->floor).doors)
+    auto& chunk(
+      map_system.get_chunk(
+	active_user->pos.x(), active_user->pos.y(), active_user->floor));
+
+    for (auto& door : chunk.doors)
     {
-      auto displacement((active_user->pos - door.pos).squaredNorm());
+      auto dist_sqrd((active_user->pos - door.pos).squaredNorm());
 
-      if (displacement < 1.5f)
+      if (dist_sqrd < 1.5f)
       {
 	cout << "Doors are close..." << endl;
       }

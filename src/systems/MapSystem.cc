@@ -62,7 +62,7 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
   float y = y_ + h_ / 2.f;
 
   get_chunk(x, y, floor_).doors.push_back({x, y});
-  set_tile("door1", x_, y_ + h_ / 2, floor_, 0);
+  set_tile("door1", x, y, floor_, 0);
 
   set_floor_tile("floor1", x_, y_ + h_ / 2, floor_, 0);
   set_tile("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
