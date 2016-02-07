@@ -11,13 +11,59 @@ using namespace Eigen;
 using namespace std;
 
 MapSystem::MapSystem()
-  : update(false),
+  : dirty(false),
+    dirty_tiles(),
     chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
     rooms(NUM_FLOORS)
 {
   setup_map();
 
   cout << "Map system ready" << endl;
+}
+
+
+void MapSystem::update()
+{
+  if (dirty)
+  {
+    dirty = false;
+
+    for (auto floor = 0; floor < NUM_FLOORS; ++floor)
+    {
+      for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+      {
+	for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+	{
+	  auto& chunk(chunks[x][y][floor]);
+
+	  if (chunk.dirty)
+	  {
+	    chunk.dirty = false;
+
+	    for (auto cx = 0; cx < TILES_PER_CHUNK_X; ++cx)
+	    {
+	      for (auto cy = 0; cy < TILES_PER_CHUNK_Y; ++cy)
+	      {
+		auto& tile(chunk.tiles[cx][cy]);
+
+		if (tile.dirty)
+		{
+		  tile.dirty = false;
+
+		  set_tile(
+		    tile.type,
+		    tile.pos.x(), tile.pos.y(), floor,
+		    tile.rotation, tile.solid);
+
+		  dirty_tiles.push_back(&tile);
+		}
+	      }
+	    }
+	  }
+	}
+      }
+    }
+  }
 }
 
 
@@ -74,13 +120,13 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 
 void MapSystem::request_tile_update(int x, int y, int floor)
 {
-  update = true;
+  dirty = true;
 
   auto& chunk(get_chunk(x, y, floor));
-  chunk.update = true;
+  chunk.dirty = true;
 
   auto& tile(chunk.tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y]);
-  tile.update = true;
+  tile.dirty = true;
 }
 
 

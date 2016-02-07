@@ -123,7 +123,17 @@ void EntitySystem::update()
       {
 	if (!door.locked)
 	{
-	  door.open = !door.open;
+	  if (!door.open)
+	  {
+	    door.open = true;
+	    map_system.set_tile("", door.pos.x(), door.pos.y(), active_user->floor);
+	  }
+	  else
+	  {
+	    door.open = false;
+	    map_system.set_tile("door1", door.pos.x(), door.pos.y(), active_user->floor);
+	  }
+
 	  map_system.request_tile_update(door.pos.x(), door.pos.y(), active_user->floor);
 	}
       }

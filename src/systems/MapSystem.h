@@ -19,13 +19,18 @@ class MapSystem
 
   void layout_room(int x, int y, int w, int h, int floor);
 
-  bool update;
+  bool dirty;
+  std::vector<Tile*> dirty_tiles;
+
   std::vector<std::vector<std::vector<Chunk>>> chunks;
   std::vector<std::vector<Room>> rooms;
 
 public:
   MapSystem();
 
+  void update();
+
+  std::vector<Tile*>& get_dirty_tiles() { return dirty_tiles; }
   void request_tile_update(int x, int y, int floor);
 
   Chunk& get_chunk(int x, int y, int floor);

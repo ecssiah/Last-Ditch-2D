@@ -13,7 +13,7 @@ struct Tile
       solid(false),
       rotation(0.0),
       body(nullptr),
-      update(false)
+      dirty(false)
   {}
 
   std::string type;
@@ -21,7 +21,7 @@ struct Tile
   bool solid;
   double rotation;
   b2Body* body;
-  bool update;
+  bool dirty;
 };
 
 #endif /* TILE_H */

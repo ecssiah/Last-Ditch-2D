@@ -21,6 +21,8 @@ class PhysicsSystem
   void setup_tile_bodies();
   void setup_entity_bodies();
 
+  void update_dirty_tiles();
+
   MapSystem& map_system;
   EntitySystem& entity_system;
 

@@ -29,6 +29,7 @@ LastDitch::LastDitch()
 
     input_system.update();
     entity_system.update();
+    map_system.update();
     physics_system.update(dt);
     camera_system.update();
     interface_system.update();

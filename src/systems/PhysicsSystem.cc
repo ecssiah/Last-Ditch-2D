@@ -31,6 +31,8 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(double dt)
 {
+  update_dirty_tiles();
+
   auto& dynamic_entities = entity_system.get_dynamic_entities();
 
   for (auto& entity : dynamic_entities)
@@ -44,6 +46,21 @@ void PhysicsSystem::update(double dt)
 
   for (auto& entity : dynamic_entities)
     entity.pos = {entity.body->GetPosition().x, entity.body->GetPosition().y};
+}
+
+
+void PhysicsSystem::update_dirty_tiles()
+{
+  auto& dirty_tiles(map_system.get_dirty_tiles());
+
+  for (auto tile : dirty_tiles)
+  {
+    if (tile->body)
+    {
+      destroy_body(tile->body);
+      tile->body = nullptr;
+    }
+  }
 }
 
 
