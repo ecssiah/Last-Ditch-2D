@@ -6,31 +6,30 @@
 #include <vector>
 
 #include "Door.h"
+#include "Item.h"
 #include "Tile.h"
 #include "StaticEntity.h"
 
 namespace ld
 {
 
-struct Chunk
+struct Chunk : public StaticEntity
 {
   Chunk()
-    : type("chunk_floor1"),
-      pos(0, 0),
+    : StaticEntity(),
       tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       items(),
-      doors(),
-      dirty(false)
-  {}
+      doors()
+  {
+    type = "chunk_floor1";
+  }
 
-  std::string type;
-  Eigen::Vector2i pos;
   std::vector<std::vector<Tile>> tiles;
   std::vector<std::vector<Tile>> floor_tiles;
-  std::vector<StaticEntity> items;
+
+  std::vector<Item> items;
   std::vector<Door> doors;
-  bool dirty;
 };
 
 }

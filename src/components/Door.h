@@ -3,16 +3,23 @@
 
 #include <eigen3/Eigen/Geometry>
 
-struct Door
+#include "StaticEntity.h"
+
+namespace ld
+{
+
+struct Door : public StaticEntity
 {
   Door(float x, float y)
     : open(false),
-      locked(false),
-      pos(x, y)
-  {}
+      locked(false)
+  {
+    pos = {x, y};
+  }
 
-  Eigen::Vector2f pos;
   bool open, locked;
 };
+
+}
 
 #endif /* DOOR_H */

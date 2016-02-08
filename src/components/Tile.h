@@ -5,23 +5,23 @@
 #include <eigen3/Eigen/Geometry>
 #include <string>
 
-struct Tile
+#include "StaticEntity.h"
+
+namespace ld
+{
+
+struct Tile : public StaticEntity
 {
   Tile()
-    : type(std::string()),
-      pos(0, 0),
+    : StaticEntity(),
       solid(false),
-      rotation(0.0),
-      body(nullptr),
-      dirty(false)
+      rotation(0.f)
   {}
 
-  std::string type;
-  Eigen::Vector2i pos;
   bool solid;
-  double rotation;
-  b2Body* body;
-  bool dirty;
+  float rotation;
 };
+
+}
 
 #endif /* TILE_H */

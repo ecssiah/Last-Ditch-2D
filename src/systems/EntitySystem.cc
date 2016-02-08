@@ -4,6 +4,7 @@
 #include <iostream>
 #include <random>
 
+#include "../components/Item.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 
@@ -62,7 +63,7 @@ void EntitySystem::setup_items()
     uniform_real_distribution<> x_position_choice(0, MAP_SIZE_X - 1);
     uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
 
-    StaticEntity item;
+    Item item;
     item.type = get_random_type();
 
     for (auto found = false; !found; )
@@ -110,7 +111,7 @@ void EntitySystem::update()
   {
     input.activate = false;
 
-    Vector2f pos_center(active_user->pos.x() + .5f, active_user->pos.y() + .5f);
+    Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
 
     auto& chunk(
       map_system.get_chunk(pos_center.x(), pos_center.y(), active_user->floor));
@@ -119,7 +120,7 @@ void EntitySystem::update()
     {
       auto dist_sqrd((pos_center - door.pos).squaredNorm());
 
-      if (dist_sqrd < 1.f)
+      if (dist_sqrd < 2.f)
       {
 	if (!door.locked)
 	{
