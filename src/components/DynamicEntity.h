@@ -14,6 +14,7 @@ struct DynamicEntity
   DynamicEntity()
     : name(std::string()),
       type(std::string()),
+      texture_name(std::string()),
       pos(0, 0),
       vel(0, 0),
       speed(100),
@@ -24,6 +25,7 @@ struct DynamicEntity
   {}
 
   std::string name, type;
+  std::string texture_name;
   Eigen::Vector2f pos, vel;
   double speed;
   int floor;

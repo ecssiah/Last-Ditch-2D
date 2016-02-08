@@ -11,16 +11,20 @@ namespace ld
 struct StaticEntity
 {
   StaticEntity()
-    : type(std::string()),
+    : texture_name(std::string()),
       pos(0, 0),
       radius(.25f),
+      rotation(0.f),
+      solid(false),
       body(nullptr),
       dirty(false)
   {}
 
-  std::string type;
+  std::string texture_name;
   Eigen::Vector2f pos;
   float radius;
+  float rotation;
+  bool solid;
   b2Body* body;
   bool dirty;
 };

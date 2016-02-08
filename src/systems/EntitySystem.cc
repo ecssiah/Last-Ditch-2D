@@ -22,7 +22,7 @@ EntitySystem::EntitySystem(mt19937& rng_, Input& input_, MapSystem& map_system_)
     item_types()
 {
   setup_users();
-  setup_items();
+  // setup_items();
 
   cout << "Entity system ready" << endl;
 }
@@ -32,7 +32,8 @@ void EntitySystem::setup_users()
 {
   DynamicEntity kadijah;
   kadijah.name = "Kadijah";
-  kadijah.type = "kadijah";
+  kadijah.type = "user";
+  kadijah.texture_name = "kadijah";
   kadijah.pos = {1, 2};
   kadijah.floor = 0;
   kadijah.radius = .48;
@@ -64,7 +65,7 @@ void EntitySystem::setup_items()
     uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
 
     Item item;
-    item.type = get_random_type();
+    item.texture_name = get_random_type();
 
     for (auto found = false; !found; )
     {
@@ -73,10 +74,10 @@ void EntitySystem::setup_items()
       float size(2.f * item.radius);
 
       auto clear(
-	!map_system.get_tile(x,        y,        0).solid &&
-	!map_system.get_tile(x + size, y,        0).solid &&
-	!map_system.get_tile(x,        y + size, 0).solid &&
-	!map_system.get_tile(x + size, y + size, 0).solid);
+	!map_system.get_entity(x,        y,        0).solid &&
+	!map_system.get_entity(x + size, y,        0).solid &&
+	!map_system.get_entity(x,        y + size, 0).solid &&
+	!map_system.get_entity(x + size, y + size, 0).solid);
 
       if (clear)
       {
@@ -115,29 +116,5 @@ void EntitySystem::update()
 
     auto& chunk(
       map_system.get_chunk(pos_center.x(), pos_center.y(), active_user->floor));
-
-    for (auto& door : chunk.doors)
-    {
-      auto dist_sqrd((pos_center - door.pos).squaredNorm());
-
-      if (dist_sqrd < 2.f)
-      {
-	if (!door.locked)
-	{
-	  if (!door.open)
-	  {
-	    door.open = true;
-	    map_system.set_tile("", door.pos.x(), door.pos.y(), active_user->floor);
-	  }
-	  else
-	  {
-	    door.open = false;
-	    map_system.set_tile("door1", door.pos.x(), door.pos.y(), active_user->floor);
-	  }
-
-	  map_system.request_tile_update(door.pos.x(), door.pos.y(), active_user->floor);
-	}
-      }
-    }
   }
 }

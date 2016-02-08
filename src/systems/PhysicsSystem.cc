@@ -16,8 +16,8 @@ PhysicsSystem::PhysicsSystem(
     entity_system(entity_system_),
     world(new b2World({0, 0}))
 {
-  setup_entity_bodies();
-  setup_tile_bodies();
+  setup_dynamic_bodies();
+  setup_static_bodies();
 
   cout << "Physics system ready" << endl;
 }
@@ -31,7 +31,7 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(double dt)
 {
-  update_dirty_tiles();
+  cleanup_dirty_entities();
 
   auto& dynamic_entities = entity_system.get_dynamic_entities();
 
@@ -49,16 +49,16 @@ void PhysicsSystem::update(double dt)
 }
 
 
-void PhysicsSystem::update_dirty_tiles()
+void PhysicsSystem::cleanup_dirty_entities()
 {
-  auto& dirty_tiles(map_system.get_dirty_tiles());
+  auto& dirty_entities(map_system.get_dirty_entities());
 
-  for (auto tile : dirty_tiles)
+  for (auto entity : dirty_entities)
   {
-    if (tile->body)
+    if (entity->body)
     {
-      destroy_body(tile->body);
-      tile->body = nullptr;
+      destroy_body(entity->body);
+      entity->body = nullptr;
     }
   }
 }
@@ -76,7 +76,7 @@ void PhysicsSystem::render_debug()
 }
 
 
-void PhysicsSystem::setup_entity_bodies()
+void PhysicsSystem::setup_dynamic_bodies()
 {
   for (auto& entity : entity_system.get_dynamic_entities())
   {
@@ -88,7 +88,7 @@ void PhysicsSystem::setup_entity_bodies()
     body_def.fixedRotation = true;
     body_def.active = true;
 
-    auto body = world->CreateBody(&body_def);
+    auto body(world->CreateBody(&body_def));
 
     b2CircleShape circle_shape;
     circle_shape.m_radius = entity.radius;
@@ -104,15 +104,15 @@ void PhysicsSystem::setup_entity_bodies()
 }
 
 
-void PhysicsSystem::setup_tile_bodies()
+void PhysicsSystem::setup_static_bodies()
 {
   for (auto x = 0; x < MAP_SIZE_X; ++x)
   {
     for (auto y = 0; y < MAP_SIZE_Y; ++y)
     {
-      auto& tile(map_system.get_tile(x, y, 0));
+      auto& entity(map_system.get_entity(x, y, 0));
 
-      if (tile.solid)
+      if (entity.solid)
       {
 	b2BodyDef body_def;
 	body_def.type = b2_staticBody;
@@ -121,7 +121,7 @@ void PhysicsSystem::setup_tile_bodies()
 	body_def.fixedRotation = true;
 	body_def.active = true;
 
-	auto body = world->CreateBody(&body_def);
+	auto body(world->CreateBody(&body_def));
 
 	b2PolygonShape polygon_shape;
 	polygon_shape.SetAsBox(.5, .5);
@@ -132,7 +132,7 @@ void PhysicsSystem::setup_tile_bodies()
 
 	body->CreateFixture(&fixture_def);
 
-	tile.body = body;
+	entity.body = body;
       }
     }
   }

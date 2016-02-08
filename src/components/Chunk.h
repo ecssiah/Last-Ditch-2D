@@ -5,9 +5,7 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
-#include "Door.h"
 #include "Item.h"
-#include "Tile.h"
 #include "StaticEntity.h"
 
 namespace ld
@@ -17,19 +15,17 @@ struct Chunk : public StaticEntity
 {
   Chunk()
     : StaticEntity(),
-      tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
-      floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
-      items(),
-      doors()
+      entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, StaticEntity()}),
+      floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, StaticEntity()}),
+      items()
   {
-    type = "chunk_floor1";
+    texture_name = "chunk_floor1";
   }
 
-  std::vector<std::vector<Tile>> tiles;
-  std::vector<std::vector<Tile>> floor_tiles;
+  std::vector<std::vector<StaticEntity>> entities;
+  std::vector<std::vector<StaticEntity>> floor_entities;
 
   std::vector<Item> items;
-  std::vector<Door> doors;
 };
 
 }

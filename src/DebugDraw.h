@@ -53,7 +53,7 @@ public:
   {
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
-    auto sides = 8;
+    auto sides = 16;
     auto step = 2 * M_PI / sides;
 
     for (auto alpha = 0.0; alpha < 2 * M_PI; alpha += step)

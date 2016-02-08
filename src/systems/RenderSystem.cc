@@ -66,7 +66,7 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 }
 
 
-void RenderSystem::render_chunks()
+void RenderSystem::render_chunk_floors()
 {
   for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
@@ -82,23 +82,24 @@ void RenderSystem::render_chunks()
       dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
       dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
 
-      SDL_RenderCopy(sdl_interface.renderer, textures[chunk.type], nullptr, &dest_rect);
+      SDL_RenderCopy(
+	sdl_interface.renderer, textures[chunk.texture_name], nullptr, &dest_rect);
     }
   }
 }
 
 
-void RenderSystem::render_tiles(Chunk& chunk)
+void RenderSystem::render_entities(Chunk& chunk)
 {
   for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
   {
     for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
     {
-      auto& tile(chunk.tiles[x][y]);
+      auto& entity(chunk.entities[x][y]);
 
       SDL_Rect clip_rect;
-      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
-      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[tile.type].y());
+      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[entity.texture_name].x());
+      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[entity.texture_name].y());
       clip_rect.w = PIXELS_PER_UNIT;
       clip_rect.h = PIXELS_PER_UNIT;
 
@@ -116,7 +117,7 @@ void RenderSystem::render_tiles(Chunk& chunk)
 	sdl_interface.renderer,
 	textures["tileset1"],
 	&clip_rect, &dest_rect,
-	tile.rotation,
+	entity.rotation,
 	nullptr,
 	SDL_FLIP_NONE);
     }
@@ -124,17 +125,17 @@ void RenderSystem::render_tiles(Chunk& chunk)
 }
 
 
-void RenderSystem::render_floor_tiles(Chunk& chunk)
+void RenderSystem::render_floor_entities(Chunk& chunk)
 {
   for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
   {
     for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
     {
-      auto& tile(chunk.floor_tiles[x][y]);
+      auto& entity(chunk.floor_entities[x][y]);
 
       SDL_Rect clip_rect;
-      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[tile.type].x());
-      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[tile.type].y());
+      clip_rect.x = PIXELS_PER_UNIT * (tileset1_coords[entity.texture_name].x());
+      clip_rect.y = PIXELS_PER_UNIT * (tileset1_coords[entity.texture_name].y());
       clip_rect.w = PIXELS_PER_UNIT;
       clip_rect.h = PIXELS_PER_UNIT;
 
@@ -152,7 +153,7 @@ void RenderSystem::render_floor_tiles(Chunk& chunk)
 	sdl_interface.renderer,
 	textures["tileset1"],
 	&clip_rect, &dest_rect,
-	tile.rotation,
+	entity.rotation,
 	nullptr,
 	SDL_FLIP_NONE);
     }
@@ -165,8 +166,8 @@ void RenderSystem::render_items(Chunk& chunk)
   for (auto& item : chunk.items)
   {
     SDL_Rect clip_rect;
-    clip_rect.x = PIXELS_PER_UNIT / 2 * (items1_coords[item.type].x());
-    clip_rect.y = PIXELS_PER_UNIT / 2 * (items1_coords[item.type].y());
+    clip_rect.x = PIXELS_PER_UNIT / 2 * (items1_coords[item.texture_name].x());
+    clip_rect.y = PIXELS_PER_UNIT / 2 * (items1_coords[item.texture_name].y());
     clip_rect.w = PIXELS_PER_UNIT / 2;
     clip_rect.h = PIXELS_PER_UNIT / 2;
 
@@ -183,16 +184,18 @@ void RenderSystem::render_items(Chunk& chunk)
 }
 
 
-void RenderSystem::render_entities()
+void RenderSystem::render()
 {
+  render_chunk_floors();
+
   for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
     for (int y = 0; y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
     {
       auto& chunk(map_system.get_chunk(x, y, current_floor));
 
-      render_floor_tiles(chunk);
-      render_tiles(chunk);
+      render_floor_entities(chunk);
+      render_entities(chunk);
       render_items(chunk);
     }
   }
@@ -209,7 +212,7 @@ void RenderSystem::render_entities()
 
     SDL_RenderCopy(
       sdl_interface.renderer,
-      textures[entity.type],
+      textures[entity.texture_name],
       &entity.clip_rect, &dest_rect);
   }
 }
@@ -221,8 +224,7 @@ void RenderSystem::update()
 
   SDL_RenderClear(sdl_interface.renderer);
 
-  render_chunks();
-  render_entities();
+  render();
 
   interface_system.render();
 

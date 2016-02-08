@@ -18,10 +18,10 @@ constexpr int32 B2D_POSITION_ITERATIONS = 3;
 
 class PhysicsSystem
 {
-  void setup_tile_bodies();
-  void setup_entity_bodies();
+  void setup_static_bodies();
+  void setup_dynamic_bodies();
 
-  void update_dirty_tiles();
+  void cleanup_dirty_entities();
 
   MapSystem& map_system;
   EntitySystem& entity_system;

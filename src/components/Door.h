@@ -10,6 +10,8 @@ namespace ld
 
 struct Door : public StaticEntity
 {
+  Door() = default;
+
   Door(float x, float y)
     : open(false),
       locked(false)
