@@ -5,6 +5,7 @@
 #include <random>
 
 #include "../components/Item.h"
+#include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 
@@ -17,11 +18,10 @@ EntitySystem::EntitySystem(mt19937& rng_, Input& input_, MapSystem& map_system_)
     input(input_),
     map_system(map_system_),
     active_user(nullptr),
-    users(),
-    item_types()
+    users()
 {
   setup_users();
-  // setup_items();
+  setup_items();
 
   cout << "Entity system ready" << endl;
 }
@@ -47,17 +47,14 @@ void EntitySystem::setup_users()
 
 std::string EntitySystem::get_random_type()
 {
-  uniform_int_distribution<> type_choice(0, item_types.size() - 1);
+  uniform_int_distribution<> type_choice(0, ITEM_TYPES.size() - 1);
 
-  return item_types[type_choice(rng)];
+  return ITEM_TYPES[type_choice(rng)];
 }
 
 
 void EntitySystem::setup_items()
 {
-  item_types.push_back("scrub1");
-  item_types.push_back("container1");
-
   for (auto i = 0; i < NUM_ITEMS; ++i)
   {
     uniform_real_distribution<> x_position_choice(0, MAP_SIZE_X - 1);
@@ -65,6 +62,8 @@ void EntitySystem::setup_items()
 
     Item item;
     item.texture_name = get_random_type();
+
+    cout << item.texture_name << endl;
 
     for (auto found = false; !found; )
     {

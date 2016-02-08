@@ -15,7 +15,6 @@ namespace ld
 class MapSystem
 {
   void setup_map();
-
   void layout_room(int x, int y, int w, int h, int floor);
 
   bool dirty;
@@ -29,31 +28,29 @@ public:
 
   void update();
 
-  std::vector<Entity*>& get_dirty_entities() { return dirty_entities; }
   void request_cleanup(int x, int y, int floor);
+  std::vector<Entity*>& get_dirty_entities() { return dirty_entities; }
 
   Chunk& get_chunk(int x, int y, int floor);
   Chunk& get_chunk(float x, float y, int floor);
 
   Entity& get_entity(int x, int y, int floor);
   Entity& get_entity(float x, float y, int floor);
+  Entity& get_floor_entity(int x, int y, int floor);
+  Entity& get_floor_entity(float x, float y, int floor);
 
   void set_entity(
     std::string texture_name,
     int x, int y, int floor,
-    float rotation = 0, bool solid = true);
+    float rotation = 0.f, bool solid = true);
   void set_door(
     std::string texture_name,
     int x, int y, int floor,
-    float rotation = 0, bool solid = true);
-
-  Entity& get_floor_entity(int x, int y, int floor);
-  Entity& get_floor_entity(float x, float y, int floor);
-
+    float rotation = 0.f, bool solid = true);
   void set_floor_entity(
     std::string texture_name,
     int x, int y, int floor,
-    float rotation = 0, bool solid = true);
+    float rotation = 0.f, bool solid = true);
 };
 
 }
