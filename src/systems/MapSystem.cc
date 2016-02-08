@@ -202,6 +202,5 @@ void MapSystem::set_floor_entity(
   entity.solid = solid;
   entity.rotation = rotation;
 
-  get_chunk(x, y, floor).floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] =
-    entity;
+  get_chunk(x, y, floor).floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = entity;
 }
