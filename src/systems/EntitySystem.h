@@ -4,9 +4,8 @@
 #include <random>
 #include <vector>
 
-#include "../components/DynamicEntity.h"
-#include "../components/StaticEntity.h"
 #include "../components/Input.h"
+#include "../components/User.h"
 #include "../systems/MapSystem.h"
 
 namespace ld
@@ -25,10 +24,8 @@ class EntitySystem
   Input& input;
   MapSystem& map_system;
 
-  DynamicEntity* active_user;
-
-  std::vector<DynamicEntity> dynamic_entities;
-  std::vector<StaticEntity> items;
+  User* active_user;
+  std::vector<User> users;
 
   std::vector<std::string> item_types;
 
@@ -37,9 +34,8 @@ public:
 
   void update();
 
-  DynamicEntity* get_active_user() { return active_user; }
-  std::vector<DynamicEntity>& get_dynamic_entities() { return dynamic_entities; }
-  std::vector<StaticEntity>& get_items() { return items; }
+  User* get_active_user() { return active_user; }
+  std::vector<User>& get_users() { return users; }
 };
 
 }

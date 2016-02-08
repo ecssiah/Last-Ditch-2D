@@ -6,7 +6,7 @@
 
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
-#include "../components/DynamicEntity.h"
+#include "../components/Entity.h"
 #include "EntitySystem.h"
 
 namespace ld
@@ -18,7 +18,7 @@ class CameraSystem
 
   Eigen::Vector2f pos;
 
-  DynamicEntity* target;
+  Entity* target;
 
 public:
   CameraSystem(EntitySystem& entity_system);

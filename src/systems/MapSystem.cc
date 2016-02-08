@@ -133,7 +133,7 @@ Chunk& MapSystem::get_chunk(float x, float y, int floor)
 }
 
 
-StaticEntity& MapSystem::get_entity(int x, int y, int floor)
+Entity& MapSystem::get_entity(int x, int y, int floor)
 {
   auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
 
@@ -141,7 +141,7 @@ StaticEntity& MapSystem::get_entity(int x, int y, int floor)
 }
 
 
-StaticEntity& MapSystem::get_entity(float x, float y, int floor)
+Entity& MapSystem::get_entity(float x, float y, int floor)
 {
   int ix(std::floor(x));
   int iy(std::floor(y));
@@ -153,7 +153,7 @@ StaticEntity& MapSystem::get_entity(float x, float y, int floor)
 void MapSystem::set_entity(
   string texture_name, int x, int y, int floor, float rotation, bool solid)
 {
-  StaticEntity entity;
+  Entity entity;
   entity.texture_name = texture_name;
   entity.pos = {x, y};
   entity.solid = solid;
@@ -176,7 +176,7 @@ void MapSystem::set_door(
 }
 
 
-StaticEntity& MapSystem::get_floor_entity(int x, int y, int floor)
+Entity& MapSystem::get_floor_entity(int x, int y, int floor)
 {
   auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
 
@@ -184,7 +184,7 @@ StaticEntity& MapSystem::get_floor_entity(int x, int y, int floor)
 }
 
 
-StaticEntity& MapSystem::get_floor_entity(float x, float y, int floor)
+Entity& MapSystem::get_floor_entity(float x, float y, int floor)
 {
   int ix(std::floor(x));
   int iy(std::floor(y));
@@ -196,7 +196,7 @@ StaticEntity& MapSystem::get_floor_entity(float x, float y, int floor)
 void MapSystem::set_floor_entity(
   string texture_name, int x, int y, int floor, float rotation, bool solid)
 {
-  StaticEntity entity;
+  Entity entity;
   entity.texture_name = texture_name;
   entity.pos = {x, y};
   entity.solid = solid;

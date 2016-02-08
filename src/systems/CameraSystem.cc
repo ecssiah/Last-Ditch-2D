@@ -15,8 +15,8 @@ CameraSystem::CameraSystem(EntitySystem& entity_system_)
     pos(0, 0),
     target(nullptr)
 {
-  for (auto& entity : entity_system.get_dynamic_entities())
-    if (entity.name == "Kadijah") target = &entity;
+  for (auto& user : entity_system.get_users())
+    if (user.name == "Kadijah") target = &user;
 
   cout << "Camera system ready" << endl;
 }

@@ -200,20 +200,20 @@ void RenderSystem::render()
     }
   }
 
-  for (auto& entity : entity_system.get_dynamic_entities())
+  for (auto& user : entity_system.get_users())
   {
     SDL_Rect dest_rect;
     dest_rect.x =
-      PIXELS_PER_UNIT * (entity.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (user.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
     dest_rect.y =
-      PIXELS_PER_UNIT * (entity.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      PIXELS_PER_UNIT * (user.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
     dest_rect.w = PIXELS_PER_UNIT;
     dest_rect.h = PIXELS_PER_UNIT;
 
     SDL_RenderCopy(
       sdl_interface.renderer,
-      textures[entity.texture_name],
-      &entity.clip_rect, &dest_rect);
+      textures[user.texture_name],
+      &user.clip_rect, &dest_rect);
   }
 }
 

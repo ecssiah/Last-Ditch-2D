@@ -1,16 +1,19 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include "StaticEntity.h"
+#include "Entity.h"
 
 namespace ld
 {
 
-struct Item : public StaticEntity
+struct Item : public Entity
 {
   Item()
-    : StaticEntity()
+    : Entity(),
+      radius(.5f)
   {}
+
+  float radius;
 };
 
 }

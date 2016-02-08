@@ -33,19 +33,19 @@ void PhysicsSystem::update(double dt)
 {
   cleanup_dirty_entities();
 
-  auto& dynamic_entities = entity_system.get_dynamic_entities();
+  auto& users(entity_system.get_users());
 
-  for (auto& entity : dynamic_entities)
+  for (auto& user : users)
   {
-    b2Vec2 impulse(dt * entity.vel.x(), dt * entity.vel.y());
-    entity.body->ApplyLinearImpulse(impulse, entity.body->GetWorldCenter(), true);
+    b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
+    user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
   }
 
   world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
   world->ClearForces();
 
-  for (auto& entity : dynamic_entities)
-    entity.pos = {entity.body->GetPosition().x, entity.body->GetPosition().y};
+  for (auto& user : users)
+    user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
 }
 
 
@@ -78,11 +78,11 @@ void PhysicsSystem::render_debug()
 
 void PhysicsSystem::setup_dynamic_bodies()
 {
-  for (auto& entity : entity_system.get_dynamic_entities())
+  for (auto& user : entity_system.get_users())
   {
     b2BodyDef body_def;
     body_def.type = b2_dynamicBody;
-    body_def.position.Set(entity.pos.x(), entity.pos.y());
+    body_def.position.Set(user.pos.x(), user.pos.y());
     body_def.linearDamping = 8;
     body_def.allowSleep = true;
     body_def.fixedRotation = true;
@@ -91,7 +91,7 @@ void PhysicsSystem::setup_dynamic_bodies()
     auto body(world->CreateBody(&body_def));
 
     b2CircleShape circle_shape;
-    circle_shape.m_radius = entity.radius;
+    circle_shape.m_radius = user.radius;
 
     b2FixtureDef fixture_def;
     fixture_def.shape = &circle_shape;
@@ -99,7 +99,7 @@ void PhysicsSystem::setup_dynamic_bodies()
 
     body->CreateFixture(&fixture_def);
 
-    entity.body = body;
+    user.body = body;
   }
 }
 

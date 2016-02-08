@@ -17,8 +17,7 @@ EntitySystem::EntitySystem(mt19937& rng_, Input& input_, MapSystem& map_system_)
     input(input_),
     map_system(map_system_),
     active_user(nullptr),
-    dynamic_entities(),
-    items(),
+    users(),
     item_types()
 {
   setup_users();
@@ -30,7 +29,7 @@ EntitySystem::EntitySystem(mt19937& rng_, Input& input_, MapSystem& map_system_)
 
 void EntitySystem::setup_users()
 {
-  DynamicEntity kadijah;
+  User kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "user";
   kadijah.texture_name = "kadijah";
@@ -41,8 +40,8 @@ void EntitySystem::setup_users()
   kadijah.clip_rect.w = PIXELS_PER_UNIT;
   kadijah.clip_rect.h = PIXELS_PER_UNIT;
 
-  dynamic_entities.push_back(kadijah);
-  active_user = &dynamic_entities.back();
+  users.push_back(kadijah);
+  active_user = &users.back();
 }
 
 

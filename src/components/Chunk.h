@@ -6,24 +6,24 @@
 #include <vector>
 
 #include "Item.h"
-#include "StaticEntity.h"
+#include "Entity.h"
 
 namespace ld
 {
 
-struct Chunk : public StaticEntity
+struct Chunk : public Entity
 {
   Chunk()
-    : StaticEntity(),
-      entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, StaticEntity()}),
-      floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, StaticEntity()}),
+    : Entity(),
+      entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
+      floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
       items()
   {
     texture_name = "chunk_floor1";
   }
 
-  std::vector<std::vector<StaticEntity>> entities;
-  std::vector<std::vector<StaticEntity>> floor_entities;
+  std::vector<std::vector<Entity>> entities;
+  std::vector<std::vector<Entity>> floor_entities;
 
   std::vector<Item> items;
 };

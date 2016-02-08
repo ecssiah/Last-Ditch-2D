@@ -3,17 +3,18 @@
 
 #include <eigen3/Eigen/Geometry>
 
-#include "StaticEntity.h"
+#include "Entity.h"
 
 namespace ld
 {
 
-struct Door : public StaticEntity
+struct Door : public Entity
 {
   Door() = default;
 
   Door(float x, float y)
-    : open(false),
+    : Entity(),
+      open(false),
       locked(false)
   {
     pos = {x, y};
