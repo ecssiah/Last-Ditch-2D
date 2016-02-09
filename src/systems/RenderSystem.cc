@@ -27,7 +27,6 @@ RenderSystem::RenderSystem(
     debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     texture_coords(),
-    type_to_texture_map(),
     current_floor(0)
 {
   setup_textures();
@@ -42,16 +41,6 @@ RenderSystem::RenderSystem(
 
 void RenderSystem::setup_textures()
 {
-  type_to_texture_map["chunk"] = "chunk_floor1";
-  type_to_texture_map["kadijah"] = "kadijah";
-  type_to_texture_map["scrub1"] = "items1";
-  type_to_texture_map["container1"] = "items1";
-  type_to_texture_map["wall"] = "tileset1";
-  type_to_texture_map["door"] = "tileset1";
-  type_to_texture_map["floor"] = "tileset1";
-  type_to_texture_map["stairs_up"] = "tileset1";
-  type_to_texture_map["stairs_down"] = "tileset1";
-
   textures["kadijah"] = load_texture("kadijah");
   textures["chunk_floor1"] = load_texture("chunk_floor1");
 
@@ -94,7 +83,7 @@ void RenderSystem::render_chunk_floors()
 
       SDL_RenderCopy(
 	sdl_interface.renderer,
-	textures[type_to_texture_map[chunk.type]],
+	textures[chunk.texture_name],
 	nullptr, &dest_rect);
     }
   }
@@ -110,11 +99,6 @@ void RenderSystem::render_entities(Chunk& chunk)
       auto& entity(chunk.entities[x][y]);
 
       if (entity.type == "") continue;
-
-      auto& texture_name(type_to_texture_map[entity.type]);
-
-      cout << entity.type << endl;
-      cout << texture_coords[entity.type].x() << " " << texture_coords[entity.type].y() << endl;
 
       SDL_Rect clip_rect;
       clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
@@ -134,7 +118,7 @@ void RenderSystem::render_entities(Chunk& chunk)
 
       SDL_RenderCopyEx(
 	sdl_interface.renderer,
-	textures[texture_name],
+	textures[entity.texture_name],
 	&clip_rect, &dest_rect,
 	entity.rotation,
 	nullptr,
@@ -154,9 +138,6 @@ void RenderSystem::render_floor_entities(Chunk& chunk)
 
       if (entity.type == "") continue;
 
-      auto& texture_name(type_to_texture_map[entity.type]);
-
-
       SDL_Rect clip_rect;
       clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
       clip_rect.y = PIXELS_PER_UNIT * (texture_coords[entity.type].y());
@@ -175,7 +156,7 @@ void RenderSystem::render_floor_entities(Chunk& chunk)
 
       SDL_RenderCopyEx(
 	sdl_interface.renderer,
-	textures[texture_name],
+	textures[entity.texture_name],
 	&clip_rect, &dest_rect,
 	entity.rotation,
 	nullptr,
@@ -189,8 +170,6 @@ void RenderSystem::render_items(Chunk& chunk)
 {
   for (auto& item : chunk.items)
   {
-    auto& texture_name(type_to_texture_map[item.type]);
-
     SDL_Rect clip_rect;
     clip_rect.x = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].x());
     clip_rect.y = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].y());
@@ -207,7 +186,7 @@ void RenderSystem::render_items(Chunk& chunk)
 
     SDL_RenderCopy(
       sdl_interface.renderer,
-      textures[texture_name],
+      textures[item.texture_name],
       &clip_rect, &dest_rect);
   }
 }
@@ -241,7 +220,7 @@ void RenderSystem::render()
 
     SDL_RenderCopy(
       sdl_interface.renderer,
-      textures[type_to_texture_map[user.type]],
+      textures[user.texture_name],
       &user.clip_rect, &dest_rect);
   }
 }
@@ -256,6 +235,8 @@ void RenderSystem::update()
 
   interface_system.render();
   physics_system.render_debug();
+
+  SDL_RenderPresent(sdl_interface.renderer);
 }
 
 

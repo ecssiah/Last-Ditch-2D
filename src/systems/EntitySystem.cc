@@ -32,6 +32,7 @@ void EntitySystem::setup_users()
   User kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
+  kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
   kadijah.pos = {1, 2};
   kadijah.floor = 0;
   kadijah.radius = .48;
@@ -61,6 +62,7 @@ void EntitySystem::setup_items()
 
     Item item;
     item.type = get_random_type();
+    item.texture_name = TYPE_TO_TEXTURE[item.type];
 
     while (1)
     {

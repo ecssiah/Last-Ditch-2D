@@ -18,9 +18,7 @@ struct Chunk : public Entity
       entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
       floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
       items()
-  {
-    type = "chunk";
-  }
+  {}
 
   std::vector<std::vector<Entity>> entities;
   std::vector<std::vector<Entity>> floor_entities;

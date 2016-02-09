@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "../constants/MapConstants.h"
+#include "../constants/RenderConstants.h"
 #include "../components/Door.h"
 
 using namespace ld;
@@ -71,6 +72,8 @@ void MapSystem::setup_map()
 	auto& chunk(chunks[x][y][floor]);
 
 	chunk.pos = {x * TILES_PER_CHUNK_X, y * TILES_PER_CHUNK_Y};
+	chunk.type = "chunk1";
+	chunk.texture_name = TYPE_TO_TEXTURE[chunk.type];
       }
     }
   }
@@ -155,6 +158,7 @@ void MapSystem::set_entity(
 {
   Entity entity;
   entity.type = type;
+  entity.texture_name = TYPE_TO_TEXTURE[type];
   entity.pos = {x, y};
   entity.solid = solid;
   entity.rotation = rotation;
@@ -168,6 +172,7 @@ void MapSystem::set_door(
 {
   Door door;
   door.type = type;
+  door.texture_name = TYPE_TO_TEXTURE[type];
   door.pos = {x, y};
   door.solid = solid;
   door.rotation = rotation;
@@ -198,6 +203,7 @@ void MapSystem::set_floor_entity(
 {
   Entity entity;
   entity.type = type;
+  entity.texture_name = TYPE_TO_TEXTURE[type];
   entity.pos = {x, y};
   entity.solid = solid;
   entity.rotation = rotation;
