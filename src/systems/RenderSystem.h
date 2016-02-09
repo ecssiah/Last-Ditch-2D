@@ -41,6 +41,7 @@ class RenderSystem
   std::map<std::string, Eigen::Vector2i> texture_coords;
   std::map<std::string, std::string> type_to_texture_map;
 
+  bool debug;
   int current_floor;
 
 public:

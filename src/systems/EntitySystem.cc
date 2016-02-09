@@ -113,8 +113,16 @@ void EntitySystem::update()
 
     Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
 
-    cout << selection_point.x() << " " << selection_point.y() << endl;
+    if (selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
+	selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1)
+    {
+      auto& entity(
+	map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
 
-    Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
+      cout << entity.type << endl;
+      cout << entity.pos.x() << " " << entity.pos.y() << endl;
+
+      Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
+    }
   }
 }

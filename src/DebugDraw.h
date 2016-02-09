@@ -22,6 +22,7 @@ public:
     : renderer(renderer_),
       camera_system(camera_system_)
   {
+    SetFlags(b2Draw::e_shapeBit);
   }
 
 

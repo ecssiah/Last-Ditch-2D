@@ -27,11 +27,10 @@ RenderSystem::RenderSystem(
     debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     texture_coords(),
+    debug(false),
     current_floor(0)
 {
   setup_textures();
-
-  debug_draw.SetFlags(b2Draw::e_shapeBit);
 
   physics_system.set_debug_draw(debug_draw);
 
@@ -234,7 +233,9 @@ void RenderSystem::update()
   render();
 
   interface_system.render();
-  physics_system.render_debug();
+
+  if (debug)
+    physics_system.render_debug();
 
   SDL_RenderPresent(sdl_interface.renderer);
 }
