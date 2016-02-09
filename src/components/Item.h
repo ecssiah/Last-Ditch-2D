@@ -11,7 +11,9 @@ struct Item : public Entity
   Item()
     : Entity(),
       radius(.5f)
-  {}
+  {
+    type = "item";
+  }
 
   float radius;
 };

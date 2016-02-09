@@ -12,7 +12,6 @@ struct Entity
 {
   Entity()
     : type(std::string()),
-      texture_name(std::string()),
       pos(0.f, 0.f),
       rotation(0.f),
       solid(false),
@@ -20,7 +19,6 @@ struct Entity
   {}
 
   std::string type;
-  std::string texture_name;
   Eigen::Vector2f pos;
   float rotation;
   bool solid;

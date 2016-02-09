@@ -38,8 +38,8 @@ class RenderSystem
   PhysicsSystem& physics_system;
 
   std::map<std::string, SDL_Texture*> textures;
-  std::map<std::string, Eigen::Vector2i> tileset1_coords;
-  std::map<std::string, Eigen::Vector2i> items1_coords;
+  std::map<std::string, Eigen::Vector2i> texture_coords;
+  std::map<std::string, std::string> type_to_texture_map;
 
   int current_floor;
 

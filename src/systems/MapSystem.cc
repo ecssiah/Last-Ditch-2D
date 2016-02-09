@@ -151,10 +151,10 @@ Entity& MapSystem::get_entity(float x, float y, int floor)
 
 
 void MapSystem::set_entity(
-  string texture_name, int x, int y, int floor, float rotation, bool solid)
+  string type, int x, int y, int floor, float rotation, bool solid)
 {
   Entity entity;
-  entity.texture_name = texture_name;
+  entity.type = type;
   entity.pos = {x, y};
   entity.solid = solid;
   entity.rotation = rotation;
@@ -164,10 +164,10 @@ void MapSystem::set_entity(
 
 
 void MapSystem::set_door(
-  string texture_name, int x, int y, int floor, float rotation, bool solid)
+  string type, int x, int y, int floor, float rotation, bool solid)
 {
   Door door;
-  door.texture_name = texture_name;
+  door.type = type;
   door.pos = {x, y};
   door.solid = solid;
   door.rotation = rotation;
@@ -194,10 +194,10 @@ Entity& MapSystem::get_floor_entity(float x, float y, int floor)
 
 
 void MapSystem::set_floor_entity(
-  string texture_name, int x, int y, int floor, float rotation, bool solid)
+  string type, int x, int y, int floor, float rotation, bool solid)
 {
   Entity entity;
-  entity.texture_name = texture_name;
+  entity.type = type;
   entity.pos = {x, y};
   entity.solid = solid;
   entity.rotation = rotation;

@@ -31,8 +31,7 @@ void EntitySystem::setup_users()
 {
   User kadijah;
   kadijah.name = "Kadijah";
-  kadijah.type = "user";
-  kadijah.texture_name = "kadijah";
+  kadijah.type = "kadijah";
   kadijah.pos = {1, 2};
   kadijah.floor = 0;
   kadijah.radius = .48;
@@ -61,11 +60,9 @@ void EntitySystem::setup_items()
     uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
 
     Item item;
-    item.texture_name = get_random_type();
+    item.type = get_random_type();
 
-    cout << item.texture_name << endl;
-
-    for (auto found = false; !found; )
+    while (1)
     {
       float x(x_position_choice(rng));
       float y(y_position_choice(rng));
@@ -79,10 +76,10 @@ void EntitySystem::setup_items()
 
       if (clear)
       {
-	found = true;
 	item.pos = {x, y};
-
 	map_system.get_chunk(x, y, 0).items.push_back(item);
+
+	break;
       }
     }
   }

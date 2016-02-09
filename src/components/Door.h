@@ -17,6 +17,7 @@ struct Door : public Entity
       open(false),
       locked(false)
   {
+    type = "door";
     pos = {x, y};
   }
 

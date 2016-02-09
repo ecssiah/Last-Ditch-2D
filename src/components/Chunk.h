@@ -19,7 +19,7 @@ struct Chunk : public Entity
       floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
       items()
   {
-    texture_name = "chunk_floor1";
+    type = "chunk";
   }
 
   std::vector<std::vector<Entity>> entities;
