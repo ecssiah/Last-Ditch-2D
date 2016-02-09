@@ -102,6 +102,10 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 
   set_door("door1", x_, y_ + h_ / 2, floor_);
   set_floor_entity("floor1", x_, y_ + h_ / 2, floor_, 0);
+
+  set_entity("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
+  set_floor_entity("floor1", x_, y_ + h_ / 2 - 2, floor_, 0);
+
   set_entity("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
   set_entity("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
 
@@ -173,6 +177,7 @@ void MapSystem::set_door(
   Door door;
   door.type = type;
   door.texture_name = TYPE_TO_TEXTURE[type];
+  door.properties.door = true;
   door.pos = {x, y};
   door.solid = solid;
   door.rotation = rotation;

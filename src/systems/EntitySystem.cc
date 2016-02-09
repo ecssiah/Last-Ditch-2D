@@ -65,6 +65,7 @@ void EntitySystem::setup_items()
     Item item;
     item.type = get_random_type();
     item.texture_name = TYPE_TO_TEXTURE[item.type];
+    item.properties.item = true;
 
     while (1)
     {
@@ -113,16 +114,24 @@ void EntitySystem::update()
 
     Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
 
-    if (selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
-	selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1)
+    auto in_bounds(
+      selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
+      selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1);
+
+    if (in_bounds)
     {
       auto& entity(
 	map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
 
-      cout << entity.type << endl;
-      cout << entity.pos.x() << " " << entity.pos.y() << endl;
+      auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
 
-      Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
+      if (sqrd_distance < 2.4f)
+      {
+	if (entity.properties.door)
+	{
+	  cout << "Door!" << endl;
+	}
+      }
     }
   }
 }
