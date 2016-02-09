@@ -1,6 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 
 namespace ld
@@ -17,8 +18,7 @@ struct Input
       activate(false),
       menu(false),
       sub_menu(false),
-      mx(0),
-      my(0)
+      mouse_pos(0, 0)
   {}
 
   bool up, down;
@@ -26,7 +26,8 @@ struct Input
   bool exit;
   bool activate;
   bool menu, sub_menu;
-  Sint32 mx, my;
+
+  Eigen::Vector2i mouse_pos;
 };
 
 }

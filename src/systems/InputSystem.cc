@@ -73,6 +73,6 @@ void InputSystem::update()
 void InputSystem::left_click(Sint32 mx, Sint32 my)
 {
   input.activate = true;
-  input.mx = mx;
-  input.my = my;
+  input.mouse_pos.x() = mx;
+  input.mouse_pos.y() = my;
 }

@@ -23,7 +23,7 @@ InterfaceSystem::InterfaceSystem(
 
 void InterfaceSystem::update()
 {
-  auto active_user = entity_system.get_active_user();
+  auto active_user(entity_system.get_active_user());
 
   stringstream ss;
   ss << active_user->pos.x() << " " << active_user->pos.y();
@@ -42,7 +42,7 @@ void InterfaceSystem::update()
     time_system.get_year() << " ";
   ss << time_system.get_hour() << ":";
 
-  auto minute = time_system.get_minute();
+  auto minute(time_system.get_minute());
   minute < 10 ? ss << "0" << minute : ss << minute;
 
   surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
@@ -60,7 +60,7 @@ void InterfaceSystem::render()
 
 void InterfaceSystem::render_texture_at(string texture_name, int x, int y)
 {
-  auto& texture = textures[texture_name];
+  auto& texture(textures[texture_name]);
 
   int w, h;
   SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);

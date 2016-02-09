@@ -7,23 +7,24 @@
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 #include "../components/Entity.h"
-#include "EntitySystem.h"
 
 namespace ld
 {
 
 class CameraSystem
 {
-  EntitySystem& entity_system;
-
   Eigen::Vector2f pos;
 
   Entity* target;
 
 public:
-  CameraSystem(EntitySystem& entity_system);
+  CameraSystem();
 
   void update();
+
+  Eigen::Vector2f to_world_coordinates(Eigen::Vector2i screen_pos);
+  float to_world_coordinates(int screen_pos);
+  void set_target(Entity* target_) { target = target_; }
 
   inline Eigen::Vector2f get_pos() { return pos; }
   inline Eigen::Vector2i get_pos_in_pixels();

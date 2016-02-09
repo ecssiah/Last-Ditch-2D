@@ -13,10 +13,12 @@ using namespace ld;
 using namespace Eigen;
 using namespace std;
 
-EntitySystem::EntitySystem(mt19937& rng_, Input& input_, MapSystem& map_system_)
+EntitySystem::EntitySystem(
+  mt19937& rng_, Input& input_, CameraSystem& camera_system_, MapSystem& map_system_)
   : rng(rng_),
     input(input_),
     map_system(map_system_),
+    camera_system(camera_system_),
     active_user(nullptr),
     users()
 {
@@ -57,8 +59,8 @@ void EntitySystem::setup_items()
 {
   for (auto i = 0; i < NUM_ITEMS; ++i)
   {
-    uniform_real_distribution<> x_position_choice(0, MAP_SIZE_X - 1);
-    uniform_real_distribution<> y_position_choice(0, MAP_SIZE_Y - 1);
+    uniform_real_distribution<> x_dist(0, MAP_SIZE_X - 1);
+    uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
 
     Item item;
     item.type = get_random_type();
@@ -66,8 +68,8 @@ void EntitySystem::setup_items()
 
     while (1)
     {
-      float x(x_position_choice(rng));
-      float y(y_position_choice(rng));
+      float x(x_dist(rng));
+      float y(y_dist(rng));
       float size(2.f * item.radius);
 
       auto clear(
@@ -109,9 +111,10 @@ void EntitySystem::update()
   {
     input.activate = false;
 
-    Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
+    Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
 
-    auto& chunk(
-      map_system.get_chunk(pos_center.x(), pos_center.y(), active_user->floor));
+    cout << selection_point.x() << " " << selection_point.y() << endl;
+
+    Vector2f pos_center(active_user->pos.x(), active_user->pos.y() + .5f);
   }
 }

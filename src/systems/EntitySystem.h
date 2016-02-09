@@ -7,6 +7,7 @@
 #include "../components/Input.h"
 #include "../components/User.h"
 #include "../systems/MapSystem.h"
+#include "../systems/CameraSystem.h"
 
 namespace ld
 {
@@ -22,6 +23,7 @@ class EntitySystem
   std::mt19937& rng;
 
   Input& input;
+  CameraSystem& camera_system;
   MapSystem& map_system;
 
   User* active_user;
@@ -30,7 +32,8 @@ class EntitySystem
   std::vector<std::string> item_types;
 
 public:
-  EntitySystem(std::mt19937& rng, Input& input, MapSystem& map_system);
+  EntitySystem(
+    std::mt19937& rng, Input& input, CameraSystem& camera_system, MapSystem& map_system);
 
   void update();
 

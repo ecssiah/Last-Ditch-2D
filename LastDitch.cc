@@ -12,20 +12,22 @@ LastDitch::LastDitch()
     rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
     time_system(),
     input_system(input),
+    camera_system(),
     map_system(),
-    entity_system(rng, input, map_system),
+    entity_system(rng, input, camera_system, map_system),
     physics_system(sdl_interface.renderer, map_system, entity_system),
-    camera_system(entity_system),
     interface_system(sdl_interface, time_system, entity_system),
     render_system(
       sdl_interface, map_system, entity_system, camera_system,
       interface_system, physics_system)
 {
+  camera_system.set_target(entity_system.get_active_user());
+
   cout << endl << "Starting Last Ditch..." << endl << endl;
 
   while (!input.exit)
   {
-    auto dt = time_system.update();
+    auto dt(time_system.update());
 
     input_system.update();
     entity_system.update();
