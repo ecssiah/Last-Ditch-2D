@@ -51,9 +51,9 @@ void EntitySystem::setup_users()
 
 std::string EntitySystem::get_random_type()
 {
-  uniform_int_distribution<> type_choice(0, ITEM_TYPES.size() - 1);
+  uniform_int_distribution<> type_dist(0, ITEM_TYPES.size() - 1);
 
-  return ITEM_TYPES[type_choice(rng)];
+  return ITEM_TYPES[type_dist(rng)];
 }
 
 
@@ -95,13 +95,13 @@ void EntitySystem::setup_items()
 
 void EntitySystem::update()
 {
-  update_velocities();
+  apply_user_inputs();
 
   if (input.activate) handle_activation();
 }
 
 
-void EntitySystem::update_velocities()
+void EntitySystem::apply_user_inputs()
 {
   Vector2f direction(0, 0);
 
@@ -126,25 +126,23 @@ void EntitySystem::handle_activation()
 
   Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
 
-  auto in_bounds(
-    selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
-    selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1);
+  auto out_of_bounds(
+    selection_point.x() < 0 || selection_point.x() >= MAP_SIZE_X ||
+    selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
 
-  if (in_bounds)
+  if (out_of_bounds) return;
+
+  auto& entity(
+    map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
+
+  if (entity.type == "") return;
+
+  auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
+
+  if (sqrd_distance > 2.4f) return;
+
+  if (entity.properties.door)
   {
-    auto& entity(
-      map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
-
-    if (entity.type == "") return;
-
-    auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
-
-    if (sqrd_distance < 2.4f)
-    {
-      if (entity.properties.door)
-      {
-	cout << "Door!" << endl;
-      }
-    }
+    cout << "Door!" << endl;
   }
 }
