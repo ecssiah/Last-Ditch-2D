@@ -34,6 +34,7 @@ RenderSystem::RenderSystem(
 
   physics_system.set_debug_draw(debug_draw);
 
+
   cout << "Render system ready" << endl;
 }
 
@@ -64,7 +65,7 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 }
 
 
-void RenderSystem::render_chunk_floors()
+void RenderSystem::render_chunks()
 {
   for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
@@ -95,73 +96,49 @@ void RenderSystem::render_entities(Chunk& chunk)
   {
     for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
     {
+      auto& entity(chunk.floor_entities[x][y]);
+
+      render_entity(entity);
+    }
+  }
+
+  for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
+  {
+    for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
+    {
       auto& entity(chunk.entities[x][y]);
 
-      if (entity.type == "") continue;
-
-      SDL_Rect clip_rect;
-      clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
-      clip_rect.y = PIXELS_PER_UNIT * (texture_coords[entity.type].y());
-      clip_rect.w = PIXELS_PER_UNIT;
-      clip_rect.h = PIXELS_PER_UNIT;
-
-      SDL_Rect dest_rect;
-      dest_rect.x =
-	PIXELS_PER_UNIT *
-	(chunk.pos.x() + x - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
-      dest_rect.y =
-	PIXELS_PER_UNIT *
-	(chunk.pos.y() + y - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-      dest_rect.w = PIXELS_PER_UNIT;
-      dest_rect.h = PIXELS_PER_UNIT;
-
-      SDL_RenderCopyEx(
-	sdl_interface.renderer,
-	textures[entity.texture_name],
-	&clip_rect, &dest_rect,
-	entity.rotation,
-	nullptr,
-	SDL_FLIP_NONE);
+      render_entity(entity);
     }
   }
 }
 
 
-void RenderSystem::render_floor_entities(Chunk& chunk)
+void RenderSystem::render_entity(Entity& entity)
 {
-  for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
-  {
-    for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
-    {
-      auto& entity(chunk.floor_entities[x][y]);
+  SDL_Rect clip_rect;
+  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
+  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[entity.type].y());
+  clip_rect.w = PIXELS_PER_UNIT;
+  clip_rect.h = PIXELS_PER_UNIT;
 
-      if (entity.type == "") continue;
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT *
+    (entity.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+  dest_rect.y =
+    PIXELS_PER_UNIT *
+    (entity.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
 
-      SDL_Rect clip_rect;
-      clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
-      clip_rect.y = PIXELS_PER_UNIT * (texture_coords[entity.type].y());
-      clip_rect.w = PIXELS_PER_UNIT;
-      clip_rect.h = PIXELS_PER_UNIT;
-
-      SDL_Rect dest_rect;
-      dest_rect.x =
-	PIXELS_PER_UNIT *
-	(chunk.pos.x() + x - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
-      dest_rect.y =
-	PIXELS_PER_UNIT *
-	(chunk.pos.y() + y - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
-      dest_rect.w = PIXELS_PER_UNIT;
-      dest_rect.h = PIXELS_PER_UNIT;
-
-      SDL_RenderCopyEx(
-	sdl_interface.renderer,
-	textures[entity.texture_name],
-	&clip_rect, &dest_rect,
-	entity.rotation,
-	nullptr,
-	SDL_FLIP_NONE);
-    }
-  }
+  SDL_RenderCopyEx(
+    sdl_interface.renderer,
+    textures[entity.texture_name],
+    &clip_rect, &dest_rect,
+    entity.rotation,
+    nullptr,
+    SDL_FLIP_NONE);
 }
 
 
@@ -193,20 +170,44 @@ void RenderSystem::render_items(Chunk& chunk)
 
 void RenderSystem::render()
 {
-  render_chunk_floors();
+  render_chunks();
+  render_tiles();
+  render_items();
+  render_users();
+}
 
-  for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
+
+void RenderSystem::render_tiles()
+{
+  for (auto x = 0; x < NUM_CHUNKS_X; ++x)
   {
-    for (int y = 0; y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
+    for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+    {
+      auto& chunk(
+	map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, current_floor));
+
+      render_entities(chunk);
+    }
+  }
+}
+
+
+void RenderSystem::render_items()
+{
+  for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+  {
+    for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
     {
       auto& chunk(map_system.get_chunk(x, y, current_floor));
 
-      render_floor_entities(chunk);
-      render_entities(chunk);
       render_items(chunk);
     }
   }
+}
 
+
+void RenderSystem::render_users()
+{
   for (auto& user : entity_system.get_users())
   {
     SDL_Rect dest_rect;
@@ -234,15 +235,7 @@ void RenderSystem::update()
 
   interface_system.render();
 
-  if (debug)
-    physics_system.render_debug();
+  if (debug) physics_system.render_debug();
 
   SDL_RenderPresent(sdl_interface.renderer);
-}
-
-
-void RenderSystem::shutdown()
-{
-  for (auto& pair : textures)
-    SDL_DestroyTexture(pair.second);
 }

@@ -20,6 +20,9 @@ class EntitySystem
   void setup_items();
   std::string get_random_type();
 
+  void update_velocities();
+  void handle_activation();
+
   std::mt19937& rng;
 
   Input& input;

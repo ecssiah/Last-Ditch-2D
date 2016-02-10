@@ -22,13 +22,16 @@ class RenderSystem
   SDL_Texture* load_texture(std::string name);
 
   void render();
-  void render_chunk_floors();
-  void render_floor_entities(Chunk& chunk);
-  void render_items(Chunk& chunk);
+  void render_chunks();
+  void render_tiles();
+  void render_items();
+  void render_users();
+
   void render_entities(Chunk& chunk);
+  void render_entity(Entity& entity);
+  void render_items(Chunk& chunk);
 
   SDL_Interface& sdl_interface;
-
   DebugDraw debug_draw;
 
   MapSystem& map_system;
@@ -54,7 +57,6 @@ public:
     PhysicsSystem& physics_system);
 
   void update();
-  void shutdown();
 };
 
 }

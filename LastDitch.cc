@@ -40,7 +40,6 @@ LastDitch::LastDitch()
     time_system.tick();
   }
 
-  render_system.shutdown();
   sdl_interface.shutdown();
 }
 

@@ -1,5 +1,6 @@
 #include "EntitySystem.h"
 
+#include <cassert>
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 #include <random>
@@ -14,7 +15,8 @@ using namespace Eigen;
 using namespace std;
 
 EntitySystem::EntitySystem(
-  mt19937& rng_, Input& input_, CameraSystem& camera_system_, MapSystem& map_system_)
+  mt19937& rng_, Input& input_, CameraSystem& camera_system_, MapSystem& map_system_
+)
   : rng(rng_),
     input(input_),
     map_system(map_system_),
@@ -93,6 +95,14 @@ void EntitySystem::setup_items()
 
 void EntitySystem::update()
 {
+  update_velocities();
+
+  if (input.activate) handle_activation();
+}
+
+
+void EntitySystem::update_velocities()
+{
   Vector2f direction(0, 0);
 
   if (input.left) direction.x() -= 1;
@@ -107,30 +117,33 @@ void EntitySystem::update()
   }
   else
     active_user->vel = Vector2f::Zero();
+}
 
-  if (input.activate)
+
+void EntitySystem::handle_activation()
+{
+  input.activate = false;
+
+  Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
+
+  auto in_bounds(
+    selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
+    selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1);
+
+  if (in_bounds)
   {
-    input.activate = false;
+    auto& entity(
+      map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
 
-    Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
+    if (entity.type == "") return;
 
-    auto in_bounds(
-      selection_point.x() >= 0 && selection_point.x() < MAP_SIZE_X - 1 &&
-      selection_point.y() >= 0 && selection_point.y() < MAP_SIZE_Y - 1);
+    auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
 
-    if (in_bounds)
+    if (sqrd_distance < 2.4f)
     {
-      auto& entity(
-	map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
-
-      auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
-
-      if (sqrd_distance < 2.4f)
+      if (entity.properties.door)
       {
-	if (entity.properties.door)
-	{
-	  cout << "Door!" << endl;
-	}
+	cout << "Door!" << endl;
       }
     }
   }

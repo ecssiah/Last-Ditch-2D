@@ -1,5 +1,6 @@
 #include "CameraSystem.h"
 
+#include <cassert>
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 
