@@ -9,14 +9,9 @@ TimeSystem::TimeSystem()
   : start(chrono::steady_clock::now()),
     end(chrono::steady_clock::now()),
     dt(0.0),
-    game_time(0.0),
-    game_minute_counter(0.0),
     game_time_rate(62.f),
-    year(3212),
-    month(1),
-    day(28),
-    hour(11),
-    minute(50)
+    game_time_tracker(0.0),
+    game_minutes(604000)
 {
   cout << endl << "Time system ready" << endl;
 }
@@ -31,12 +26,13 @@ double TimeSystem::update()
 
   if (dt > .01) dt = .01;
 
-  auto step(game_time_rate * dt);
+  game_time_tracker += game_time_rate * dt;
 
-  game_time += step;
-  game_minute_counter += step;
-
-  update_game_time();
+  if (game_time_tracker >= 60.0)
+  {
+    ++game_minutes;
+    game_time_tracker -= 60.0;
+  }
 
   return dt;
 }
@@ -45,38 +41,4 @@ double TimeSystem::update()
 void TimeSystem::tick()
 {
   start = chrono::steady_clock::now();
-}
-
-
-void TimeSystem::update_game_time()
-{
-  if (game_minute_counter >= 60.0)
-  {
-    ++minute;
-    game_minute_counter -= 60.0;
-
-    if (minute > 59)
-    {
-      ++hour;
-      minute = 0;
-
-      if (hour > 23)
-      {
-	++day;
-	hour = 0;
-
-	if (day > 30)
-	{
-	  ++month;
-	  day = 1;
-
-	  if (month > 12)
-	  {
-	    ++year;
-	    month = 1;
-	  }
-	}
-      }
-    }
-  }
 }
