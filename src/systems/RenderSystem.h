@@ -22,10 +22,10 @@ class RenderSystem
   SDL_Texture* load_texture(std::string name);
 
   void render();
-  void render_chunks();
-  void render_tiles();
-  void render_items();
-  void render_users();
+  void render_chunks(int floor);
+  void render_tiles(int floor);
+  void render_items(int floor);
+  void render_users(int floor);
 
   void render_entities(Chunk& chunk);
   void render_entity(Entity& entity);
@@ -45,7 +45,8 @@ class RenderSystem
   std::map<std::string, std::string> type_to_texture_map;
 
   bool debug;
-  int current_floor;
+
+  User* active_user;
 
 public:
   RenderSystem(

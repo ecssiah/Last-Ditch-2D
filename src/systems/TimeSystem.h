@@ -24,11 +24,11 @@ public:
   double update();
   void tick();
 
-  const int get_year() const { return year; }
-  const int get_month() const { return month; }
-  const int get_day() const { return day; }
-  const int get_hour() const { return hour; }
-  const int get_minute() const { return minute; }
+  inline const int get_year() const { return year; }
+  inline const int get_month() const { return month; }
+  inline const int get_day() const { return day; }
+  inline const int get_hour() const { return hour; }
+  inline const int get_minute() const { return minute; }
 };
 
 }

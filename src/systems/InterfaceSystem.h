@@ -6,6 +6,7 @@
 #include <map>
 
 #include "../SDL_Interface.h"
+#include "../components/User.h"
 #include "TimeSystem.h"
 #include "EntitySystem.h"
 
@@ -20,6 +21,8 @@ class InterfaceSystem
 
   TimeSystem& time_system;
   EntitySystem& entity_system;
+
+  User* active_user;
 
   std::map<std::string, TTF_Font*> fonts;
   std::map<std::string, SDL_Texture*> textures;

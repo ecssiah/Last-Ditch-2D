@@ -1,5 +1,6 @@
 #include "MapSystem.h"
 
+#include <cassert>
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 
@@ -13,7 +14,7 @@ using namespace std;
 
 MapSystem::MapSystem()
   : dirty(false),
-    dirty_entities(),
+    dirty_entities(NUM_FLOORS),
     chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
     rooms(NUM_FLOORS)
 {
@@ -29,11 +30,11 @@ void MapSystem::update()
   {
     dirty = false;
 
-    for (auto floor = 0; floor < NUM_FLOORS; ++floor)
+    for (auto floor(0); floor < NUM_FLOORS; ++floor)
     {
-      for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+      for (auto x(0); x < NUM_CHUNKS_X; ++x)
       {
-	for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+	for (auto y(0); y < NUM_CHUNKS_Y; ++y)
 	{
 	  auto& chunk(chunks[x][y][floor]);
 
@@ -41,9 +42,9 @@ void MapSystem::update()
 	  {
 	    chunk.dirty = false;
 
-	    for (auto cx = 0; cx < TILES_PER_CHUNK_X; ++cx)
+	    for (auto cx(0); cx < TILES_PER_CHUNK_X; ++cx)
 	    {
-	      for (auto cy = 0; cy < TILES_PER_CHUNK_Y; ++cy)
+	      for (auto cy(0); cy < TILES_PER_CHUNK_Y; ++cy)
 	      {
 		auto& entity(chunk.entities[cx][cy]);
 
@@ -63,17 +64,18 @@ void MapSystem::update()
 
 void MapSystem::setup_map()
 {
-  for (auto floor = 0; floor < NUM_FLOORS; ++floor)
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+    for (auto x(0); x < NUM_CHUNKS_X; ++x)
     {
-      for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+      for (auto y(0); y < NUM_CHUNKS_Y; ++y)
       {
 	auto& chunk(chunks[x][y][floor]);
 
 	chunk.pos = {x * TILES_PER_CHUNK_X, y * TILES_PER_CHUNK_Y};
 	chunk.type = "chunk1";
 	chunk.texture_name = TYPE_TO_TEXTURE[chunk.type];
+	chunk.floor = floor;
       }
     }
   }
@@ -84,20 +86,20 @@ void MapSystem::setup_map()
 
 void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 {
-  for (auto x = x_; x < x_ + w_; ++x)
+  for (auto x(x_); x < x_ + w_; ++x)
   {
     set_entity("wall1", x, y_, floor_);
     set_entity("wall1", x, y_ + h_ - 1, floor_);
   }
 
-  for (auto y = y_; y < y_ + h_; ++y)
+  for (auto y(y_); y < y_ + h_; ++y)
   {
     set_entity("wall1", x_, y, floor_);
     set_entity("wall1", x_ + w_ - 1, y, floor_);
   }
 
-  for (auto x = x_ + 1; x < x_ + w_ - 1; ++x)
-    for (auto y = y_ + 1; y < y_ + h_ - 1; ++y)
+  for (auto x(x_ + 1); x < x_ + w_ - 1; ++x)
+    for (auto y(y_ + 1); y < y_ + h_ - 1; ++y)
       set_floor_entity("floor1", x, y, floor_);
 
   set_door("door1", x_, y_ + h_ / 2, floor_);
@@ -164,6 +166,7 @@ void MapSystem::set_entity(
   entity.type = type;
   entity.texture_name = TYPE_TO_TEXTURE[type];
   entity.pos = {x, y};
+  entity.floor = floor;
   entity.solid = solid;
   entity.rotation = rotation;
 
@@ -179,10 +182,35 @@ void MapSystem::set_door(
   door.texture_name = TYPE_TO_TEXTURE[type];
   door.properties.door = true;
   door.pos = {x, y};
+  door.floor = floor;
   door.solid = solid;
   door.rotation = rotation;
 
   get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = door;
+}
+
+
+void MapSystem::update_door(int x, int y, int floor, bool open, bool locked)
+{
+  auto& entity(
+    get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y]);
+
+  assert(entity.properties.door);
+
+  Door& door(static_cast<Door&>(entity));
+
+  door.locked = locked;
+
+  if (open && !door.locked)
+  {
+    door.open = true;
+    door.type = "";
+  }
+  else
+  {
+    door.open = false;
+    door.type = "door1";
+  }
 }
 
 
@@ -212,6 +240,7 @@ void MapSystem::set_floor_entity(
   entity.pos = {x, y};
   entity.solid = solid;
   entity.rotation = rotation;
+  entity.floor = floor;
 
   get_chunk(x, y, floor).floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = entity;
 }

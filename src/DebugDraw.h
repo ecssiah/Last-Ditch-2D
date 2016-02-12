@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 
 #include "constants/MapConstants.h"
+#include "constants/RenderConstants.h"
 #include "systems/CameraSystem.h"
 
 using namespace ld;
@@ -35,11 +36,13 @@ public:
   {
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
+    auto xform_origin(vertices[0] + b2Vec2(.5, .5));
+
     SDL_Rect rect;
     rect.x =
-      PIXELS_PER_UNIT * (vertices[0].x + .5 - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (xform_origin.x - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
     rect.y =
-      PIXELS_PER_UNIT * (vertices[0].y + .5 - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      PIXELS_PER_UNIT * (xform_origin.y - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
     rect.w = PIXELS_PER_UNIT;
     rect.h = PIXELS_PER_UNIT;
 
@@ -54,22 +57,22 @@ public:
   {
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
-    auto sides = 16;
-    auto step = 2 * M_PI / sides;
+    auto sides(16);
+    auto step(2 * M_PI / sides);
 
-    for (auto alpha = 0.0; alpha < 2 * M_PI; alpha += step)
+    for (auto alpha(0.0); alpha < 2 * M_PI; alpha += step)
     {
-      auto x1 = center.x + .5 + radius * cos(alpha) - camera_system.get_pos().x();
-      auto y1 = center.y + .5 + radius * sin(alpha) - camera_system.get_pos().y();
-      auto x2 = center.x + .5 + radius * cos(alpha + step) - camera_system.get_pos().x();
-      auto y2 = center.y + .5 + radius * sin(alpha + step) - camera_system.get_pos().y();
+      auto x1(center.x + .5 + radius * cos(alpha) - camera_system.get_pos().x());
+      auto y1(center.y + .5 + radius * sin(alpha) - camera_system.get_pos().y());
+      auto x2(center.x + .5 + radius * cos(alpha + step) - camera_system.get_pos().x());
+      auto y2(center.y + .5 + radius * sin(alpha + step) - camera_system.get_pos().y());
 
       SDL_RenderDrawLine(
 	renderer,
-	PIXELS_PER_UNIT * x1 + SCREEN_SIZE_X / 2,
-	PIXELS_PER_UNIT * y1 + SCREEN_SIZE_Y / 2,
-	PIXELS_PER_UNIT * x2 + SCREEN_SIZE_X / 2,
-	PIXELS_PER_UNIT * y2 + SCREEN_SIZE_Y / 2);
+	PIXELS_PER_UNIT * x1 + HALF_SCREEN_SIZE_X,
+	PIXELS_PER_UNIT * y1 + HALF_SCREEN_SIZE_Y,
+	PIXELS_PER_UNIT * x2 + HALF_SCREEN_SIZE_X,
+	PIXELS_PER_UNIT * y2 + HALF_SCREEN_SIZE_Y);
     }
   }
 

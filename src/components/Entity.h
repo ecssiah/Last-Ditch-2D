@@ -17,6 +17,7 @@ struct Entity
       texture_name(std::string()),
       properties(),
       pos(0.f, 0.f),
+      floor(0),
       rotation(0.f),
       solid(false),
       body(nullptr)
@@ -26,6 +27,7 @@ struct Entity
   std::string texture_name;
   Properties properties;
   Eigen::Vector2f pos;
+  int floor;
   float rotation;
   bool solid;
   bool dirty;

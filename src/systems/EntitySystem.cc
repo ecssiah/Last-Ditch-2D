@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 
+#include "../components/Door.h"
 #include "../components/Item.h"
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
@@ -22,7 +23,7 @@ EntitySystem::EntitySystem(
     map_system(map_system_),
     camera_system(camera_system_),
     active_user(nullptr),
-    users()
+    users(NUM_FLOORS)
 {
   setup_users();
   setup_items();
@@ -44,8 +45,8 @@ void EntitySystem::setup_users()
   kadijah.clip_rect.w = PIXELS_PER_UNIT;
   kadijah.clip_rect.h = PIXELS_PER_UNIT;
 
-  users.push_back(kadijah);
-  active_user = &users.back();
+  users[kadijah.floor].push_back(kadijah);
+  active_user = &users[kadijah.floor].back();
 }
 
 
@@ -59,34 +60,38 @@ std::string EntitySystem::get_random_type()
 
 void EntitySystem::setup_items()
 {
-  for (auto i = 0; i < NUM_ITEMS; ++i)
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    uniform_real_distribution<> x_dist(0, MAP_SIZE_X - 1);
-    uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
-
-    Item item;
-    item.type = get_random_type();
-    item.texture_name = TYPE_TO_TEXTURE[item.type];
-    item.properties.item = true;
-
-    while (1)
+    for (auto i(0); i < NUM_ITEMS; ++i)
     {
-      float x(x_dist(rng));
-      float y(y_dist(rng));
-      float size(2.f * item.radius);
+      uniform_real_distribution<> x_dist(0, MAP_SIZE_X - 1);
+      uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
 
-      auto clear(
-	!map_system.get_entity(x,        y,        0).solid &&
-	!map_system.get_entity(x + size, y,        0).solid &&
-	!map_system.get_entity(x,        y + size, 0).solid &&
-	!map_system.get_entity(x + size, y + size, 0).solid);
+      Item item;
+      item.type = get_random_type();
+      item.texture_name = TYPE_TO_TEXTURE[item.type];
+      item.properties.item = true;
+      item.floor = floor;
 
-      if (clear)
+      while (1)
       {
-	item.pos = {x, y};
-	map_system.get_chunk(x, y, 0).items.push_back(item);
+	float x(x_dist(rng));
+	float y(y_dist(rng));
+	float size(2.f * item.radius);
 
-	break;
+	auto clear(
+	  !map_system.get_entity(x,        y,        floor).solid &&
+	  !map_system.get_entity(x + size, y,        floor).solid &&
+	  !map_system.get_entity(x,        y + size, floor).solid &&
+	  !map_system.get_entity(x + size, y + size, floor).solid);
+
+	if (clear)
+	{
+	  item.pos = {x, y};
+	  map_system.get_chunk(x, y, floor).items.push_back(item);
+
+	  break;
+	}
       }
     }
   }
@@ -142,7 +147,25 @@ void EntitySystem::handle_activation()
   if (sqrd_distance > 2.4f) return;
 
   if (entity.properties.door)
+    handle_door(entity);
+}
+
+
+void EntitySystem::handle_door(Entity& entity)
+{
+  assert(entity.properties.door);
+
+  Door& door(static_cast<Door&>(entity));
+
+  if (!door.locked)
   {
-    cout << "Door!" << endl;
+    cout << door.open << endl;
+
+    if (door.open)
+      map_system.update_door(door.pos.x(), door.pos.y(), door.floor, false, false);
+    else
+      map_system.update_door(door.pos.x(), door.pos.y(), door.floor, true, false);
+
+    map_system.request_cleanup(door.pos.x(), door.pos.y(), door.floor);
   }
 }

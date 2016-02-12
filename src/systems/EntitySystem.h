@@ -4,6 +4,8 @@
 #include <random>
 #include <vector>
 
+#include "../components/Door.h"
+#include "../components/Entity.h"
 #include "../components/Input.h"
 #include "../components/User.h"
 #include "../systems/MapSystem.h"
@@ -22,6 +24,7 @@ class EntitySystem
 
   void apply_user_inputs();
   void handle_activation();
+  void handle_door(Entity& entity);
 
   std::mt19937& rng;
 
@@ -30,7 +33,7 @@ class EntitySystem
   MapSystem& map_system;
 
   User* active_user;
-  std::vector<User> users;
+  std::vector<std::vector<User>> users;
 
   std::vector<std::string> item_types;
 
@@ -40,8 +43,8 @@ public:
 
   void update();
 
-  User* get_active_user() { return active_user; }
-  std::vector<User>& get_users() { return users; }
+  inline User* get_active_user() { return active_user; }
+  inline std::vector<User>& get_users(int floor) { return users[floor]; }
 };
 
 }

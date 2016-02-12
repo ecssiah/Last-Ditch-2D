@@ -10,7 +10,13 @@ namespace ld
 
 struct Door : public Entity
 {
-  Door() = default;
+  Door()
+    : Entity(),
+      open(false),
+      locked(false)
+  {
+    type = "door";
+  }
 
   Door(float x, float y)
     : Entity(),

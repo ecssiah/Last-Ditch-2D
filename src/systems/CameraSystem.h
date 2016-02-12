@@ -22,23 +22,26 @@ public:
 
   void update();
 
-  Eigen::Vector2f to_world_coordinates(Eigen::Vector2i screen_pos);
-  float to_world_coordinates(int screen_pos);
-  void set_target(Entity* target_) { target = target_; }
-
   inline Eigen::Vector2f get_pos() { return pos; }
-  inline Eigen::Vector2i get_pos_in_pixels();
+  inline void set_target(Entity* target_) { target = target_; }
+
+  inline Eigen::Vector2f to_world_coordinates(Eigen::Vector2i screen_pos_pixels);
 };
 
 
-Eigen::Vector2i CameraSystem::get_pos_in_pixels()
+Eigen::Vector2f CameraSystem::to_world_coordinates(Eigen::Vector2i screen_pos_pixels)
 {
-  Eigen::Vector2i pixel_pos(
-    PIXELS_PER_UNIT * pos.x() + SCREEN_SIZE_X / 2,
-    PIXELS_PER_UNIT * pos.y() + SCREEN_SIZE_Y / 2);
+  Eigen::Vector2f screen_pos(
+    screen_pos_pixels.x() / (float)PIXELS_PER_UNIT,
+    screen_pos_pixels.y() / (float)PIXELS_PER_UNIT);
 
-  return pixel_pos;
+  Eigen::Vector2f world_pos(
+    screen_pos.x() + pos.x() - HALF_SCREEN_SIZE_X_WORLD,
+    screen_pos.y() + pos.y() - HALF_SCREEN_SIZE_Y_WORLD);
+
+  return world_pos;
 }
+
 
 }
 

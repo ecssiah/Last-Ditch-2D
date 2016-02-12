@@ -14,6 +14,7 @@ InterfaceSystem::InterfaceSystem(
   : sdl_interface(sdl_interface_),
     time_system(time_system_),
     entity_system(entity_system_),
+    active_user(entity_system_.get_active_user()),
     fonts(),
     textures()
 {
@@ -23,15 +24,11 @@ InterfaceSystem::InterfaceSystem(
 
 void InterfaceSystem::update()
 {
-  auto active_user(entity_system.get_active_user());
-
   stringstream ss;
   ss << active_user->pos.x() << " " << active_user->pos.y();
 
   SDL_Surface* surface;
-
-  surface = TTF_RenderText_Blended(
-    fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
+  surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
 
   textures["debug"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 

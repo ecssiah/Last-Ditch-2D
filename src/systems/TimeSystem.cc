@@ -25,13 +25,13 @@ TimeSystem::TimeSystem()
 double TimeSystem::update()
 {
   end = chrono::steady_clock::now();
-  auto microseconds = chrono::duration_cast<chrono::microseconds>(end - start).count();
+  auto microseconds(chrono::duration_cast<chrono::microseconds>(end - start).count());
 
   dt = microseconds / 1000.0;
 
   if (dt > .01) dt = .01;
 
-  auto step = game_time_rate * dt;
+  auto step(game_time_rate * dt);
 
   game_time += step;
   game_minute_counter += step;

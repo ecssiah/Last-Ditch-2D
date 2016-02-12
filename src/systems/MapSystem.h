@@ -18,7 +18,7 @@ class MapSystem
   void layout_room(int x, int y, int w, int h, int floor);
 
   bool dirty;
-  std::vector<Entity*> dirty_entities;
+  std::vector<std::vector<Entity*>> dirty_entities;
 
   std::vector<std::vector<std::vector<Chunk>>> chunks;
   std::vector<std::vector<Room>> rooms;
@@ -29,7 +29,7 @@ public:
   void update();
 
   void request_cleanup(int x, int y, int floor);
-  std::vector<Entity*>& get_dirty_entities() { return dirty_entities; }
+  std::vector<Entity*>& get_dirty_entities(int floor) { return dirty_entities[floor]; }
 
   Chunk& get_chunk(int x, int y, int floor);
   Chunk& get_chunk(float x, float y, int floor);
@@ -51,6 +51,8 @@ public:
     std::string texture_name,
     int x, int y, int floor,
     float rotation = 0.f, bool solid = true);
+
+  void update_door(int x, int y, int floor, bool open, bool locked);
 };
 
 }

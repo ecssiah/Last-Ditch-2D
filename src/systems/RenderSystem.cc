@@ -28,12 +28,11 @@ RenderSystem::RenderSystem(
     textures(),
     texture_coords(),
     debug(false),
-    current_floor(0)
+    active_user(entity_system.get_active_user())
 {
   setup_textures();
 
   physics_system.set_debug_draw(debug_draw);
-
 
   cout << "Render system ready" << endl;
 }
@@ -65,19 +64,19 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 }
 
 
-void RenderSystem::render_chunks()
+void RenderSystem::render_chunks(int floor)
 {
-  for (int x = 0; x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
+  for (int x(0); x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
-    for (int y = 0; y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
+    for (int y(0); y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
     {
-      auto& chunk(map_system.get_chunk(x, y, current_floor));
+      auto& chunk(map_system.get_chunk(x, y, floor));
 
       SDL_Rect dest_rect;
       dest_rect.x =
-	PIXELS_PER_UNIT * (chunk.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+	PIXELS_PER_UNIT * (chunk.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
       dest_rect.y =
-	PIXELS_PER_UNIT * (chunk.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+	PIXELS_PER_UNIT * (chunk.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
       dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
       dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
 
@@ -92,25 +91,13 @@ void RenderSystem::render_chunks()
 
 void RenderSystem::render_entities(Chunk& chunk)
 {
-  for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
-  {
-    for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
-    {
-      auto& entity(chunk.floor_entities[x][y]);
+  for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+    for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+      render_entity(chunk.floor_entities[x][y]);
 
-      render_entity(entity);
-    }
-  }
-
-  for (auto x = 0; x < TILES_PER_CHUNK_X; ++x)
-  {
-    for (auto y = 0; y < TILES_PER_CHUNK_Y; ++y)
-    {
-      auto& entity(chunk.entities[x][y]);
-
-      render_entity(entity);
-    }
-  }
+  for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+    for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+      render_entity(chunk.entities[x][y]);
 }
 
 
@@ -124,11 +111,9 @@ void RenderSystem::render_entity(Entity& entity)
 
   SDL_Rect dest_rect;
   dest_rect.x =
-    PIXELS_PER_UNIT *
-    (entity.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+    PIXELS_PER_UNIT * (entity.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
   dest_rect.y =
-    PIXELS_PER_UNIT *
-    (entity.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+    PIXELS_PER_UNIT * (entity.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
   dest_rect.w = PIXELS_PER_UNIT;
   dest_rect.h = PIXELS_PER_UNIT;
 
@@ -154,9 +139,9 @@ void RenderSystem::render_items(Chunk& chunk)
 
     SDL_Rect dest_rect;
     dest_rect.x =
-      PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
     dest_rect.y =
-      PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
     dest_rect.w = PIXELS_PER_UNIT / 2;
     dest_rect.h = PIXELS_PER_UNIT / 2;
 
@@ -170,21 +155,22 @@ void RenderSystem::render_items(Chunk& chunk)
 
 void RenderSystem::render()
 {
-  render_chunks();
-  render_tiles();
-  render_items();
-  render_users();
+  auto floor(active_user->floor);
+
+  render_chunks(floor);
+  render_tiles(floor);
+  render_items(floor);
+  render_users(floor);
 }
 
 
-void RenderSystem::render_tiles()
+void RenderSystem::render_tiles(int floor)
 {
-  for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+  for (auto x(0); x < NUM_CHUNKS_X; ++x)
   {
-    for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+    for (auto y(0); y < NUM_CHUNKS_Y; ++y)
     {
-      auto& chunk(
-	map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, current_floor));
+      auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
 
       render_entities(chunk);
     }
@@ -192,13 +178,13 @@ void RenderSystem::render_tiles()
 }
 
 
-void RenderSystem::render_items()
+void RenderSystem::render_items(int floor)
 {
-  for (auto x = 0; x < NUM_CHUNKS_X; ++x)
+  for (auto x(0); x < NUM_CHUNKS_X; ++x)
   {
-    for (auto y = 0; y < NUM_CHUNKS_Y; ++y)
+    for (auto y(0); y < NUM_CHUNKS_Y; ++y)
     {
-      auto& chunk(map_system.get_chunk(x, y, current_floor));
+      auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
 
       render_items(chunk);
     }
@@ -206,15 +192,15 @@ void RenderSystem::render_items()
 }
 
 
-void RenderSystem::render_users()
+void RenderSystem::render_users(int floor)
 {
-  for (auto& user : entity_system.get_users())
+  for (auto& user : entity_system.get_users(floor))
   {
     SDL_Rect dest_rect;
     dest_rect.x =
-      PIXELS_PER_UNIT * (user.pos.x() - camera_system.get_pos().x()) + SCREEN_SIZE_X / 2;
+      PIXELS_PER_UNIT * (user.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
     dest_rect.y =
-      PIXELS_PER_UNIT * (user.pos.y() - camera_system.get_pos().y()) + SCREEN_SIZE_Y / 2;
+      PIXELS_PER_UNIT * (user.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
     dest_rect.w = PIXELS_PER_UNIT;
     dest_rect.h = PIXELS_PER_UNIT;
 

@@ -15,9 +15,7 @@ InputSystem::InputSystem(Input& input_)
 
 void InputSystem::update()
 {
-  SDL_Event e;
-
-  while (SDL_PollEvent(&e))
+  for (SDL_Event e; SDL_PollEvent(&e); )
   {
     switch (e.type)
     {

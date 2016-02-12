@@ -31,27 +31,30 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(double dt)
 {
-  cleanup_dirty_entities();
-
-  auto& users(entity_system.get_users());
-
-  for (auto& user : users)
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
-    user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
+    cleanup_dirty_entities(floor);
+
+    auto& users(entity_system.get_users(floor));
+
+    for (auto& user : users)
+    {
+      b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
+      user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
+    }
+
+    world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
+    world->ClearForces();
+
+    for (auto& user : users)
+      user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
   }
-
-  world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
-  world->ClearForces();
-
-  for (auto& user : users)
-    user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
 }
 
 
-void PhysicsSystem::cleanup_dirty_entities()
+void PhysicsSystem::cleanup_dirty_entities(int floor)
 {
-  auto& dirty_entities(map_system.get_dirty_entities());
+  auto& dirty_entities(map_system.get_dirty_entities(floor));
 
   for (auto entity : dirty_entities)
   {
@@ -78,61 +81,67 @@ void PhysicsSystem::render_debug()
 
 void PhysicsSystem::setup_dynamic_bodies()
 {
-  for (auto& user : entity_system.get_users())
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    b2BodyDef body_def;
-    body_def.type = b2_dynamicBody;
-    body_def.position.Set(user.pos.x(), user.pos.y());
-    body_def.linearDamping = 8;
-    body_def.allowSleep = true;
-    body_def.fixedRotation = true;
-    body_def.active = true;
+    for (auto& user : entity_system.get_users(floor))
+    {
+      b2BodyDef body_def;
+      body_def.type = b2_dynamicBody;
+      body_def.position.Set(user.pos.x(), user.pos.y());
+      body_def.linearDamping = 8;
+      body_def.allowSleep = true;
+      body_def.fixedRotation = true;
+      body_def.active = true;
 
-    auto body(world->CreateBody(&body_def));
+      auto body(world->CreateBody(&body_def));
 
-    b2CircleShape circle_shape;
-    circle_shape.m_radius = user.radius;
+      b2CircleShape circle_shape;
+      circle_shape.m_radius = user.radius;
 
-    b2FixtureDef fixture_def;
-    fixture_def.shape = &circle_shape;
-    fixture_def.friction = 0;
+      b2FixtureDef fixture_def;
+      fixture_def.shape = &circle_shape;
+      fixture_def.friction = 0;
 
-    body->CreateFixture(&fixture_def);
+      body->CreateFixture(&fixture_def);
 
-    user.body = body;
+      user.body = body;
+    }
   }
 }
 
 
 void PhysicsSystem::setup_static_bodies()
 {
-  for (auto x = 0; x < MAP_SIZE_X; ++x)
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    for (auto y = 0; y < MAP_SIZE_Y; ++y)
+    for (auto x(0); x < MAP_SIZE_X; ++x)
     {
-      auto& entity(map_system.get_entity(x, y, 0));
-
-      if (entity.solid)
+      for (auto y(0); y < MAP_SIZE_Y; ++y)
       {
-	b2BodyDef body_def;
-	body_def.type = b2_staticBody;
-	body_def.position.Set(x, y);
-	body_def.allowSleep = true;
-	body_def.fixedRotation = true;
-	body_def.active = true;
+	auto& entity(map_system.get_entity(x, y, floor));
 
-	auto body(world->CreateBody(&body_def));
+	if (entity.solid)
+	{
+	  b2BodyDef body_def;
+	  body_def.type = b2_staticBody;
+	  body_def.position.Set(x, y);
+	  body_def.allowSleep = true;
+	  body_def.fixedRotation = true;
+	  body_def.active = true;
 
-	b2PolygonShape polygon_shape;
-	polygon_shape.SetAsBox(.5, .5);
+	  auto body(world->CreateBody(&body_def));
 
-	b2FixtureDef fixture_def;
-	fixture_def.shape = &polygon_shape;
-	fixture_def.friction = 0;
+	  b2PolygonShape polygon_shape;
+	  polygon_shape.SetAsBox(.5, .5);
 
-	body->CreateFixture(&fixture_def);
+	  b2FixtureDef fixture_def;
+	  fixture_def.shape = &polygon_shape;
+	  fixture_def.friction = 0;
 
-	entity.body = body;
+	  body->CreateFixture(&fixture_def);
+
+	  entity.body = body;
+	}
       }
     }
   }
