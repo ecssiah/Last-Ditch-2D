@@ -23,41 +23,26 @@ MapSystem::MapSystem()
 }
 
 
+MapSystem::~MapSystem()
+{
+  for (auto floor(0); floor < NUM_FLOORS; ++floor)
+    for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
+      for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
+      {
+	auto& chunk(chunks[cx][cy][floor])
+
+	for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+	  for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+	  {
+	    chunk.floor_entities[x][y].body = nullptr;
+	    chunk.entities[x][y].body = nullptr;
+	  }
+      }
+}
+
+
 void MapSystem::update()
 {
-  if (dirty)
-  {
-    dirty = false;
-
-    for (auto floor(0); floor < NUM_FLOORS; ++floor)
-    {
-      for (auto x(0); x < NUM_CHUNKS_X; ++x)
-      {
-	for (auto y(0); y < NUM_CHUNKS_Y; ++y)
-	{
-	  auto& chunk(chunks[x][y][floor]);
-
-	  if (chunk.dirty)
-	  {
-	    chunk.dirty = false;
-
-	    for (auto cx(0); cx < TILES_PER_CHUNK_X; ++cx)
-	    {
-	      for (auto cy(0); cy < TILES_PER_CHUNK_Y; ++cy)
-	      {
-		auto& entity(chunk.entities[cx][cy]);
-
-		if (entity.dirty)
-		{
-		  entity.dirty = false;
-		}
-	      }
-	    }
-	  }
-	}
-      }
-    }
-  }
 }
 
 
@@ -178,9 +163,9 @@ void MapSystem::set_door(
 }
 
 
-void MapSystem::open_door(Door& door, bool open)
+bool MapSystem::open_door(Door& door, bool open)
 {
-  if (door.locked) return;
+  if (door.locked) return false;
 
   if (open)
   {
@@ -194,6 +179,8 @@ void MapSystem::open_door(Door& door, bool open)
   }
 
   request_cleanup(door);
+
+  return true;
 }
 
 

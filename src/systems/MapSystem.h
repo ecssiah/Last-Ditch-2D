@@ -27,6 +27,7 @@ class MapSystem
 
 public:
   MapSystem();
+  ~MapSystem();
 
   void update();
 
@@ -51,7 +52,7 @@ public:
     int x, int y, int floor,
     float rotation = 0.f, bool solid = true);
 
-  void open_door(Door& door, bool open);
+  bool open_door(Door& door, bool open);
 };
 
 }
