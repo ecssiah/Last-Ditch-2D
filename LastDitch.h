@@ -19,7 +19,7 @@
 namespace ld
 {
 
-constexpr long SEED = 1234567890;
+constexpr long SEED(1234567890);
 
 class LastDitch
 {

@@ -12,9 +12,9 @@
 namespace ld
 {
 
-constexpr float32 B2D_TIMESTEP = 1 / 30.f;
-constexpr int32 B2D_VELOCITY_ITERATIONS = 8;
-constexpr int32 B2D_POSITION_ITERATIONS = 3;
+constexpr float32 B2D_TIMESTEP(1 / 30.f);
+constexpr int32 B2D_VELOCITY_ITERATIONS(3);
+constexpr int32 B2D_POSITION_ITERATIONS(1);
 
 class PhysicsSystem
 {

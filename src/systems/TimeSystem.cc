@@ -11,7 +11,7 @@ TimeSystem::TimeSystem()
     dt(0.0),
     game_time_rate(62.f),
     game_time_tracker(0.0),
-    game_minutes(604000)
+    game_minutes(10604000)
 {
   cout << endl << "Time system ready" << endl;
 }

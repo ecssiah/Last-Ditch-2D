@@ -36,13 +36,11 @@ public:
   {
     SDL_SetRenderDrawColor(renderer, 200, 255, 255, 255);
 
-    auto xform_origin(vertices[0] + b2Vec2(.5, .5));
+    auto center(vertices[0] + b2Vec2(.5, .5));
 
     SDL_Rect rect;
-    rect.x =
-      PIXELS_PER_UNIT * (xform_origin.x - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-    rect.y =
-      PIXELS_PER_UNIT * (xform_origin.y - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+    rect.x = PIXELS_PER_UNIT * (center.x - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+    rect.y = PIXELS_PER_UNIT * (center.y - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
     rect.w = PIXELS_PER_UNIT;
     rect.h = PIXELS_PER_UNIT;
 

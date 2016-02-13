@@ -31,7 +31,7 @@ struct SDL_Interface
 
     TTF_Init();
 
-    int img_flags = IMG_INIT_PNG;
+    auto img_flags(IMG_INIT_PNG);
     IMG_Init(img_flags);
   }
 

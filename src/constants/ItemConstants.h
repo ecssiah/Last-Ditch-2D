@@ -7,11 +7,11 @@
 namespace ld
 {
 
-const std::vector<std::string> ITEM_TYPES =
+static std::vector<std::string> ITEM_TYPES(
 {
   "scrub1",
   "container1",
-};
+});
 
 }
 

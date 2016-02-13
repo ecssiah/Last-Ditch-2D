@@ -33,7 +33,7 @@ void PhysicsSystem::update(double dt)
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    cleanup_dirty_entities(floor);
+    // cleanup_dirty_entities(floor);
 
     auto& users(entity_system.get_users(floor));
 
