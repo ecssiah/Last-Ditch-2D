@@ -14,7 +14,7 @@
 namespace ld
 {
 
-constexpr int NUM_ITEMS = 100;
+constexpr int NUM_ITEMS(100);
 
 class EntitySystem
 {

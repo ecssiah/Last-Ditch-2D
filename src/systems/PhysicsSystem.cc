@@ -33,8 +33,6 @@ void PhysicsSystem::update(double dt)
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    // cleanup_dirty_entities(floor);
-
     auto& users(entity_system.get_users(floor));
 
     for (auto& user : users)
@@ -48,21 +46,6 @@ void PhysicsSystem::update(double dt)
 
     for (auto& user : users)
       user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
-  }
-}
-
-
-void PhysicsSystem::cleanup_dirty_entities(int floor)
-{
-  auto& dirty_entities(map_system.get_dirty_entities(floor));
-
-  for (auto entity : dirty_entities)
-  {
-    if (entity->body)
-    {
-      destroy_body(entity->body);
-      entity->body = nullptr;
-    }
   }
 }
 

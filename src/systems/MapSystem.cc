@@ -14,7 +14,6 @@ using namespace std;
 
 MapSystem::MapSystem()
   : dirty(false),
-    dirty_entities(NUM_FLOORS),
     chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
     rooms(NUM_FLOORS)
 {
@@ -103,27 +102,15 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
       set_floor_entity("floor1", x, y, floor_);
 
   set_door("door1", x_, y_ + h_ / 2, floor_);
-  set_floor_entity("floor1", x_, y_ + h_ / 2, floor_, 0);
+  set_floor_entity("floor1", x_, y_ + h_ / 2, floor_);
 
   set_entity("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
-  set_floor_entity("floor1", x_, y_ + h_ / 2 - 2, floor_, 0);
+  set_floor_entity("floor1", x_, y_ + h_ / 2 - 2, floor_);
 
   set_entity("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
   set_entity("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
 
   rooms[floor_].push_back({x_, y_, w_, h_, floor_});
-}
-
-
-void MapSystem::request_cleanup(int x, int y, int floor)
-{
-  dirty = true;
-
-  auto& chunk(get_chunk(x, y, floor));
-  chunk.dirty = true;
-
-  auto& entity(chunk.entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y]);
-  entity.dirty = true;
 }
 
 
@@ -185,23 +172,17 @@ void MapSystem::set_door(
   door.floor = floor;
   door.solid = solid;
   door.rotation = rotation;
+  door.locked = false;
 
   get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = door;
 }
 
 
-void MapSystem::update_door(int x, int y, int floor, bool open, bool locked)
+void MapSystem::open_door(Door& door, bool open)
 {
-  auto& entity(
-    get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y]);
+  if (door.locked) return;
 
-  assert(entity.properties.door);
-
-  Door& door(static_cast<Door&>(entity));
-
-  door.locked = locked;
-
-  if (open && !door.locked)
+  if (open)
   {
     door.open = true;
     door.type = "";
@@ -211,6 +192,8 @@ void MapSystem::update_door(int x, int y, int floor, bool open, bool locked)
     door.open = false;
     door.type = "door1";
   }
+
+  request_cleanup(door);
 }
 
 
@@ -243,4 +226,17 @@ void MapSystem::set_floor_entity(
   entity.floor = floor;
 
   get_chunk(x, y, floor).floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = entity;
+}
+
+
+void MapSystem::request_cleanup(Entity& entity)
+{
+  int x(entity.pos.x());
+  int y(entity.pos.y());
+
+  auto& chunk(get_chunk(x, y, entity.floor));
+
+  dirty = true;
+  chunk.dirty = true;
+  entity.dirty = true;
 }

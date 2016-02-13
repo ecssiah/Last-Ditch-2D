@@ -21,8 +21,6 @@ class PhysicsSystem
   void setup_static_bodies();
   void setup_dynamic_bodies();
 
-  void cleanup_dirty_entities(int floor);
-
   MapSystem& map_system;
   EntitySystem& entity_system;
 

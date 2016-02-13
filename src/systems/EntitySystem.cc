@@ -80,10 +80,10 @@ void EntitySystem::setup_items()
 	float size(2.f * item.radius);
 
 	auto clear(
-	  !map_system.get_entity(x,        y,        floor).solid &&
-	  !map_system.get_entity(x + size, y,        floor).solid &&
-	  !map_system.get_entity(x,        y + size, floor).solid &&
-	  !map_system.get_entity(x + size, y + size, floor).solid);
+	  not map_system.get_entity(x,        y,        floor).solid &&
+	  not map_system.get_entity(x + size, y,        floor).solid &&
+	  not map_system.get_entity(x,        y + size, floor).solid &&
+	  not map_system.get_entity(x + size, y + size, floor).solid);
 
 	if (clear)
 	{
@@ -157,15 +157,7 @@ void EntitySystem::handle_door(Entity& entity)
 
   Door& door(static_cast<Door&>(entity));
 
-  if (!door.locked)
-  {
-    cout << door.open << endl;
+  cout << "Sparkys" << endl;
 
-    if (door.open)
-      map_system.update_door(door.pos.x(), door.pos.y(), door.floor, false, false);
-    else
-      map_system.update_door(door.pos.x(), door.pos.y(), door.floor, true, false);
-
-    map_system.request_cleanup(door.pos.x(), door.pos.y(), door.floor);
-  }
+  map_system.open_door(door, !door.open);
 }

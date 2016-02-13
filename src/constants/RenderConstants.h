@@ -22,8 +22,8 @@ static std::map<std::string, std::string> TYPE_TO_TEXTURE(
   {"wall1", "tileset1"},
   {"door1", "tileset1"},
   {"floor1", "tileset1"},
-  {"stairs_up", "tileset1"},
-  {"stairs_down", "tileset1"},
+  {"stairs_up1", "tileset1"},
+  {"stairs_down1", "tileset1"},
   {"scrub1", "items1"},
   {"container1", "items1"},
 });

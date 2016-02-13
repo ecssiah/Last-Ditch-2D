@@ -25,7 +25,7 @@ LastDitch::LastDitch()
 
   cout << endl << "Starting Last Ditch..." << endl << endl;
 
-  while (!input.exit)
+  while (not input.exit)
   {
     auto dt(time_system.update());
 
