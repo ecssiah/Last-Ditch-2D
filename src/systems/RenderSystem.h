@@ -27,8 +27,7 @@ class RenderSystem
   void render_items(int floor);
   void render_users(int floor);
 
-  void render_entities(Chunk& chunk);
-  void render_entity(Entity& entity);
+  void render_tile(Tile& tile);
   void render_items(Chunk& chunk);
 
   SDL_Interface& sdl_interface;

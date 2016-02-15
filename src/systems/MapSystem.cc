@@ -14,30 +14,11 @@ using namespace std;
 
 MapSystem::MapSystem()
   : dirty(false),
-    chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}}),
-    rooms(NUM_FLOORS)
+    chunks(NUM_CHUNKS_X, {NUM_CHUNKS_Y, {NUM_FLOORS, Chunk()}})
 {
   setup_map();
 
   cout << "Map system ready" << endl;
-}
-
-
-MapSystem::~MapSystem()
-{
-  for (auto floor(0); floor < NUM_FLOORS; ++floor)
-    for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
-      for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
-      {
-	auto& chunk(chunks[cx][cy][floor])
-
-	for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-	  for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	  {
-	    chunk.floor_entities[x][y].body = nullptr;
-	    chunk.entities[x][y].body = nullptr;
-	  }
-      }
 }
 
 
@@ -50,13 +31,13 @@ void MapSystem::setup_map()
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    for (auto x(0); x < NUM_CHUNKS_X; ++x)
+    for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
     {
-      for (auto y(0); y < NUM_CHUNKS_Y; ++y)
+      for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
       {
-	auto& chunk(chunks[x][y][floor]);
+	auto& chunk(chunks[cx][cy][floor]);
 
-	chunk.pos = {x * TILES_PER_CHUNK_X, y * TILES_PER_CHUNK_Y};
+	chunk.pos = {cx * TILES_PER_CHUNK_X, cy * TILES_PER_CHUNK_Y};
 	chunk.type = "chunk1";
 	chunk.texture_name = TYPE_TO_TEXTURE[chunk.type];
 	chunk.floor = floor;
@@ -72,30 +53,25 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
 {
   for (auto x(x_); x < x_ + w_; ++x)
   {
-    set_entity("wall1", x, y_, floor_);
-    set_entity("wall1", x, y_ + h_ - 1, floor_);
+    set_main_tile("wall1", x, y_, floor_);
+    set_main_tile("wall1", x, y_ + h_ - 1, floor_);
   }
 
   for (auto y(y_); y < y_ + h_; ++y)
   {
-    set_entity("wall1", x_, y, floor_);
-    set_entity("wall1", x_ + w_ - 1, y, floor_);
+    set_main_tile("wall1", x_, y, floor_);
+    set_main_tile("wall1", x_ + w_ - 1, y, floor_);
   }
 
   for (auto x(x_ + 1); x < x_ + w_ - 1; ++x)
     for (auto y(y_ + 1); y < y_ + h_ - 1; ++y)
-      set_floor_entity("floor1", x, y, floor_);
+      set_floor_tile("floor1", x, y, floor_);
 
-  set_door("door1", x_, y_ + h_ / 2, floor_);
-  set_floor_entity("floor1", x_, y_ + h_ / 2, floor_);
+  set_main_tile("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
+  set_floor_tile("floor1", x_, y_ + h_ / 2 - 2, floor_);
 
-  set_entity("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
-  set_floor_entity("floor1", x_, y_ + h_ / 2 - 2, floor_);
-
-  set_entity("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
-  set_entity("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
-
-  rooms[floor_].push_back({x_, y_, w_, h_, floor_});
+  set_main_tile("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
+  set_main_tile("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
 }
 
 
@@ -114,116 +90,65 @@ Chunk& MapSystem::get_chunk(float x, float y, int floor)
 }
 
 
-Entity& MapSystem::get_entity(int x, int y, int floor)
+Tile& MapSystem::get_main_tile(int x, int y, int floor)
 {
   auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
 
-  return chunk.entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
+  return chunk.main_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
 }
 
 
-Entity& MapSystem::get_entity(float x, float y, int floor)
+Tile& MapSystem::get_main_tile(float x, float y, int floor)
 {
   int ix(std::floor(x));
   int iy(std::floor(y));
 
-  return get_entity(ix, iy, floor);
+  return get_main_tile(ix, iy, floor);
 }
 
 
-void MapSystem::set_entity(
+void MapSystem::set_main_tile(
   string type, int x, int y, int floor, float rotation, bool solid)
 {
-  Entity entity;
-  entity.type = type;
-  entity.texture_name = TYPE_TO_TEXTURE[type];
-  entity.pos = {x, y};
-  entity.floor = floor;
-  entity.solid = solid;
-  entity.rotation = rotation;
+  Tile tile;
+  tile.type = type;
+  tile.texture_name = TYPE_TO_TEXTURE[type];
+  tile.pos = {x, y};
+  tile.floor = floor;
+  tile.solid = solid;
+  tile.rotation = rotation;
 
-  get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = entity;
+  get_chunk(x, y, floor).main_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = tile;
 }
 
 
-void MapSystem::set_door(
-  string type, int x, int y, int floor, float rotation, bool solid)
-{
-  Door door;
-  door.type = type;
-  door.texture_name = TYPE_TO_TEXTURE[type];
-  door.properties.door = true;
-  door.pos = {x, y};
-  door.floor = floor;
-  door.solid = solid;
-  door.rotation = rotation;
-  door.locked = false;
-
-  get_chunk(x, y, floor).entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = door;
-}
-
-
-bool MapSystem::open_door(Door& door, bool open)
-{
-  if (door.locked) return false;
-
-  if (open)
-  {
-    door.open = true;
-    door.type = "";
-  }
-  else
-  {
-    door.open = false;
-    door.type = "door1";
-  }
-
-  request_cleanup(door);
-
-  return true;
-}
-
-
-Entity& MapSystem::get_floor_entity(int x, int y, int floor)
+Tile& MapSystem::get_floor_tile(int x, int y, int floor)
 {
   auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
 
-  return chunk.floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
+  return chunk.floor_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
 }
 
 
-Entity& MapSystem::get_floor_entity(float x, float y, int floor)
+Tile& MapSystem::get_floor_tile(float x, float y, int floor)
 {
   int ix(std::floor(x));
   int iy(std::floor(y));
 
-  return get_floor_entity(ix, iy, floor);
+  return get_floor_tile(ix, iy, floor);
 }
 
 
-void MapSystem::set_floor_entity(
+void MapSystem::set_floor_tile(
   string type, int x, int y, int floor, float rotation, bool solid)
 {
-  Entity entity;
-  entity.type = type;
-  entity.texture_name = TYPE_TO_TEXTURE[type];
-  entity.pos = {x, y};
-  entity.solid = solid;
-  entity.rotation = rotation;
-  entity.floor = floor;
+  Tile tile;
+  tile.type = type;
+  tile.texture_name = TYPE_TO_TEXTURE[type];
+  tile.pos = {x, y};
+  tile.solid = solid;
+  tile.rotation = rotation;
+  tile.floor = floor;
 
-  get_chunk(x, y, floor).floor_entities[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = entity;
-}
-
-
-void MapSystem::request_cleanup(Entity& entity)
-{
-  int x(entity.pos.x());
-  int y(entity.pos.y());
-
-  auto& chunk(get_chunk(x, y, entity.floor));
-
-  dirty = true;
-  chunk.dirty = true;
-  entity.dirty = true;
+  get_chunk(x, y, floor).floor_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = tile;
 }

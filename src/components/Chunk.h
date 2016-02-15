@@ -5,8 +5,9 @@
 #include <SDL2/SDL.h>
 #include <vector>
 
+#include "Door.h"
 #include "Item.h"
-#include "Entity.h"
+#include "Tile.h"
 
 namespace ld
 {
@@ -15,15 +16,17 @@ struct Chunk : public Entity
 {
   Chunk()
     : Entity(),
-      entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
-      floor_entities(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Entity()}),
-      items()
+      main_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
+      floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
+      items(),
+      doors()
   {}
 
-  std::vector<std::vector<Entity>> entities;
-  std::vector<std::vector<Entity>> floor_entities;
+  std::vector<std::vector<Tile>> main_tiles;
+  std::vector<std::vector<Tile>> floor_tiles;
 
   std::vector<Item> items;
+  std::vector<Item> doors;
 };
 
 }

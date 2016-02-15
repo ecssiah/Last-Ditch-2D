@@ -38,7 +38,7 @@ void EntitySystem::setup_users()
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
   kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
-  kadijah.pos = {1, 2};
+  kadijah.pos = {3, 9};
   kadijah.floor = 0;
   kadijah.radius = .48;
   kadijah.speed = 240;
@@ -70,7 +70,6 @@ void EntitySystem::setup_items()
       Item item;
       item.type = get_random_type();
       item.texture_name = TYPE_TO_TEXTURE[item.type];
-      item.properties.item = true;
       item.floor = floor;
 
       while (1)
@@ -80,10 +79,10 @@ void EntitySystem::setup_items()
 	float size(2.f * item.radius);
 
 	auto clear(
-	  not map_system.get_entity(x,        y,        floor).solid &&
-	  not map_system.get_entity(x + size, y,        floor).solid &&
-	  not map_system.get_entity(x,        y + size, floor).solid &&
-	  not map_system.get_entity(x + size, y + size, floor).solid);
+	  !map_system.get_main_tile(x,        y,        floor).solid &&
+	  !map_system.get_main_tile(x + size, y,        floor).solid &&
+	  !map_system.get_main_tile(x,        y + size, floor).solid &&
+	  !map_system.get_main_tile(x + size, y + size, floor).solid);
 
 	if (clear)
 	{
@@ -136,28 +135,9 @@ void EntitySystem::handle_activation()
     selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
 
   if (out_of_bounds) return;
-
-  auto& entity(
-    map_system.get_entity(selection_point.x(), selection_point.y(), active_user->floor));
-
-  if (entity.type == "") return;
-
-  auto sqrd_distance((entity.pos - active_user->pos).squaredNorm());
-
-  if (sqrd_distance > 2.4f) return;
-
-  if (entity.properties.door)
-    handle_door(entity);
 }
 
 
 void EntitySystem::handle_door(Entity& entity)
 {
-  assert(entity.properties.door);
-
-  Door& door(static_cast<Door&>(entity));
-
-  cout << "Sparkys" << endl;
-
-  map_system.open_door(door, !door.open);
 }

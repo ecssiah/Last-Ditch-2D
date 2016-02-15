@@ -89,39 +89,27 @@ void RenderSystem::render_chunks(int floor)
 }
 
 
-void RenderSystem::render_entities(Chunk& chunk)
-{
-  for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-    for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-      render_entity(chunk.floor_entities[x][y]);
-
-  for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-    for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-      render_entity(chunk.entities[x][y]);
-}
-
-
-void RenderSystem::render_entity(Entity& entity)
+void RenderSystem::render_tile(Tile& tile)
 {
   SDL_Rect clip_rect;
-  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[entity.type].x());
-  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[entity.type].y());
+  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[tile.type].x());
+  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[tile.type].y());
   clip_rect.w = PIXELS_PER_UNIT;
   clip_rect.h = PIXELS_PER_UNIT;
 
   SDL_Rect dest_rect;
   dest_rect.x =
-    PIXELS_PER_UNIT * (entity.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+    PIXELS_PER_UNIT * (tile.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
   dest_rect.y =
-    PIXELS_PER_UNIT * (entity.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+    PIXELS_PER_UNIT * (tile.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
   dest_rect.w = PIXELS_PER_UNIT;
   dest_rect.h = PIXELS_PER_UNIT;
 
   SDL_RenderCopyEx(
     sdl_interface.renderer,
-    textures[entity.texture_name],
+    textures[tile.texture_name],
     &clip_rect, &dest_rect,
-    entity.rotation,
+    tile.rotation,
     nullptr,
     SDL_FLIP_NONE);
 }
@@ -166,13 +154,20 @@ void RenderSystem::render()
 
 void RenderSystem::render_tiles(int floor)
 {
-  for (auto x(0); x < NUM_CHUNKS_X; ++x)
+  for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
   {
-    for (auto y(0); y < NUM_CHUNKS_Y; ++y)
+    for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
     {
-      auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
+      auto& chunk(
+	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
 
-      render_entities(chunk);
+      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+	  render_tile(chunk.floor_tiles[x][y]);
+
+      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+	  render_tile(chunk.main_tiles[x][y]);
     }
   }
 }

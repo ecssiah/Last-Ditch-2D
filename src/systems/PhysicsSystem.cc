@@ -101,9 +101,9 @@ void PhysicsSystem::setup_static_bodies()
     {
       for (auto y(0); y < MAP_SIZE_Y; ++y)
       {
-	auto& entity(map_system.get_entity(x, y, floor));
+	auto& tile(map_system.get_main_tile(x, y, floor));
 
-	if (entity.solid)
+	if (tile.solid)
 	{
 	  b2BodyDef body_def;
 	  body_def.type = b2_staticBody;
@@ -123,7 +123,7 @@ void PhysicsSystem::setup_static_bodies()
 
 	  body->CreateFixture(&fixture_def);
 
-	  entity.body = body;
+	  tile.body = body;
 	}
       }
     }

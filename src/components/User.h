@@ -1,6 +1,7 @@
 #ifndef USER_H
 #define USER_H
 
+#include <Box2D/Box2D.h>
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 #include <string>
@@ -15,21 +16,22 @@ struct User : public Entity
   User()
     : Entity(),
       name(std::string()),
-      floor(0),
       radius(.5f),
       speed(100.f),
       vel(0.f, 0.f),
-      clip_rect()
+      clip_rect(),
+      body(nullptr)
   {}
 
   std::string name;
 
-  int floor;
   float radius;
   float speed;
   Eigen::Vector2f vel;
 
   SDL_Rect clip_rect;
+
+  b2Body* body;
 };
 
 }
