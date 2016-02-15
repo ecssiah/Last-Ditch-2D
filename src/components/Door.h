@@ -12,21 +12,20 @@ struct Door : public Entity
 {
   Door()
     : Entity(),
+      rotation(0.f),
       open(false),
       locked(false)
-  {
-    type = "door";
-  }
+  {}
 
   Door(float x, float y)
     : Entity(),
       open(false),
       locked(false)
   {
-    type = "door";
     pos = {x, y};
   }
 
+  float rotation;
   bool open, locked;
 };
 

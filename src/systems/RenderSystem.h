@@ -24,11 +24,12 @@ class RenderSystem
   void render();
   void render_chunks(int floor);
   void render_tiles(int floor);
-  void render_items(int floor);
-  void render_users(int floor);
-
   void render_tile(Tile& tile);
-  void render_items(Chunk& chunk);
+  void render_items(int floor);
+  void render_item(Item& item);
+  void render_doors(int floor);
+  void render_door(Door& door);
+  void render_users(int floor);
 
   SDL_Interface& sdl_interface;
   DebugDraw debug_draw;

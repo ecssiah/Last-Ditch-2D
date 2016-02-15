@@ -67,6 +67,9 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
     for (auto y(y_ + 1); y < y_ + h_ - 1; ++y)
       set_floor_tile("floor1", x, y, floor_);
 
+  create_door("door1", x_, y_ + h_ / 2, floor_);
+  set_floor_tile("floor1", x_, y_ + h_ / 2, floor_, 0, false);
+
   set_main_tile("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
   set_floor_tile("floor1", x_, y_ + h_ / 2 - 2, floor_);
 
@@ -110,15 +113,14 @@ Tile& MapSystem::get_main_tile(float x, float y, int floor)
 void MapSystem::set_main_tile(
   string type, int x, int y, int floor, float rotation, bool solid)
 {
-  Tile tile;
+  auto& tile(get_main_tile(x, y, floor));
+
   tile.type = type;
   tile.texture_name = TYPE_TO_TEXTURE[type];
   tile.pos = {x, y};
   tile.floor = floor;
   tile.solid = solid;
   tile.rotation = rotation;
-
-  get_chunk(x, y, floor).main_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = tile;
 }
 
 
@@ -142,13 +144,28 @@ Tile& MapSystem::get_floor_tile(float x, float y, int floor)
 void MapSystem::set_floor_tile(
   string type, int x, int y, int floor, float rotation, bool solid)
 {
-  Tile tile;
+  auto& tile(get_floor_tile(x, y, floor));
+
   tile.type = type;
   tile.texture_name = TYPE_TO_TEXTURE[type];
   tile.pos = {x, y};
   tile.solid = solid;
   tile.rotation = rotation;
   tile.floor = floor;
+}
 
-  get_chunk(x, y, floor).floor_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y] = tile;
+
+void MapSystem::create_door(string type, int x, int y, int floor, float rotation)
+{
+  set_main_tile(type, x, y, floor, rotation, true);
+
+  Door door;
+  door.type = type;
+  door.texture_name = TYPE_TO_TEXTURE[type];
+  door.pos = {x, y};
+  door.floor = floor;
+  door.rotation = rotation;
+
+  auto& chunk(get_chunk(x, y, floor));
+  chunk.doors.push_back(door);
 }

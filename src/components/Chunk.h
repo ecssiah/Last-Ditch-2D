@@ -26,7 +26,7 @@ struct Chunk : public Entity
   std::vector<std::vector<Tile>> floor_tiles;
 
   std::vector<Item> items;
-  std::vector<Item> doors;
+  std::vector<Door> doors;
 };
 
 }

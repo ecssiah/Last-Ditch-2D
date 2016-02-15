@@ -115,32 +115,6 @@ void RenderSystem::render_tile(Tile& tile)
 }
 
 
-void RenderSystem::render_items(Chunk& chunk)
-{
-  for (auto& item : chunk.items)
-  {
-    SDL_Rect clip_rect;
-    clip_rect.x = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].x());
-    clip_rect.y = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].y());
-    clip_rect.w = PIXELS_PER_UNIT / 2;
-    clip_rect.h = PIXELS_PER_UNIT / 2;
-
-    SDL_Rect dest_rect;
-    dest_rect.x =
-      PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-    dest_rect.y =
-      PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-    dest_rect.w = PIXELS_PER_UNIT / 2;
-    dest_rect.h = PIXELS_PER_UNIT / 2;
-
-    SDL_RenderCopy(
-      sdl_interface.renderer,
-      textures[item.texture_name],
-      &clip_rect, &dest_rect);
-  }
-}
-
-
 void RenderSystem::render()
 {
   auto floor(active_user->floor);
@@ -148,6 +122,7 @@ void RenderSystem::render()
   render_chunks(floor);
   render_tiles(floor);
   render_items(floor);
+  render_doors(floor);
   render_users(floor);
 }
 
@@ -181,9 +156,72 @@ void RenderSystem::render_items(int floor)
     {
       auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
 
-      render_items(chunk);
+      for (auto& item : chunk.items)
+	render_item(item);
     }
   }
+}
+
+
+void RenderSystem::render_item(Item& item)
+{
+  SDL_Rect clip_rect;
+  clip_rect.x = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].x());
+  clip_rect.y = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].y());
+  clip_rect.w = PIXELS_PER_UNIT / 2;
+  clip_rect.h = PIXELS_PER_UNIT / 2;
+
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT / 2;
+  dest_rect.h = PIXELS_PER_UNIT / 2;
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    textures[item.texture_name],
+    &clip_rect, &dest_rect);
+}
+
+
+void RenderSystem::render_doors(int floor)
+{
+  for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
+  {
+    for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
+    {
+      auto& chunk(
+	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
+
+      for (auto& door : chunk.doors)
+	render_door(door);
+    }
+  }
+}
+
+
+void RenderSystem::render_door(Door& door)
+{
+  SDL_Rect clip_rect;
+  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[door.type].x());
+  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[door.type].y());
+  clip_rect.w = PIXELS_PER_UNIT;
+  clip_rect.h = PIXELS_PER_UNIT;
+
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (door.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (door.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    textures[door.texture_name],
+    &clip_rect, &dest_rect);
 }
 
 
