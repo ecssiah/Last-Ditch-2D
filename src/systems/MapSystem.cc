@@ -67,8 +67,12 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
     for (auto y(y_ + 1); y < y_ + h_ - 1; ++y)
       set_floor_tile("floor1", x, y, floor_);
 
+  create_door("door1", x_, y_, floor_);
+  set_floor_tile("floor1", x_, y_, floor_, 0, false);
+
   create_door("door1", x_, y_ + h_ / 2, floor_);
   set_floor_tile("floor1", x_, y_ + h_ / 2, floor_, 0, false);
+  set_main_tile("wall1", x_ - 1, y_ + h_ / 2, floor_);
 
   set_main_tile("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
   set_floor_tile("floor1", x_, y_ + h_ / 2 - 2, floor_);
@@ -157,7 +161,7 @@ void MapSystem::set_floor_tile(
 
 void MapSystem::create_door(string type, int x, int y, int floor, float rotation)
 {
-  set_main_tile(type, x, y, floor, rotation, true);
+  set_main_tile("", x, y, floor, rotation, true);
 
   Door door;
   door.type = type;
@@ -171,10 +175,16 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
 }
 
 
-void open_door(Door& door)
+void MapSystem::open_door(Door& door)
 {
   if (!door.locked)
   {
     door.open = !door.open;
+
+    auto& chunk(get_chunk(door.pos.x(), door.pos.y(), door.floor));
+
+    dirty = true;
+    chunk.dirty = true;
+    door.dirty = true;
   }
 }
