@@ -19,6 +19,7 @@ class MapSystem
   void layout_room(int x, int y, int w, int h, int floor);
 
   void create_door(std::string type, int x, int y, int floor, float roation = 0.f);
+  void open_door(Door& door);
 
   bool dirty;
 

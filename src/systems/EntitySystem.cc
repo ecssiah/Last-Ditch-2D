@@ -135,9 +135,30 @@ void EntitySystem::handle_activation()
     selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
 
   if (out_of_bounds) return;
+
+  auto& chunk(
+    map_system.get_chunk(selection_point.x(), selection_point.y(), active_user->floor));
+
+  find_door(selection_point, chunk);
 }
 
 
-void EntitySystem::handle_door(Entity& entity)
+bool EntitySystem::find_door(Vector2f& selection_point, Chunk& chunk)
 {
+  for (auto& door : chunk.doors)
+  {
+    auto hit(
+      selection_point.x() > door.pos.x() && selection_point.x() < door.pos.x() + 1 &&
+      selection_point.y() > door.pos.y() && selection_point.y() < door.pos.y() + 1);
+
+    if (hit && !door.locked)
+    {
+      door.open = !door.open;
+      map_system.get_main_tile(door.pos.x(), door.pos.y(), door.floor).solid = !door.open;
+
+      return true;
+    }
+  }
+
+  return false;
 }

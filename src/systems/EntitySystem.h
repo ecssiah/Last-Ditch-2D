@@ -18,13 +18,15 @@ constexpr int NUM_ITEMS(100);
 
 class EntitySystem
 {
+  std::string get_random_type();
+
   void setup_users();
   void setup_items();
-  std::string get_random_type();
 
   void apply_user_inputs();
   void handle_activation();
-  void handle_door(Entity& entity);
+
+  bool find_door(Eigen::Vector2f& selection_point, Chunk& chunk);
 
   std::mt19937& rng;
 

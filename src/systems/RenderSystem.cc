@@ -45,7 +45,8 @@ void RenderSystem::setup_textures()
 
   textures["tileset1"] = load_texture("tileset1");
   texture_coords["wall1"] = {0, 0};
-  texture_coords["door1"] = {0, 1};
+  texture_coords["door1_closed"] = {0, 1};
+  texture_coords["door1_open"] = {1, 1};
   texture_coords["stairs_down1"] = {0, 2};
   texture_coords["stairs_up1"] = {1, 2};
   texture_coords["floor1"] = {0, 3};
@@ -204,9 +205,11 @@ void RenderSystem::render_doors(int floor)
 
 void RenderSystem::render_door(Door& door)
 {
+  auto full_type(door.open ? door.type + "_open" : door.type + "_closed");
+
   SDL_Rect clip_rect;
-  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[door.type].x());
-  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[door.type].y());
+  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[full_type].x());
+  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[full_type].y());
   clip_rect.w = PIXELS_PER_UNIT;
   clip_rect.h = PIXELS_PER_UNIT;
 

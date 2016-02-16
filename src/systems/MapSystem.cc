@@ -169,3 +169,12 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
   auto& chunk(get_chunk(x, y, floor));
   chunk.doors.push_back(door);
 }
+
+
+void open_door(Door& door)
+{
+  if (!door.locked)
+  {
+    door.open = !door.open;
+  }
+}
