@@ -33,10 +33,12 @@ static std::map<std::string, Eigen::Vector3i> ANIMATION_COORDS(
 {
   {"kadijah-idle-forward", {1, 0, 0}},
   {"kadijah-idle-back", {1, 1, 0}},
-  {"kadijah-idle-side", {1, 2, 0}},
+  {"kadijah-idle-left", {1, 2, 0}},
+  {"kadijah-idle-right", {1, 2, 0}},
   {"kadijah-walk-forward", {2, 0, 1}},
   {"kadijah-walk-back", {2, 0, 2}},
-  {"kadijah-walk-side", {4, 0, 3}},
+  {"kadijah-walk-left", {4, 0, 3}},
+  {"kadijah-walk-right", {4, 0, 3}},
 });
 
 }

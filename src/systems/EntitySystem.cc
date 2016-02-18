@@ -40,7 +40,7 @@ void EntitySystem::setup_users()
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
   kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
-  kadijah.animation = "kadijah-walk-side";
+  kadijah.animation = "kadijah-idle-front";
   kadijah.pos = {3, 9};
   kadijah.floor = 0;
   kadijah.radius = .48;
@@ -138,34 +138,36 @@ void EntitySystem::apply_user_inputs()
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
+  auto& animation(active_user->animation);
+  string new_animation(animation);
+
   if (direction.squaredNorm() == 0)
   {
     active_user->vel = Vector2f::Zero();
 
-    auto animation(active_user->animation);
-    string new_animation("");
-
     if (animation == "kadijah-walk-forward") new_animation = "kadijah-idle-forward";
     else if (animation == "kadijah-walk-back") new_animation = "kadijah-idle-back";
-    else if (animation == "kadijah-walk-side") new_animation = "kadijah-idle-side";
-    else new_animation = "kadijah-idle-forward";
-
-    active_user->animation = new_animation;
+    else if (animation == "kadijah-walk-left") new_animation = "kadijah-idle-left";
+    else if (animation == "kadijah-walk-right") new_animation = "kadijah-idle-right";
   }
   else
   {
     direction.normalize();
-    active_user->vel = active_user->speed * direction;
+    auto vel(active_user->speed * direction);
 
-    if (direction.x() > 0)
-      active_user->animation = "kadijah-walk-side";
-    else if (direction.x() < 0)
-      active_user->animation = "kadijah-walk-side";
-    else if (direction.y() > 0)
-      active_user->animation = "kadijah-walk-forward";
-    else if (direction.y() < 0)
-      active_user->animation = "kadijah-walk-back";
+    if (vel.x() > 0)
+      new_animation = "kadijah-walk-right";
+    else if (vel.x() < 0)
+      new_animation = "kadijah-walk-left";
+    else if (vel.y() > 0)
+      new_animation = "kadijah-walk-forward";
+    else if (vel.y() < 0)
+      new_animation = "kadijah-walk-back";
+
+    active_user->vel = vel;
   }
+
+  active_user->animation = new_animation;
 }
 
 

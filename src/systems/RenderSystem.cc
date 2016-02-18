@@ -228,6 +228,19 @@ void RenderSystem::render_door(Door& door)
 }
 
 
+bool ends_with(string const& string, std::string const& suffix)
+{
+  if (string.length() >= suffix.length())
+  {
+    auto found(string.compare(string.length() - suffix.length(), suffix.length(), suffix));
+
+    if (found) return true;
+  }
+
+  return false;
+}
+
+
 void RenderSystem::render_users(int floor)
 {
   for (auto& user : entity_system.get_users(floor))
@@ -240,11 +253,16 @@ void RenderSystem::render_users(int floor)
     dest_rect.w = PIXELS_PER_UNIT;
     dest_rect.h = PIXELS_PER_UNIT;
 
-    SDL_RenderCopy(
+    SDL_RendererFlip flip(
+      ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderCopyEx(
       sdl_interface.renderer,
       textures[user.texture_name],
-      &user.clip_rect,
-      &dest_rect);
+      &user.clip_rect, &dest_rect,
+      0,
+      nullptr,
+      flip);
   }
 }
 
