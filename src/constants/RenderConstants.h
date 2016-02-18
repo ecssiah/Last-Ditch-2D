@@ -36,7 +36,7 @@ static std::map<std::string, Eigen::Vector3i> ANIMATION_COORDS(
   {"kadijah-idle-side", {1, 2, 0}},
   {"kadijah-walk-forward", {2, 0, 1}},
   {"kadijah-walk-back", {2, 0, 2}},
-  {"kadijah-walk-side", {2, 0, 3}},
+  {"kadijah-walk-side", {4, 0, 3}},
 });
 
 }
