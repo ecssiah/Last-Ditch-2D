@@ -27,7 +27,7 @@ RenderSystem::RenderSystem(
     debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     texture_coords(),
-    debug(true),
+    debug(false),
     active_user(entity_system.get_active_user())
 {
   setup_textures();

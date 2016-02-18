@@ -100,6 +100,8 @@ void EntitySystem::setup_items()
 
 void EntitySystem::update(double dt)
 {
+  apply_user_inputs();
+
   frame_time += dt;
 
   if (frame_time > .03)
@@ -108,17 +110,20 @@ void EntitySystem::update(double dt)
 
     for (auto& user : users[active_user->floor])
     {
-      ++user.frame;
+      auto num_frames(ANIMATION_COORDS[user.animation][0]);
 
-      if (user.frame >= ANIMATION_COORDS[user.animation].x())
+      if (user.frame >= num_frames - 1)
 	user.frame = 0;
+      else
+	++user.frame;
 
-      user.clip_rect.x = PIXELS_PER_UNIT * (ANIMATION_COORDS[user.animation].y() + user.frame);
-      user.clip_rect.y = PIXELS_PER_UNIT * ANIMATION_COORDS[user.animation].z();
+      auto x(ANIMATION_COORDS[user.animation][1] + user.frame);
+      auto y(ANIMATION_COORDS[user.animation][2]);
+
+      user.clip_rect.x = PIXELS_PER_UNIT * x;
+      user.clip_rect.y = PIXELS_PER_UNIT * y;
     }
   }
-
-  apply_user_inputs();
 
   if (input.activate) handle_activation();
 }
@@ -133,13 +138,34 @@ void EntitySystem::apply_user_inputs()
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
-  if (direction.squaredNorm() != 0)
+  if (direction.squaredNorm() == 0)
+  {
+    active_user->vel = Vector2f::Zero();
+
+    auto animation(active_user->animation);
+    string new_animation("");
+
+    if (animation == "kadijah-walk-forward") new_animation = "kadijah-idle-forward";
+    else if (animation == "kadijah-walk-back") new_animation = "kadijah-idle-back";
+    else if (animation == "kadijah-walk-side") new_animation = "kadijah-idle-side";
+    else new_animation = "kadijah-idle-forward";
+
+    active_user->animation = new_animation;
+  }
+  else
   {
     direction.normalize();
     active_user->vel = active_user->speed * direction;
+
+    if (direction.x() > 0)
+      active_user->animation = "kadijah-walk-side";
+    else if (direction.x() < 0)
+      active_user->animation = "kadijah-walk-side";
+    else if (direction.y() > 0)
+      active_user->animation = "kadijah-walk-forward";
+    else if (direction.y() < 0)
+      active_user->animation = "kadijah-walk-back";
   }
-  else
-    active_user->vel = Vector2f::Zero();
 }
 
 
