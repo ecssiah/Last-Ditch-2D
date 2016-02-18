@@ -37,13 +37,15 @@ class EntitySystem
   User* active_user;
   std::vector<std::vector<User>> users;
 
+  double frame_time;
+
   std::vector<std::string> item_types;
 
 public:
   EntitySystem(
     std::mt19937& rng, Input& input, CameraSystem& camera_system, MapSystem& map_system);
 
-  void update();
+  void update(double dt);
 
   inline User* get_active_user() { return active_user; }
   inline std::vector<User>& get_users(int floor) { return users[floor]; }

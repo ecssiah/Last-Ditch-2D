@@ -27,7 +27,7 @@ RenderSystem::RenderSystem(
     debug_draw(sdl_interface.renderer, camera_system_),
     textures(),
     texture_coords(),
-    debug(false),
+    debug(true),
     active_user(entity_system.get_active_user())
 {
   setup_textures();
@@ -243,7 +243,8 @@ void RenderSystem::render_users(int floor)
     SDL_RenderCopy(
       sdl_interface.renderer,
       textures[user.texture_name],
-      &user.clip_rect, &dest_rect);
+      &user.clip_rect,
+      &dest_rect);
   }
 }
 

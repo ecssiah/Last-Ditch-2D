@@ -186,5 +186,6 @@ void MapSystem::open_door(Door& door)
     dirty = true;
     chunk.dirty = true;
     door.dirty = true;
+    door.solid = true;
   }
 }

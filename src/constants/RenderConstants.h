@@ -1,6 +1,7 @@
 #ifndef RENDERCONSTANTS_H
 #define RENDERCONSTANTS_H
 
+#include <eigen3/Eigen/Geometry>
 #include <map>
 #include <string>
 
@@ -26,6 +27,16 @@ static std::map<std::string, std::string> TYPE_TO_TEXTURE(
   {"stairs_down1", "tileset1"},
   {"scrub1", "items1"},
   {"container1", "items1"},
+});
+
+static std::map<std::string, Eigen::Vector3i> ANIMATION_COORDS(
+{
+  {"kadijah-idle-forward", {1, 0, 0}},
+  {"kadijah-idle-back", {1, 1, 0}},
+  {"kadijah-idle-side", {1, 2, 0}},
+  {"kadijah-walk-forward", {2, 0, 1}},
+  {"kadijah-walk-back", {2, 0, 2}},
+  {"kadijah-walk-side", {2, 0, 3}},
 });
 
 }

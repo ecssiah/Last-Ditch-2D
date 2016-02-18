@@ -23,7 +23,9 @@ EntitySystem::EntitySystem(
     map_system(map_system_),
     camera_system(camera_system_),
     active_user(nullptr),
-    users(NUM_FLOORS)
+    users(NUM_FLOORS),
+    frame_time(0.0),
+    item_types()
 {
   setup_users();
   setup_items();
@@ -38,12 +40,11 @@ void EntitySystem::setup_users()
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
   kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.animation = "kadijah-walk-side";
   kadijah.pos = {3, 9};
   kadijah.floor = 0;
   kadijah.radius = .48;
   kadijah.speed = 240;
-  kadijah.clip_rect.w = PIXELS_PER_UNIT;
-  kadijah.clip_rect.h = PIXELS_PER_UNIT;
 
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
@@ -97,8 +98,26 @@ void EntitySystem::setup_items()
 }
 
 
-void EntitySystem::update()
+void EntitySystem::update(double dt)
 {
+  frame_time += dt;
+
+  if (frame_time > .03)
+  {
+    frame_time = 0.0;
+
+    for (auto& user : users[active_user->floor])
+    {
+      ++user.frame;
+
+      if (user.frame >= ANIMATION_COORDS[user.animation].x())
+	user.frame = 0;
+
+      user.clip_rect.x = PIXELS_PER_UNIT * (ANIMATION_COORDS[user.animation].y() + user.frame);
+      user.clip_rect.y = PIXELS_PER_UNIT * ANIMATION_COORDS[user.animation].z();
+    }
+  }
+
   apply_user_inputs();
 
   if (input.activate) handle_activation();
@@ -154,12 +173,11 @@ bool EntitySystem::find_door(Vector2f& selection_point, Chunk& chunk)
     if (!hit) continue;
 
     auto user_center(active_user->pos + Vector2f(.5, .5));
-    auto in_range((user_center - selection_point).squaredNorm() < 3.0f);
+    auto in_range((user_center - selection_point).squaredNorm() < 2.8f);
 
     if (!in_range) continue;
 
-    door.open = !door.open;
-    map_system.get_main_tile(door.pos.x(), door.pos.y(), door.floor).solid = !door.open;
+    map_system.open_door(door);
 
     return true;
   }

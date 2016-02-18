@@ -30,7 +30,7 @@ LastDitch::LastDitch()
     auto dt(time_system.update());
 
     input_system.update();
-    entity_system.update();
+    entity_system.update(dt);
     map_system.update();
     physics_system.update(dt);
     camera_system.update();

@@ -38,6 +38,9 @@ struct SDL_Interface
 
   void shutdown()
   {
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();

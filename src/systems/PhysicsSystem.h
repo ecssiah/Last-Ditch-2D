@@ -13,13 +13,16 @@ namespace ld
 {
 
 constexpr float32 B2D_TIMESTEP(1 / 30.f);
-constexpr int32 B2D_VELOCITY_ITERATIONS(3);
+constexpr int32 B2D_VELOCITY_ITERATIONS(1);
 constexpr int32 B2D_POSITION_ITERATIONS(1);
 
 class PhysicsSystem
 {
-  void setup_static_bodies();
-  void setup_dynamic_bodies();
+  void setup_user_bodies();
+  void setup_tile_bodies();
+  void setup_door_bodies();
+
+  b2Body* create_body(float x, float y, float hw, float hh);
 
   MapSystem& map_system;
   EntitySystem& entity_system;
