@@ -25,36 +25,36 @@ public:
   double update();
   void tick();
 
-  inline const int get_year() const;
-  inline const int get_month() const;
-  inline const int get_day() const;
-  inline const int get_hour() const;
   inline const int get_minute() const;
+  inline const int get_hour() const;
+  inline const int get_day() const;
+  inline const int get_month() const;
+  inline const int get_year() const;
 };
-
-const int TimeSystem::get_year() const
-{
-  return game_minutes / MINUTES_PER_YEAR;
-}
-
-const int TimeSystem::get_month() const
-{
-  return (game_minutes / MINUTES_PER_MONTH) % DAYS_PER_MONTH;
-}
-
-const int TimeSystem::get_day() const
-{
-  return (game_minutes % MINUTES_PER_MONTH) / MINUTES_PER_DAY;
-}
-
-const int TimeSystem::get_hour() const
-{
-  return (game_minutes % MINUTES_PER_DAY) / MINUTES_PER_HOUR;
-}
 
 const int TimeSystem::get_minute() const
 {
   return game_minutes % MINUTES_PER_HOUR;
+}
+
+const int TimeSystem::get_hour() const
+{
+  return (game_minutes / MINUTES_PER_HOUR) % HOURS_PER_DAY;
+}
+
+const int TimeSystem::get_day() const
+{
+  return (game_minutes / MINUTES_PER_DAY) % DAYS_PER_MONTH;
+}
+
+const int TimeSystem::get_month() const
+{
+  return (game_minutes / MINUTES_PER_MONTH) % MONTHS_PER_YEAR;
+}
+
+const int TimeSystem::get_year() const
+{
+  return game_minutes / MINUTES_PER_YEAR;
 }
 
 }
