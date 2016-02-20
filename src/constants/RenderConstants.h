@@ -16,6 +16,24 @@ constexpr int HALF_SCREEN_SIZE_Y(SCREEN_SIZE_Y / 2);
 constexpr float HALF_SCREEN_SIZE_X_WORLD(HALF_SCREEN_SIZE_X / (float)PIXELS_PER_UNIT);
 constexpr float HALF_SCREEN_SIZE_Y_WORLD(HALF_SCREEN_SIZE_Y / (float)PIXELS_PER_UNIT);
 
+struct AnimationData
+{
+  AnimationData()
+    : x(0),
+      y(0),
+      frames(0)
+  {}
+
+  AnimationData(int _x, int _y, int _frames)
+    : x(_x),
+      y(_y),
+      frames(_frames)
+  {}
+
+  int x, y;
+  int frames;
+};
+
 static std::map<std::string, std::string> TYPE_TO_TEXTURE(
 {
   {"kadijah", "kadijah"},
@@ -29,16 +47,16 @@ static std::map<std::string, std::string> TYPE_TO_TEXTURE(
   {"container1", "items1"},
 });
 
-static std::map<std::string, Eigen::Vector3i> ANIMATION_COORDS(
+static std::map<std::string, AnimationData> ANIMATION_DATA(
 {
-  {"kadijah-idle-forward", {1, 0, 0}},
-  {"kadijah-idle-back", {1, 1, 0}},
-  {"kadijah-idle-left", {1, 2, 0}},
-  {"kadijah-idle-right", {1, 2, 0}},
-  {"kadijah-walk-forward", {2, 0, 1}},
-  {"kadijah-walk-back", {2, 0, 2}},
-  {"kadijah-walk-left", {4, 0, 3}},
-  {"kadijah-walk-right", {4, 0, 3}},
+  {"kadijah-idle-forward", AnimationData(0, 0, 1)},
+  {"kadijah-idle-back", AnimationData(1, 0, 1)},
+  {"kadijah-idle-left", AnimationData(2, 0, 1)},
+  {"kadijah-idle-right", AnimationData(2, 0, 1)},
+  {"kadijah-walk-forward", AnimationData(0, 1, 2)},
+  {"kadijah-walk-back", AnimationData(0, 2, 2)},
+  {"kadijah-walk-left", AnimationData(0, 3, 4)},
+  {"kadijah-walk-right", AnimationData(0, 3, 4)},
 });
 
 }

@@ -41,6 +41,8 @@ void EntitySystem::setup_users()
   kadijah.type = "kadijah";
   kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
   kadijah.animation = "kadijah-idle-front";
+  kadijah.clip_rect.x = PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.animation].x;
+  kadijah.clip_rect.y = PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.animation].y;
   kadijah.pos = {3, 9};
   kadijah.floor = 0;
   kadijah.radius = .48;
@@ -110,15 +112,15 @@ void EntitySystem::update(double dt)
 
     for (auto& user : users[active_user->floor])
     {
-      auto num_frames(ANIMATION_COORDS[user.animation][0]);
+      const auto& anim_data(ANIMATION_DATA[user.animation]);
 
-      if (user.frame >= num_frames - 1)
-	user.frame = 0;
-      else
+      if (user.frame < anim_data.frames - 1)
 	++user.frame;
+      else
+	user.frame = 0;
 
-      auto x(ANIMATION_COORDS[user.animation][1] + user.frame);
-      auto y(ANIMATION_COORDS[user.animation][2]);
+      auto x(anim_data.x + user.frame);
+      auto y(anim_data.y);
 
       user.clip_rect.x = PIXELS_PER_UNIT * x;
       user.clip_rect.y = PIXELS_PER_UNIT * y;
@@ -145,10 +147,10 @@ void EntitySystem::apply_user_inputs()
   {
     active_user->vel = Vector2f::Zero();
 
-    if (animation == "kadijah-walk-forward") new_animation = "kadijah-idle-forward";
-    else if (animation == "kadijah-walk-back") new_animation = "kadijah-idle-back";
-    else if (animation == "kadijah-walk-left") new_animation = "kadijah-idle-left";
-    else if (animation == "kadijah-walk-right") new_animation = "kadijah-idle-right";
+    if (animation == "kadijah-walk-forward") animation = "kadijah-idle-forward";
+    else if (animation == "kadijah-walk-back") animation = "kadijah-idle-back";
+    else if (animation == "kadijah-walk-left") animation = "kadijah-idle-left";
+    else if (animation == "kadijah-walk-right") animation = "kadijah-idle-right";
   }
   else
   {
@@ -156,18 +158,16 @@ void EntitySystem::apply_user_inputs()
     auto vel(active_user->speed * direction);
 
     if (vel.x() > 0)
-      new_animation = "kadijah-walk-right";
+      animation = "kadijah-walk-right";
     else if (vel.x() < 0)
-      new_animation = "kadijah-walk-left";
+      animation = "kadijah-walk-left";
     else if (vel.y() > 0)
-      new_animation = "kadijah-walk-forward";
+      animation = "kadijah-walk-forward";
     else if (vel.y() < 0)
-      new_animation = "kadijah-walk-back";
+      animation = "kadijah-walk-back";
 
     active_user->vel = vel;
   }
-
-  active_user->animation = new_animation;
 }
 
 
