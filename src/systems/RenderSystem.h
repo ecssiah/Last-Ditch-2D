@@ -2,8 +2,8 @@
 #define RENDERSYSTEM_H
 
 #include <eigen3/Eigen/Geometry>
-#include <map>
 #include <SDL2/SDL.h>
+#include <unordered_map>
 
 #include "../DebugDraw.h"
 #include "../SDL_Interface.h"
@@ -40,9 +40,9 @@ class RenderSystem
   InterfaceSystem& interface_system;
   PhysicsSystem& physics_system;
 
-  std::map<std::string, SDL_Texture*> textures;
-  std::map<std::string, Eigen::Vector2i> texture_coords;
-  std::map<std::string, std::string> type_to_texture_map;
+  std::unordered_map<std::string, SDL_Texture*> textures;
+  std::unordered_map<std::string, Eigen::Vector2i> texture_coords;
+  std::unordered_map<std::string, std::string> type_to_texture_map;
 
   bool debug;
 

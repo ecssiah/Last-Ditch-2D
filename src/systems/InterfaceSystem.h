@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <map>
+#include <unordered_map>
 
 #include "../SDL_Interface.h"
 #include "../components/User.h"
@@ -24,8 +24,8 @@ class InterfaceSystem
 
   User* active_user;
 
-  std::map<std::string, TTF_Font*> fonts;
-  std::map<std::string, SDL_Texture*> textures;
+  std::unordered_map<std::string, TTF_Font*> fonts;
+  std::unordered_map<std::string, SDL_Texture*> textures;
 
 public:
   InterfaceSystem(
