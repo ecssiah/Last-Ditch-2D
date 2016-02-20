@@ -103,7 +103,13 @@ void EntitySystem::setup_items()
 void EntitySystem::update(double dt)
 {
   apply_user_inputs();
+  update_animations(dt);
+  if (input.activate) handle_activation();
+}
 
+
+void EntitySystem::update_animations(double& dt)
+{
   frame_time += dt;
 
   if (frame_time > .03)
@@ -126,8 +132,6 @@ void EntitySystem::update(double dt)
       user.clip_rect.y = PIXELS_PER_UNIT * y;
     }
   }
-
-  if (input.activate) handle_activation();
 }
 
 
