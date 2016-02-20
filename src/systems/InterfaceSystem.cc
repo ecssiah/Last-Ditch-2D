@@ -42,7 +42,7 @@ void InterfaceSystem::update()
   auto minute(time_system.get_minute());
   minute < 10 ? ss << "0" << minute : ss << minute;
 
-  surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {230, 255, 255});
+  surface = TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {236, 255, 255});
 
   textures["time"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 }

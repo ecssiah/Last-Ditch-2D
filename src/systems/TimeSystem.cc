@@ -7,12 +7,19 @@ using namespace std;
 
 TimeSystem::TimeSystem()
   : start(chrono::steady_clock::now()),
-    end(chrono::steady_clock::now()),
+    end(start),
     dt(0.0),
     game_time_rate(62.f),
     game_time_tracker(0.0),
-    game_minutes(1110604155)
+    game_minutes(0)
 {
+  auto year(3012), month(12), day(30);
+  auto hour(23), minute(55);
+
+  game_minutes =
+    MINUTES_PER_YEAR * (year - BASE_YEAR) + MINUTES_PER_MONTH * (month - 1) +
+    MINUTES_PER_DAY * (day - 1) + MINUTES_PER_HOUR * hour + minute;
+
   cout << endl << "TimeSystem ready" << endl;
 }
 

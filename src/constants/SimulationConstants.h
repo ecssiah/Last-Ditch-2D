@@ -4,6 +4,7 @@
 namespace ld
 {
 
+constexpr int BASE_YEAR(3000);
 constexpr int MINUTES_PER_HOUR(60);
 constexpr int MINUTES_PER_DAY(1440);
 constexpr int MINUTES_PER_MONTH(43200);
