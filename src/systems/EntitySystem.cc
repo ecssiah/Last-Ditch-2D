@@ -222,8 +222,12 @@ bool EntitySystem::find_and_interact_door(Vector2f& selection_point, Chunk& chun
 
 bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chunk)
 {
-  for (auto& item : chunk.items)
+  auto& items(chunk.items);
+
+  for (auto it(items.begin()); it != items.end(); ++it)
   {
+    auto& item(*it);
+
     auto hit(
       selection_point.x() > item.pos.x() &&
       selection_point.x() < item.pos.x() + item.radius &&
@@ -236,6 +240,11 @@ bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chun
     auto in_range((user_center - selection_point).squaredNorm() < 2.7f);
 
     if (!in_range) continue;
+
+    item.contained = true;
+    active_user->inventory.items.push_back(item);
+
+    items.erase(it);
 
     return true;
   }

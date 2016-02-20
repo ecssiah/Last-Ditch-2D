@@ -21,7 +21,7 @@ struct Inventory
   float weight, max_weight;
   float area, max_area;
 
-  std::vector<Item*> items;
+  std::vector<Item> items;
 };
 
 }
