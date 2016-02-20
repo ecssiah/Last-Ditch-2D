@@ -8,6 +8,7 @@ set(
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
   ./src/systems/EntitySystem.h
+  ./src/systems/InventorySystem.h
   ./src/systems/PhysicsSystem.h
   ./src/systems/MapSystem.h
   ./src/systems/CameraSystem.h
@@ -20,6 +21,7 @@ set(
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
   ./src/systems/EntitySystem.cc
+  ./src/systems/InventorySystem.cc
   ./src/systems/PhysicsSystem.cc
   ./src/systems/MapSystem.cc
   ./src/systems/CameraSystem.cc

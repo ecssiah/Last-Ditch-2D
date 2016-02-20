@@ -15,7 +15,7 @@ CameraSystem::CameraSystem()
   : pos(0, 0),
     target(nullptr)
 {
-  cout << "Camera system ready" << endl;
+  cout << "CameraSystem ready" << endl;
 }
 
 

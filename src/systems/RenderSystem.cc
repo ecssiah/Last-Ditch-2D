@@ -34,7 +34,7 @@ RenderSystem::RenderSystem(
 
   physics_system.set_debug_draw(debug_draw);
 
-  cout << "Render system ready" << endl;
+  cout << "RenderSystem ready" << endl;
 }
 
 
@@ -158,7 +158,7 @@ void RenderSystem::render_items(int floor)
       auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
 
       for (auto& item : chunk.items)
-	render_item(item);
+	if (!item.contained) render_item(item);
     }
   }
 }

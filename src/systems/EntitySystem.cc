@@ -22,6 +22,7 @@ EntitySystem::EntitySystem(
     input(input_),
     map_system(map_system_),
     camera_system(camera_system_),
+    inventory_system(),
     active_user(nullptr),
     users(NUM_FLOORS),
     frame_time(0.0),
@@ -30,7 +31,7 @@ EntitySystem::EntitySystem(
   setup_users();
   setup_items();
 
-  cout << "Entity system ready" << endl;
+  cout << "EntitySystem ready" << endl;
 }
 
 
@@ -190,11 +191,12 @@ void EntitySystem::handle_activation()
   auto& chunk(
     map_system.get_chunk(selection_point.x(), selection_point.y(), active_user->floor));
 
-  if (find_door(selection_point, chunk)) return;
+  if (find_and_interact_door(selection_point, chunk)) return;
+  if (find_and_interact_item(selection_point, chunk)) return;
 }
 
 
-bool EntitySystem::find_door(Vector2f& selection_point, Chunk& chunk)
+bool EntitySystem::find_and_interact_door(Vector2f& selection_point, Chunk& chunk)
 {
   for (auto& door : chunk.doors)
   {
@@ -205,11 +207,35 @@ bool EntitySystem::find_door(Vector2f& selection_point, Chunk& chunk)
     if (!hit) continue;
 
     auto user_center(active_user->pos + Vector2f(.5, .5));
-    auto in_range((user_center - selection_point).squaredNorm() < 2.8f);
+    auto in_range((user_center - selection_point).squaredNorm() < 2.7f);
 
     if (!in_range) continue;
 
     map_system.open_door(door);
+
+    return true;
+  }
+
+  return false;
+}
+
+
+bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chunk)
+{
+  for (auto& item : chunk.items)
+  {
+    auto hit(
+      selection_point.x() > item.pos.x() &&
+      selection_point.x() < item.pos.x() + item.radius &&
+      selection_point.y() > item.pos.y() &&
+      selection_point.y() < item.pos.y() + item.radius);
+
+    if (!hit) continue;
+
+    auto user_center(active_user->pos + Vector2f(.5, .5));
+    auto in_range((user_center - selection_point).squaredNorm() < 2.7f);
+
+    if (!in_range) continue;
 
     return true;
   }

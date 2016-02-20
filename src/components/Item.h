@@ -10,12 +10,14 @@ struct Item : public Entity
 {
   Item()
     : Entity(),
-      radius(.5f)
-  {
-    type = "item";
-  }
+      weight(1.f),
+      radius(.5f),
+      contained(false)
+  {}
 
+  float weight;
   float radius;
+  bool contained;
 };
 
 }

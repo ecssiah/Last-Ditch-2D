@@ -7,6 +7,7 @@
 #include <string>
 
 #include "Entity.h"
+#include "Inventory.h"
 #include "../constants/RenderConstants.h"
 
 namespace ld
@@ -23,7 +24,8 @@ struct User : public Entity
       frame(0),
       animation(std::string()),
       clip_rect(),
-      body(nullptr)
+      body(nullptr),
+      inventory()
   {
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
@@ -41,6 +43,8 @@ struct User : public Entity
   SDL_Rect clip_rect;
 
   b2Body* body;
+
+  Inventory inventory;
 };
 
 }

@@ -1,10 +1,6 @@
 #ifndef MAPSYSTEM_H
 #define MAPSYSTEM_H
 
-// 236/399 8m2s
-// 1.98287 -1.59654 0.26423
-// 0.748316 -1.96493 -0.833067
-
 #include <array>
 #include <memory>
 #include <vector>
@@ -21,7 +17,6 @@ class MapSystem
 {
   void setup_map();
   void layout_room(int x, int y, int w, int h, int floor);
-
   void create_door(std::string type, int x, int y, int floor, float roation = 0.f);
 
   bool dirty;
@@ -33,7 +28,7 @@ public:
 
   void update();
 
-  const bool is_dirty() const { return dirty; }
+  const bool& is_dirty() const { return dirty; }
   void set_dirty(bool dirty_) { dirty = dirty_; }
 
   void open_door(Door& door);
@@ -53,7 +48,7 @@ public:
   void set_floor_tile(
     std::string texture_name,
     int x, int y, int floor,
-    float rotation = 0.f, bool solid = true);
+    float rotation = 0.f);
 };
 
 }

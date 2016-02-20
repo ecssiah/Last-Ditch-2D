@@ -9,7 +9,7 @@ using namespace std;
 InputSystem::InputSystem(Input& input_)
   : input(input_)
 {
-  cout << "Input system ready" << endl;
+  cout << "InputSystem ready" << endl;
 }
 
 

@@ -17,7 +17,7 @@ class TimeSystem
   double dt;
   double game_time_rate, game_time_tracker;
 
-  int game_minutes;
+  long long game_minutes;
 
 public:
   TimeSystem();
@@ -39,7 +39,7 @@ const int TimeSystem::get_year() const
 
 const int TimeSystem::get_month() const
 {
-  return game_minutes / MINUTES_PER_MONTH;
+  return (game_minutes / MINUTES_PER_MONTH) % DAYS_PER_MONTH;
 }
 
 const int TimeSystem::get_day() const

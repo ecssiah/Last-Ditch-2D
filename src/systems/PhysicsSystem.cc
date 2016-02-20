@@ -20,7 +20,7 @@ PhysicsSystem::PhysicsSystem(
   setup_tile_bodies();
   setup_door_bodies();
 
-  cout << "Physics system ready" << endl;
+  cout << "PhysicsSystem ready" << endl;
 }
 
 

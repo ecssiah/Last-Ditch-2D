@@ -10,6 +10,7 @@
 #include "../components/User.h"
 #include "../systems/MapSystem.h"
 #include "../systems/CameraSystem.h"
+#include "../systems/InventorySystem.h"
 
 namespace ld
 {
@@ -27,13 +28,16 @@ class EntitySystem
   void update_animations(double& dt);
   void handle_activation();
 
-  bool find_door(Eigen::Vector2f& selection_point, Chunk& chunk);
+  bool find_and_interact_door(Eigen::Vector2f& selection_point, Chunk& chunk);
+  bool find_and_interact_item(Eigen::Vector2f& selection_point, Chunk& chunk);
 
   std::mt19937& rng;
 
   Input& input;
   CameraSystem& camera_system;
   MapSystem& map_system;
+
+  InventorySystem inventory_system;
 
   User* active_user;
   std::vector<std::vector<User>> users;
