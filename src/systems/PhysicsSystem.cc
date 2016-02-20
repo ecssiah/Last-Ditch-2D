@@ -216,7 +216,7 @@ void PhysicsSystem::setup_door_bodies()
 	  {
 	    b2BodyDef body_def;
 	    body_def.type = b2_staticBody;
-	    body_def.position.Set(x, y);
+	    body_def.position.Set(door.pos.x(), door.pos.y());
 	    body_def.allowSleep = true;
 	    body_def.fixedRotation = true;
 	    body_def.active = true;

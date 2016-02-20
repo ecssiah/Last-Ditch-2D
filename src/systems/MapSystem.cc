@@ -68,10 +68,13 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
       set_floor_tile("floor1", x, y, floor_);
 
   create_door("door1", x_, y_, floor_);
+  set_main_tile("", x_, y_, floor_, 0, false);
   set_floor_tile("floor1", x_, y_, floor_, 0, false);
 
   create_door("door1", x_, y_ + h_ / 2, floor_);
+  set_main_tile("", x_, y_ + h_ / 2, floor_, 0, false);
   set_floor_tile("floor1", x_, y_ + h_ / 2, floor_, 0, false);
+
   set_main_tile("wall1", x_ - 1, y_ + h_ / 2, floor_);
 
   set_main_tile("", x_, y_ + h_ / 2 - 2, floor_, 0, false);
@@ -161,8 +164,6 @@ void MapSystem::set_floor_tile(
 
 void MapSystem::create_door(string type, int x, int y, int floor, float rotation)
 {
-  set_main_tile("", x, y, floor, rotation, true);
-
   Door door;
   door.type = type;
   door.texture_name = TYPE_TO_TEXTURE[type];
@@ -186,6 +187,6 @@ void MapSystem::open_door(Door& door)
     dirty = true;
     chunk.dirty = true;
     door.dirty = true;
-    door.solid = true;
+    door.solid = !door.open;
   }
 }
