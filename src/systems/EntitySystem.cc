@@ -40,14 +40,24 @@ void EntitySystem::setup_users()
   User kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.texture_name = TYPE_TO_TEXTURE[kadijah.type];
-  kadijah.animation = "kadijah-idle-front";
-  kadijah.clip_rect.x = PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.animation].x;
-  kadijah.clip_rect.y = PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.animation].y;
   kadijah.pos = {3, 9};
   kadijah.floor = 0;
   kadijah.radius = .48;
   kadijah.speed = 240;
+
+  kadijah.body_texture = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.body_animation = "idle-front";
+  kadijah.body_clip_rect.x =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.body_animation].x;
+  kadijah.body_clip_rect.y =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.body_animation].y;
+
+  kadijah.arm_texture = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.arm_animation = "idle-front";
+  kadijah.arm_clip_rect.x =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
+  kadijah.arm_clip_rect.y =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].y;
 
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
@@ -119,18 +129,31 @@ void EntitySystem::update_animations(double& dt)
 
     for (auto& user : users[active_user->floor])
     {
-      const auto& anim_data(ANIMATION_DATA[user.animation]);
+      const auto& body_anim_data(ANIMATION_DATA[user.type][user.body_animation]);
 
-      if (user.frame < anim_data.frames - 1)
+      if (user.frame < body_anim_data.frames - 1)
 	++user.frame;
       else
 	user.frame = 0;
 
-      auto x(anim_data.x + user.frame);
-      auto y(anim_data.y);
+      auto body_x(body_anim_data.x + user.frame);
+      auto body_y(body_anim_data.y);
 
-      user.clip_rect.x = PIXELS_PER_UNIT * x;
-      user.clip_rect.y = PIXELS_PER_UNIT * y;
+      user.body_clip_rect.x = PIXELS_PER_UNIT * body_x;
+      user.body_clip_rect.y = PIXELS_PER_UNIT * body_y;
+
+      const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
+
+      if (user.frame < arm_anim_data.frames - 1)
+	++user.frame;
+      else
+	user.frame = 0;
+
+      auto arm_x(arm_anim_data.x + user.frame);
+      auto arm_y(arm_anim_data.y);
+
+      user.arm_clip_rect.x = PIXELS_PER_UNIT * arm_x;
+      user.arm_clip_rect.y = PIXELS_PER_UNIT * arm_y;
     }
   }
 }
@@ -145,17 +168,21 @@ void EntitySystem::apply_user_inputs()
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
-  auto& animation(active_user->animation);
-  string new_animation(animation);
+  auto& body_animation(active_user->body_animation);
+  string new_body_animation(body_animation);
 
   if (direction.squaredNorm() == 0)
   {
     active_user->vel = Vector2f::Zero();
 
-    if (animation == "kadijah-walk-forward") animation = "kadijah-idle-forward";
-    else if (animation == "kadijah-walk-back") animation = "kadijah-idle-back";
-    else if (animation == "kadijah-walk-left") animation = "kadijah-idle-left";
-    else if (animation == "kadijah-walk-right") animation = "kadijah-idle-right";
+    if (body_animation == "body-walk-front")
+      body_animation = "body-idle-front";
+    else if (body_animation == "body-walk-back")
+      body_animation = "body-idle-back";
+    else if (body_animation == "body-walk-left")
+      body_animation = "body-idle-left";
+    else if (body_animation == "body-walk-right")
+      body_animation = "body-idle-right";
   }
   else
   {
@@ -163,13 +190,46 @@ void EntitySystem::apply_user_inputs()
     auto vel(active_user->speed * direction);
 
     if (vel.x() > 0)
-      animation = "kadijah-walk-right";
+      body_animation = "body-walk-right";
     else if (vel.x() < 0)
-      animation = "kadijah-walk-left";
+      body_animation = "body-walk-left";
     else if (vel.y() > 0)
-      animation = "kadijah-walk-forward";
+      body_animation = "body-walk-front";
     else if (vel.y() < 0)
-      animation = "kadijah-walk-back";
+      body_animation = "body-walk-back";
+
+    active_user->vel = vel;
+  }
+
+  auto& arm_animation(active_user->arm_animation);
+  string new_arm_animation(arm_animation);
+
+  if (direction.squaredNorm() == 0)
+  {
+    active_user->vel = Vector2f::Zero();
+
+    if (arm_animation == "arm-walk-nequip-front")
+      arm_animation = "arm-idle-nequip-front";
+    else if (arm_animation == "arm-walk-nequip-back")
+      arm_animation = "arm-idle-nequip-back";
+    else if (arm_animation == "arm-walk-nequip-left")
+      arm_animation = "arm-idle-nequip-left";
+    else if (arm_animation == "arm-walk-nequip-right")
+      arm_animation = "arm-idle-nequip-right";
+  }
+  else
+  {
+    direction.normalize();
+    auto vel(active_user->speed * direction);
+
+    if (vel.x() > 0)
+      arm_animation = "arm-walk-nequip-right";
+    else if (vel.x() < 0)
+      arm_animation = "arm-walk-nequip-left";
+    else if (vel.y() > 0)
+      arm_animation = "arm-walk-nequip-front";
+    else if (vel.y() < 0)
+      arm_animation = "arm-walk-nequip-back";
 
     active_user->vel = vel;
   }

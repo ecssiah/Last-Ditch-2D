@@ -253,16 +253,27 @@ void RenderSystem::render_users(int floor)
     dest_rect.w = PIXELS_PER_UNIT;
     dest_rect.h = PIXELS_PER_UNIT;
 
-    SDL_RendererFlip flip(
-      ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+    SDL_RendererFlip body_flip(
+      ends_with(user.body_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
     SDL_RenderCopyEx(
       sdl_interface.renderer,
-      textures[user.texture_name],
-      &user.clip_rect, &dest_rect,
+      textures[user.body_texture],
+      &user.body_clip_rect, &dest_rect,
       0,
       nullptr,
-      flip);
+      body_flip);
+
+    SDL_RendererFlip arm_flip(
+      ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderCopyEx(
+      sdl_interface.renderer,
+      textures[user.arm_texture],
+      &user.arm_clip_rect, &dest_rect,
+      0,
+      nullptr,
+      arm_flip);
   }
 }
 
