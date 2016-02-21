@@ -22,7 +22,8 @@ struct Character : public Entity
       body_animation(std::string()),
       arm_texture(std::string()),
       arm_animation(std::string()),
-      frame(0),
+      body_frame(0),
+      arm_frame(0),
       radius(.5f),
       speed(100.f),
       vel(0.f, 0.f),
@@ -41,7 +42,7 @@ struct Character : public Entity
   std::string body_texture, body_animation;
   std::string arm_texture, arm_animation;
 
-  int frame;
+  int body_frame, arm_frame;
 
   float radius;
   float speed;

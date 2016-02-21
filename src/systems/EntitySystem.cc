@@ -131,12 +131,12 @@ void EntitySystem::update_animations(double& dt)
     {
       const auto& body_anim_data(ANIMATION_DATA[user.type][user.body_animation]);
 
-      if (user.frame < body_anim_data.frames - 1)
-	++user.frame;
+      if (user.body_frame < body_anim_data.frames - 1)
+	++user.body_frame;
       else
-	user.frame = 0;
+	user.body_frame = 0;
 
-      auto body_x(body_anim_data.x + user.frame);
+      auto body_x(body_anim_data.x + user.body_frame);
       auto body_y(body_anim_data.y);
 
       user.body_clip_rect.x = PIXELS_PER_UNIT * body_x;
@@ -144,12 +144,12 @@ void EntitySystem::update_animations(double& dt)
 
       const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
 
-      if (user.frame < arm_anim_data.frames - 1)
-	++user.frame;
+      if (user.arm_frame < arm_anim_data.frames - 1)
+	++user.arm_frame;
       else
-	user.frame = 0;
+	user.arm_frame = 0;
 
-      auto arm_x(arm_anim_data.x + user.frame);
+      auto arm_x(arm_anim_data.x + user.arm_frame);
       auto arm_y(arm_anim_data.y);
 
       user.arm_clip_rect.x = PIXELS_PER_UNIT * arm_x;

@@ -267,6 +267,8 @@ void RenderSystem::render_users(int floor)
     SDL_RendererFlip arm_flip(
       ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
+    if (user.body_frame % 2 == 0) ++dest_rect.y;
+
     SDL_RenderCopyEx(
       sdl_interface.renderer,
       textures[user.arm_texture],
