@@ -51,13 +51,13 @@ static std::unordered_map<std::string, std::string> TYPE_TO_TEXTURE(
 static std::unordered_map<std::string, AnimationData> ANIMATION_DATA(
 {
   {"kadijah-idle-forward", {0, 0, 1}},
-  {"kadijah-idle-back", {1, 0, 1}},
-  {"kadijah-idle-left", {2, 0, 1}},
-  {"kadijah-idle-right", {2, 0, 1}},
-  {"kadijah-walk-forward", {0, 1, 4}},
-  {"kadijah-walk-back", {0, 2, 4}},
-  {"kadijah-walk-left", {0, 3, 4}},
-  {"kadijah-walk-right", {0, 3, 4}},
+  {"kadijah-idle-back", {0, 1, 1}},
+  {"kadijah-idle-left", {0, 2, 1}},
+  {"kadijah-idle-right", {0, 2, 1}},
+  {"kadijah-walk-forward", {0, 0, 4}},
+  {"kadijah-walk-back", {0, 1, 4}},
+  {"kadijah-walk-left", {0, 2, 4}},
+  {"kadijah-walk-right", {0, 2, 4}},
 });
 
 }
