@@ -10,7 +10,6 @@
 #include "../components/User.h"
 #include "../systems/MapSystem.h"
 #include "../systems/CameraSystem.h"
-#include "../systems/InventorySystem.h"
 
 namespace ld
 {
@@ -36,8 +35,6 @@ class EntitySystem
   Input& input;
   CameraSystem& camera_system;
   MapSystem& map_system;
-
-  InventorySystem inventory_system;
 
   User* active_user;
   std::vector<std::vector<User>> users;

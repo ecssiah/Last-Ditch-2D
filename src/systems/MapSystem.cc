@@ -39,7 +39,7 @@ void MapSystem::setup_map()
 
 	chunk.pos = {cx * TILES_PER_CHUNK_X, cy * TILES_PER_CHUNK_Y};
 	chunk.type = "chunk1";
-	chunk.texture_name = TYPE_TO_TEXTURE[chunk.type];
+	chunk.texture= TYPE_TO_TEXTURE[chunk.type];
 	chunk.floor = floor;
       }
     }
@@ -113,7 +113,7 @@ void MapSystem::set_main_tile(
   auto& tile(get_main_tile(x, y, floor));
 
   tile.type = type;
-  tile.texture_name = TYPE_TO_TEXTURE[type];
+  tile.texture = TYPE_TO_TEXTURE[type];
   tile.pos = {x, y};
   tile.floor = floor;
   tile.solid = solid;
@@ -144,7 +144,7 @@ void MapSystem::set_floor_tile(
   auto& tile(get_floor_tile(x, y, floor));
 
   tile.type = type;
-  tile.texture_name = TYPE_TO_TEXTURE[type];
+  tile.texture = TYPE_TO_TEXTURE[type];
   tile.pos = {x, y};
   tile.rotation = rotation;
   tile.floor = floor;
@@ -155,7 +155,7 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
 {
   Door door;
   door.type = type;
-  door.texture_name = TYPE_TO_TEXTURE[type];
+  door.texture = TYPE_TO_TEXTURE[type];
   door.pos = {x, y};
   door.floor = floor;
   door.rotation = rotation;

@@ -25,10 +25,8 @@ LastDitch::LastDitch()
 
   cout << endl << "Starting Last Ditch..." << endl << endl;
 
-  while (!input.exit)
+  for (auto dt(0.f); !input.exit; time_system.tick())
   {
-    auto dt(time_system.update());
-
     input_system.update();
     entity_system.update(dt);
     map_system.update();
@@ -37,7 +35,7 @@ LastDitch::LastDitch()
     interface_system.update();
     render_system.update();
 
-    time_system.tick();
+    dt = time_system.update();
   }
 
   sdl_interface.shutdown();

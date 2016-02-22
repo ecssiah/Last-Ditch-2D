@@ -11,14 +11,14 @@ struct Entity
 {
   Entity()
     : type(std::string()),
-      texture_name(std::string()),
+      texture(std::string()),
       pos(0.f, 0.f),
       floor(0),
       dirty(false)
   {}
 
   std::string type;
-  std::string texture_name;
+  std::string texture;
   Eigen::Vector2f pos;
   int floor;
   bool dirty;

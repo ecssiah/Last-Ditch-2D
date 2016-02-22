@@ -83,7 +83,7 @@ void RenderSystem::render_chunks(int floor)
 
       SDL_RenderCopy(
 	sdl_interface.renderer,
-	textures[chunk.texture_name],
+	textures[chunk.texture],
 	nullptr, &dest_rect);
     }
   }
@@ -108,7 +108,7 @@ void RenderSystem::render_tile(Tile& tile)
 
   SDL_RenderCopyEx(
     sdl_interface.renderer,
-    textures[tile.texture_name],
+    textures[tile.texture],
     &clip_rect, &dest_rect,
     tile.rotation,
     nullptr,
@@ -182,7 +182,7 @@ void RenderSystem::render_item(Item& item)
 
   SDL_RenderCopy(
     sdl_interface.renderer,
-    textures[item.texture_name],
+    textures[item.texture],
     &clip_rect, &dest_rect);
 }
 
@@ -223,7 +223,7 @@ void RenderSystem::render_door(Door& door)
 
   SDL_RenderCopy(
     sdl_interface.renderer,
-    textures[door.texture_name],
+    textures[door.texture],
     &clip_rect, &dest_rect);
 }
 
@@ -253,21 +253,21 @@ void RenderSystem::render_users(int floor)
     dest_rect.w = PIXELS_PER_UNIT;
     dest_rect.h = PIXELS_PER_UNIT;
 
-    SDL_RendererFlip body_flip(
-      ends_with(user.body_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+    SDL_RendererFlip flip(
+      ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
     SDL_RenderCopyEx(
       sdl_interface.renderer,
-      textures[user.body_texture],
-      &user.body_clip_rect, &dest_rect,
+      textures[user.texture],
+      &user.clip_rect, &dest_rect,
       0,
       nullptr,
-      body_flip);
+      flip);
 
     SDL_RendererFlip arm_flip(
       ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
-    if (user.body_frame % 2 == 0) ++dest_rect.y;
+    if (user.frame % 2 == 0) ++dest_rect.y;
 
     SDL_RenderCopyEx(
       sdl_interface.renderer,

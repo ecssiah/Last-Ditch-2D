@@ -22,7 +22,6 @@ EntitySystem::EntitySystem(
     input(input_),
     map_system(map_system_),
     camera_system(camera_system_),
-    inventory_system(),
     active_user(nullptr),
     users(NUM_FLOORS),
     frame_time(0.0),
@@ -45,15 +44,15 @@ void EntitySystem::setup_users()
   kadijah.radius = .48;
   kadijah.speed = 240;
 
-  kadijah.body_texture = TYPE_TO_TEXTURE[kadijah.type];
-  kadijah.body_animation = "idle-front";
-  kadijah.body_clip_rect.x =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.body_animation].x;
-  kadijah.body_clip_rect.y =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.body_animation].y;
+  kadijah.texture = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.animation = "body-idle-front";
+  kadijah.clip_rect.x =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].x;
+  kadijah.clip_rect.y =
+    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].y;
 
   kadijah.arm_texture = TYPE_TO_TEXTURE[kadijah.type];
-  kadijah.arm_animation = "idle-front";
+  kadijah.arm_animation = "arm-idle-nequip-front";
   kadijah.arm_clip_rect.x =
     PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
   kadijah.arm_clip_rect.y =
@@ -83,7 +82,7 @@ void EntitySystem::setup_items()
 
       Item item;
       item.type = get_random_type();
-      item.texture_name = TYPE_TO_TEXTURE[item.type];
+      item.texture = TYPE_TO_TEXTURE[item.type];
       item.floor = floor;
 
       while (1)
@@ -129,18 +128,18 @@ void EntitySystem::update_animations(double& dt)
 
     for (auto& user : users[active_user->floor])
     {
-      const auto& body_anim_data(ANIMATION_DATA[user.type][user.body_animation]);
+      const auto& anim_data(ANIMATION_DATA[user.type][user.animation]);
 
-      if (user.body_frame < body_anim_data.frames - 1)
-	++user.body_frame;
+      if (user.frame < anim_data.frames - 1)
+	++user.frame;
       else
-	user.body_frame = 0;
+	user.frame = 0;
 
-      auto body_x(body_anim_data.x + user.body_frame);
-      auto body_y(body_anim_data.y);
+      auto x(anim_data.x + user.frame);
+      auto y(anim_data.y);
 
-      user.body_clip_rect.x = PIXELS_PER_UNIT * body_x;
-      user.body_clip_rect.y = PIXELS_PER_UNIT * body_y;
+      user.clip_rect.x = PIXELS_PER_UNIT * x;
+      user.clip_rect.y = PIXELS_PER_UNIT * y;
 
       const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
 
@@ -168,21 +167,21 @@ void EntitySystem::apply_user_inputs()
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
-  auto& body_animation(active_user->body_animation);
-  string new_body_animation(body_animation);
+  auto& animation(active_user->animation);
+  string new_animation(animation);
 
   if (direction.squaredNorm() == 0)
   {
     active_user->vel = Vector2f::Zero();
 
-    if (body_animation == "body-walk-front")
-      body_animation = "body-idle-front";
-    else if (body_animation == "body-walk-back")
-      body_animation = "body-idle-back";
-    else if (body_animation == "body-walk-left")
-      body_animation = "body-idle-left";
-    else if (body_animation == "body-walk-right")
-      body_animation = "body-idle-right";
+    if (animation == "body-walk-front")
+      animation = "body-idle-front";
+    else if (animation == "body-walk-back")
+      animation = "body-idle-back";
+    else if (animation == "body-walk-left")
+      animation = "body-idle-left";
+    else if (animation == "body-walk-right")
+      animation = "body-idle-right";
   }
   else
   {
@@ -190,13 +189,13 @@ void EntitySystem::apply_user_inputs()
     auto vel(active_user->speed * direction);
 
     if (vel.x() > 0)
-      body_animation = "body-walk-right";
+      animation = "body-walk-right";
     else if (vel.x() < 0)
-      body_animation = "body-walk-left";
+      animation = "body-walk-left";
     else if (vel.y() > 0)
-      body_animation = "body-walk-front";
+      animation = "body-walk-front";
     else if (vel.y() < 0)
-      body_animation = "body-walk-back";
+      animation = "body-walk-back";
 
     active_user->vel = vel;
   }
