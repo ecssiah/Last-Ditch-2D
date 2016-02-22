@@ -9,15 +9,17 @@
 namespace ld
 {
 
+constexpr double MAX_DELTA_TIME(.2);
+
 class TimeSystem
 {
   std::chrono::steady_clock::time_point start;
   std::chrono::steady_clock::time_point end;
 
-  double dt;
-  double game_time_rate, game_time_tracker;
-
   unsigned long long game_minutes;
+
+  double dt;
+  double game_minute_tracker;
 
 public:
   TimeSystem();

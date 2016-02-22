@@ -24,7 +24,6 @@ EntitySystem::EntitySystem(
     camera_system(camera_system_),
     active_user(nullptr),
     users(NUM_FLOORS),
-    frame_time(0.0),
     item_types()
 {
   setup_users();
@@ -41,8 +40,8 @@ void EntitySystem::setup_users()
   kadijah.type = "kadijah";
   kadijah.pos = {3, 9};
   kadijah.floor = 0;
-  kadijah.radius = .48;
-  kadijah.speed = 240;
+  kadijah.radius = .48f;
+  kadijah.speed = 50.f;
 
   kadijah.texture = TYPE_TO_TEXTURE[kadijah.type];
   kadijah.animation = "body-idle-front";
@@ -120,14 +119,14 @@ void EntitySystem::update(double dt)
 
 void EntitySystem::update_animations(double& dt)
 {
-  frame_time += dt;
-
-  if (frame_time > .03)
+  for (auto& user : users[active_user->floor])
   {
-    frame_time = 0.0;
+    user.frame_time += dt;
 
-    for (auto& user : users[active_user->floor])
+    if (user.frame_time >= user.frame_length)
     {
+      user.frame_time = 0.f;
+
       const auto& anim_data(ANIMATION_DATA[user.type][user.animation]);
 
       if (user.frame < anim_data.frames - 1)
@@ -140,6 +139,13 @@ void EntitySystem::update_animations(double& dt)
 
       user.clip_rect.x = PIXELS_PER_UNIT * x;
       user.clip_rect.y = PIXELS_PER_UNIT * y;
+    }
+
+    user.arm_frame_time += dt;
+
+    if (user.arm_frame_time >= user.arm_frame_length)
+    {
+      user.arm_frame_time = 0.f;
 
       const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
 

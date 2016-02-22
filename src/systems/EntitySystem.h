@@ -39,8 +39,6 @@ class EntitySystem
   User* active_user;
   std::vector<std::vector<User>> users;
 
-  double frame_time;
-
   std::vector<std::string> item_types;
 
 public:

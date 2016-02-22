@@ -25,8 +25,12 @@ struct Character : public Entity
       arm_animation(std::string()),
       frame(0),
       arm_frame(0),
+      frame_time(0.f),
+      arm_frame_time(0.f),
+      frame_length(.22f),
+      arm_frame_length(.22f),
       radius(.5f),
-      speed(100.f),
+      speed(1.f),
       vel(0.f, 0.f),
       inventory(),
       equipment(),
@@ -45,6 +49,9 @@ struct Character : public Entity
   std::string arm_texture, arm_animation;
 
   int frame, arm_frame;
+
+  float frame_time, arm_frame_time;
+  float frame_length, arm_frame_length;
 
   float radius;
   float speed;
