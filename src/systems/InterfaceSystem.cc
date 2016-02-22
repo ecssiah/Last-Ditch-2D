@@ -14,6 +14,11 @@ InterfaceSystem::InterfaceSystem(
   : sdl_interface(sdl_interface_),
     time_system(time_system_),
     entity_system(entity_system_),
+    main_menu_active(),
+    inventory_menu_active(),
+    equipment_menu_active(),
+    production_menu_active(),
+    status_menu_active(),
     active_user(entity_system_.get_active_user()),
     fonts(),
     textures()

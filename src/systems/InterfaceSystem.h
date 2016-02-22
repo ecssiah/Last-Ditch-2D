@@ -21,7 +21,11 @@ class InterfaceSystem
   TimeSystem& time_system;
   EntitySystem& entity_system;
 
-
+  bool main_menu_active;
+  bool inventory_menu_active;
+  bool equipment_menu_active;
+  bool production_menu_active;
+  bool status_menu_active;
 
   User* active_user;
 
