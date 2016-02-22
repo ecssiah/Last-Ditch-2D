@@ -15,8 +15,10 @@ namespace ld
 
 class InterfaceSystem
 {
+  void update_date_and_time();
   void render_texture_at(std::string texture_name, int x, int y);
 
+  Input& input;
   SDL_Interface& sdl_interface;
   TimeSystem& time_system;
   EntitySystem& entity_system;
@@ -34,7 +36,8 @@ class InterfaceSystem
 
 public:
   InterfaceSystem(
-    SDL_Interface& sdl_interface, TimeSystem& time_system, EntitySystem& entity_system);
+    SDL_Interface& sdl_interface, Input& input,
+    TimeSystem& time_system, EntitySystem& entity_system);
 
   void update();
   void render();

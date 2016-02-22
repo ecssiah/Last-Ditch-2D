@@ -1,15 +1,15 @@
 #ifndef RESIZABLEELEMENT_H
 #define RESIZABLEELEMENT_H
 
-#include "Entity.h"
+#include "StaticElement.h"
 
 namespace ld
 {
 
-struct ResizableElement : public Entity
+struct ResizableElement : public StaticElement
 {
   ResizableElement()
-    : Entity(),
+    : StaticElement(),
       width(1.f),
       height(1.f),
       tl_texture(std::string()),

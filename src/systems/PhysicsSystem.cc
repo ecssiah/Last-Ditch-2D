@@ -10,10 +10,10 @@ using namespace Eigen;
 using namespace std;
 
 PhysicsSystem::PhysicsSystem(
-  SDL_Renderer* renderer, MapSystem& map_system_, EntitySystem& entity_system_
+  SDL_Renderer* _renderer, MapSystem& _map_system, EntitySystem& _entity_system
 )
-  : map_system(map_system_),
-    entity_system(entity_system_),
+  : map_system(_map_system),
+    entity_system(_entity_system),
     world(new b2World({0, 0}))
 {
   setup_user_bodies();

@@ -11,24 +11,24 @@ using namespace Eigen;
 using namespace std;
 
 RenderSystem::RenderSystem(
-  SDL_Interface& sdl_interface_,
-  MapSystem& map_system_,
-  EntitySystem& entity_system_,
-  CameraSystem& camera_system_,
-  InterfaceSystem& interface_system_,
-  PhysicsSystem& physics_system_
+  SDL_Interface& _sdl_interface,
+  MapSystem& _map_system,
+  EntitySystem& _entity_system,
+  CameraSystem& _camera_system,
+  InterfaceSystem& _interface_system,
+  PhysicsSystem& _physics_system
 )
-  : sdl_interface(sdl_interface_),
-    map_system(map_system_),
-    entity_system(entity_system_),
-    camera_system(camera_system_),
-    interface_system(interface_system_),
-    physics_system(physics_system_),
-    debug_draw(sdl_interface.renderer, camera_system_),
+  : sdl_interface(_sdl_interface),
+    map_system(_map_system),
+    entity_system(_entity_system),
+    camera_system(_camera_system),
+    interface_system(_interface_system),
+    physics_system(_physics_system),
+    debug_draw(_sdl_interface.renderer, _camera_system),
     textures(),
     texture_coords(),
     debug(false),
-    active_user(entity_system.get_active_user())
+    active_user(_entity_system.get_active_user())
 {
   setup_textures();
 

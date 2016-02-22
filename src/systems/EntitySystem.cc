@@ -16,12 +16,12 @@ using namespace Eigen;
 using namespace std;
 
 EntitySystem::EntitySystem(
-  mt19937& rng_, Input& input_, CameraSystem& camera_system_, MapSystem& map_system_
+  mt19937& _rng, Input& _input, CameraSystem& _camera_system, MapSystem& _map_system
 )
-  : rng(rng_),
-    input(input_),
-    map_system(map_system_),
-    camera_system(camera_system_),
+  : rng(_rng),
+    input(_input),
+    map_system(_map_system),
+    camera_system(_camera_system),
     active_user(nullptr),
     users(NUM_FLOORS),
     item_types()
