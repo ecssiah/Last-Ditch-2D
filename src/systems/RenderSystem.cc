@@ -73,11 +73,11 @@ void RenderSystem::update_animations(const double& dt)
       else
 	user.frame = 0;
 
-      auto x(anim_data.x + user.frame);
+      auto x(anim_data.x + PIXELS_PER_UNIT * user.frame);
       auto y(anim_data.y);
 
-      user.clip_rect.x = PIXELS_PER_UNIT * x;
-      user.clip_rect.y = PIXELS_PER_UNIT * y;
+      user.clip_rect.x = x;
+      user.clip_rect.y = y;
     }
 
     user.arm_frame_time += dt;
@@ -93,11 +93,11 @@ void RenderSystem::update_animations(const double& dt)
       else
 	user.arm_frame = 0;
 
-      auto arm_x(arm_anim_data.x + user.arm_frame);
+      auto arm_x(arm_anim_data.x + PIXELS_PER_UNIT * user.arm_frame);
       auto arm_y(arm_anim_data.y);
 
-      user.arm_clip_rect.x = PIXELS_PER_UNIT * arm_x;
-      user.arm_clip_rect.y = PIXELS_PER_UNIT * arm_y;
+      user.arm_clip_rect.x = arm_x;
+      user.arm_clip_rect.y = arm_y;
     }
   }
 }

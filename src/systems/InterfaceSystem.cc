@@ -38,7 +38,6 @@ void InterfaceSystem::update()
     input.menu = false;
     main_menu_active = !main_menu_active;
 
-    cout << "Menutime!" << endl;
   }
 }
 
@@ -64,8 +63,6 @@ void InterfaceSystem::update_date_and_time()
 
 void InterfaceSystem::render()
 {
-  update_date_and_time();
-
   render_texture_at("time", SCREEN_SIZE_X - 120, 6);
 }
 

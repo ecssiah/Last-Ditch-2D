@@ -14,19 +14,22 @@ INTERFACE_TYPE_TO_TEXTURE(
   {"backdrop1", "interface1"},
 );
 
-
-static std::unordered_map<std::string, ClipData>
+static std::unordered_map<std::string, std::unordered_map<std::string, ClipData>>
 INTERFACE_CLIP_DATA(
 {
-  {"backdrop1", {4, 4, 32, 16}},
-  {"backdrop1_tl", {0, 0, 3, 3}},
-  {"backdrop1_tt", {4, 0, 32, 3}},
-  {"backdrop1_tr", {37, 0, 3, 3}},
-  {"backdrop1_rr", {37, 4, 3, 16}},
-  {"backdrop1_br", {37, 21, 3, 3}},
-  {"backdrop1_bb", {0, 0, 3, 3}},
-  {"backdrop1_bl", {0, 4, 3, 3}},
-  {"backdrop1_ll", {0, 21, 3, 16}},
+  {"backdrop1",
+    {
+      {"ct", {4, 4, 32, 16}},
+      {"tl", {0, 0, 3, 3}},
+      {"tt", {4, 0, 32, 3}},
+      {"tr", {37, 0, 3, 3}},
+      {"rr", {37, 4, 3, 16}},
+      {"br", {37, 21, 3, 3}},
+      {"bb", {0, 0, 3, 3}},
+      {"bl", {0, 4, 3, 3}},
+      {"ll", {0, 21, 3, 16}},
+    }
+  },
 });
 
 }
