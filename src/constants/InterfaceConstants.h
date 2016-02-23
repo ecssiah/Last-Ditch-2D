@@ -4,31 +4,29 @@
 #include <string>
 #include <unordered_map>
 
+#include "../components/ClipData.h"
+
 namespace ld
 {
 
-struct RenderData
-{
-  RenderData(int _x, int _y, int _w, int _h)
-    : x(_x),
-      y(_y),
-      w(_w),
-      h(_h)
-  {}
-};
+static std::unordered_map<std::string, std::string>
+INTERFACE_TYPE_TO_TEXTURE(
+  {"backdrop1", "interface1"},
+);
 
-static std::unordered_map<std::string, RenderData>
-RENDER_DATA(
+
+static std::unordered_map<std::string, ClipData>
+INTERFACE_CLIP_DATA(
 {
-  {"basic_backdrop", {4, 4, 32, 16}},
-  {"basic_backdrop_tl", {0, 0, 3, 3}},
-  {"basic_backdrop_tt", {4, 0, 32, 3}},
-  {"basic_backdrop_tr", {37, 0, 3, 3}},
-  {"basic_backdrop_rr", {37, 4, 3, 16}},
-  {"basic_backdrop_br", {37, 21, 3, 3}},
-  {"basic_backdrop_bb", {0, 0, 3, 3}},
-  {"basic_backdrop_bl", {0, 4, 3, 3}},
-  {"basic_backdrop_ll", {0, 21, 3, 16}},
+  {"backdrop1", {4, 4, 32, 16}},
+  {"backdrop1_tl", {0, 0, 3, 3}},
+  {"backdrop1_tt", {4, 0, 32, 3}},
+  {"backdrop1_tr", {37, 0, 3, 3}},
+  {"backdrop1_rr", {37, 4, 3, 16}},
+  {"backdrop1_br", {37, 21, 3, 3}},
+  {"backdrop1_bb", {0, 0, 3, 3}},
+  {"backdrop1_bl", {0, 4, 3, 3}},
+  {"backdrop1_ll", {0, 21, 3, 16}},
 });
 
 }

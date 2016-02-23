@@ -33,6 +33,8 @@ class RenderSystem
   void setup_textures();
   SDL_Texture* load_texture(std::string name);
 
+  bool debug;
+
   SDL_Interface& sdl_interface;
   DebugDraw debug_draw;
 
@@ -42,13 +44,11 @@ class RenderSystem
   InterfaceSystem& interface_system;
   PhysicsSystem& physics_system;
 
-  std::unordered_map<std::string, SDL_Texture*> textures;
-  std::unordered_map<std::string, Eigen::Vector2i> texture_coords;
-  std::unordered_map<std::string, std::string> type_to_texture_map;
-
-  bool debug;
-
   User* active_user;
+
+  std::unordered_map<std::string, SDL_Texture*> textures;
+
+
 
 public:
   RenderSystem(

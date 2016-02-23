@@ -20,17 +20,16 @@ RenderSystem::RenderSystem(
   InterfaceSystem& _interface_system,
   PhysicsSystem& _physics_system
 )
-  : sdl_interface(_sdl_interface),
+  : debug(false),
+    sdl_interface(_sdl_interface),
     map_system(_map_system),
     entity_system(_entity_system),
     camera_system(_camera_system),
     interface_system(_interface_system),
     physics_system(_physics_system),
+    active_user(_entity_system.get_active_user()),
     debug_draw(_sdl_interface.renderer, _camera_system),
-    textures(),
-    texture_coords(),
-    debug(false),
-    active_user(_entity_system.get_active_user())
+    textures()
 {
   setup_textures();
 
@@ -104,33 +103,6 @@ void RenderSystem::update_animations(const double& dt)
 }
 
 
-void RenderSystem::setup_textures()
-{
-  textures["kadijah"] = load_texture("kadijah");
-  textures["chunk_floor1"] = load_texture("chunk_floor1");
-
-  textures["tileset1"] = load_texture("tileset1");
-  texture_coords["wall1"] = {0, 0};
-  texture_coords["door1_closed"] = {0, 1};
-  texture_coords["door1_open"] = {1, 1};
-  texture_coords["stairs_down1"] = {0, 2};
-  texture_coords["stairs_up1"] = {1, 2};
-  texture_coords["floor1"] = {0, 3};
-
-  textures["items1"] = load_texture("items1");
-  texture_coords["scrub1"] = {0, 0};
-  texture_coords["container1"] = {1, 0};
-}
-
-
-SDL_Texture* RenderSystem::load_texture(std::string name)
-{
-  auto path("media/textures/" + name + ".png");
-
-  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
-}
-
-
 void RenderSystem::render()
 {
   auto floor(active_user->floor);
@@ -191,11 +163,13 @@ void RenderSystem::render_tiles(int floor)
 
 void RenderSystem::render_tile(Tile& tile)
 {
+  auto clip_data(MAP_CLIP_DATA[tile.type]);
+
   SDL_Rect clip_rect;
-  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[tile.type].x());
-  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[tile.type].y());
-  clip_rect.w = PIXELS_PER_UNIT;
-  clip_rect.h = PIXELS_PER_UNIT;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
 
   SDL_Rect dest_rect;
   dest_rect.x =
@@ -232,11 +206,13 @@ void RenderSystem::render_items(int floor)
 
 void RenderSystem::render_item(Item& item)
 {
+  auto clip_data(MAP_CLIP_DATA[item.type]);
+
   SDL_Rect clip_rect;
-  clip_rect.x = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].x());
-  clip_rect.y = PIXELS_PER_UNIT / 2 * (texture_coords[item.type].y());
-  clip_rect.w = PIXELS_PER_UNIT / 2;
-  clip_rect.h = PIXELS_PER_UNIT / 2;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
 
   SDL_Rect dest_rect;
   dest_rect.x =
@@ -272,12 +248,13 @@ void RenderSystem::render_doors(int floor)
 void RenderSystem::render_door(Door& door)
 {
   auto full_type(door.open ? door.type + "_open" : door.type + "_closed");
+  auto clip_data(MAP_CLIP_DATA[full_type]);
 
   SDL_Rect clip_rect;
-  clip_rect.x = PIXELS_PER_UNIT * (texture_coords[full_type].x());
-  clip_rect.y = PIXELS_PER_UNIT * (texture_coords[full_type].y());
-  clip_rect.w = PIXELS_PER_UNIT;
-  clip_rect.h = PIXELS_PER_UNIT;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
 
   SDL_Rect dest_rect;
   dest_rect.x =
@@ -330,4 +307,21 @@ void RenderSystem::render_users(int floor)
       nullptr,
       arm_flip);
   }
+}
+
+
+void RenderSystem::setup_textures()
+{
+  textures["kadijah"] = load_texture("kadijah");
+  textures["chunk_floor1"] = load_texture("chunk_floor1");
+  textures["tileset1"] = load_texture("tileset1");
+  textures["items1"] = load_texture("items1");
+}
+
+
+SDL_Texture* RenderSystem::load_texture(std::string name)
+{
+  auto path("media/textures/" + name + ".png");
+
+  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }

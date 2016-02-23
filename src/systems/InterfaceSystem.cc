@@ -32,6 +32,14 @@ InterfaceSystem::InterfaceSystem(
 void InterfaceSystem::update()
 {
   update_date_and_time();
+
+  if (input.menu)
+  {
+    input.menu = false;
+    main_menu_active = !main_menu_active;
+
+    cout << "Menutime!" << endl;
+  }
 }
 
 

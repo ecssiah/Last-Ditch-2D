@@ -10,6 +10,7 @@
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
+#include "../constants/UserConstants.h"
 
 using namespace ld;
 using namespace Eigen;
@@ -43,14 +44,14 @@ void EntitySystem::setup_users()
   kadijah.radius = .48f;
   kadijah.speed = 50.f;
 
-  kadijah.texture = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.texture = USER_TYPE_TO_TEXTURE[kadijah.type];
   kadijah.animation = "body-idle-front";
   kadijah.clip_rect.x =
     PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].x;
   kadijah.clip_rect.y =
     PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].y;
 
-  kadijah.arm_texture = TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.arm_texture = USER_TYPE_TO_TEXTURE[kadijah.type];
   kadijah.arm_animation = "arm-idle-nequip-front";
   kadijah.arm_clip_rect.x =
     PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
@@ -81,7 +82,7 @@ void EntitySystem::setup_items()
 
       Item item;
       item.type = get_random_type();
-      item.texture = TYPE_TO_TEXTURE[item.type];
+      item.texture = MAP_TYPE_TO_TEXTURE[item.type];
       item.floor = floor;
 
       while (1)
