@@ -20,7 +20,9 @@ struct ResizableElement : public StaticElement
       bb_texture(std::string()),
       bl_texture(std::string()),
       ll_texture(std::string())
-  {}
+  {
+    element_type = RESIZABLE;
+  }
 
   float width, height;
 

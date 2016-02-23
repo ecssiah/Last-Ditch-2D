@@ -58,7 +58,6 @@ void InterfaceSystem::render()
 {
   update_date_and_time();
 
-  render_texture_at("debug", 10, SCREEN_SIZE_Y - 20);
   render_texture_at("time", SCREEN_SIZE_X - 120, 6);
 }
 

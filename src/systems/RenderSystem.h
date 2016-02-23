@@ -18,8 +18,7 @@ namespace ld
 
 class RenderSystem
 {
-  void setup_textures();
-  SDL_Texture* load_texture(std::string name);
+  void update_animations(const double& dt);
 
   void render();
   void render_chunks(int floor);
@@ -30,6 +29,9 @@ class RenderSystem
   void render_doors(int floor);
   void render_door(Door& door);
   void render_users(int floor);
+
+  void setup_textures();
+  SDL_Texture* load_texture(std::string name);
 
   SDL_Interface& sdl_interface;
   DebugDraw debug_draw;
@@ -57,7 +59,7 @@ public:
     InterfaceSystem& interface_system,
     PhysicsSystem& physics_system);
 
-  void update();
+  void update(const double& dt);
 };
 
 }

@@ -109,58 +109,10 @@ void EntitySystem::setup_items()
 }
 
 
-void EntitySystem::update(double dt)
+void EntitySystem::update()
 {
   apply_user_inputs();
-  update_animations(dt);
   if (input.activate) handle_activation();
-}
-
-
-void EntitySystem::update_animations(double& dt)
-{
-  for (auto& user : users[active_user->floor])
-  {
-    user.frame_time += dt;
-
-    if (user.frame_time >= user.frame_length)
-    {
-      user.frame_time = 0.f;
-
-      const auto& anim_data(ANIMATION_DATA[user.type][user.animation]);
-
-      if (user.frame < anim_data.frames - 1)
-	++user.frame;
-      else
-	user.frame = 0;
-
-      auto x(anim_data.x + user.frame);
-      auto y(anim_data.y);
-
-      user.clip_rect.x = PIXELS_PER_UNIT * x;
-      user.clip_rect.y = PIXELS_PER_UNIT * y;
-    }
-
-    user.arm_frame_time += dt;
-
-    if (user.arm_frame_time >= user.arm_frame_length)
-    {
-      user.arm_frame_time = 0.f;
-
-      const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
-
-      if (user.arm_frame < arm_anim_data.frames - 1)
-	++user.arm_frame;
-      else
-	user.arm_frame = 0;
-
-      auto arm_x(arm_anim_data.x + user.arm_frame);
-      auto arm_y(arm_anim_data.y);
-
-      user.arm_clip_rect.x = PIXELS_PER_UNIT * arm_x;
-      user.arm_clip_rect.y = PIXELS_PER_UNIT * arm_y;
-    }
-  }
 }
 
 

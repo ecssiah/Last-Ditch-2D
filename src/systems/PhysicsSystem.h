@@ -33,7 +33,7 @@ public:
   PhysicsSystem(SDL_Renderer* renderer, MapSystem& map_system, EntitySystem& entity_system);
   ~PhysicsSystem();
 
-  void update(double dt);
+  void update(const double& dt);
 
   void destroy_body(b2Body* body);
   void set_debug_draw(DebugDraw& debug_draw);

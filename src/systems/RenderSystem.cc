@@ -3,12 +3,14 @@
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL_image.h>
 
+#include "../StrUtil.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 
 using namespace ld;
 using namespace Eigen;
 using namespace std;
+using namespace StrUtil;
 
 RenderSystem::RenderSystem(
   SDL_Interface& _sdl_interface,
@@ -35,6 +37,70 @@ RenderSystem::RenderSystem(
   physics_system.set_debug_draw(debug_draw);
 
   cout << "RenderSystem ready" << endl;
+}
+
+
+void RenderSystem::update(const double& dt)
+{
+  update_animations(dt);
+
+  SDL_SetRenderDrawColor(sdl_interface.renderer, 0, 0, 0, 0);
+  SDL_RenderClear(sdl_interface.renderer);
+
+  render();
+
+  interface_system.render();
+
+  if (debug) physics_system.render_debug();
+
+  SDL_RenderPresent(sdl_interface.renderer);
+}
+
+
+void RenderSystem::update_animations(const double& dt)
+{
+  for (auto& user : entity_system.get_users(active_user->floor))
+  {
+    user.frame_time += dt;
+
+    if (user.frame_time >= user.frame_length)
+    {
+      user.frame_time = 0.f;
+
+      const auto& anim_data(ANIMATION_DATA[user.type][user.animation]);
+
+      if (user.frame < anim_data.frames - 1)
+	++user.frame;
+      else
+	user.frame = 0;
+
+      auto x(anim_data.x + user.frame);
+      auto y(anim_data.y);
+
+      user.clip_rect.x = PIXELS_PER_UNIT * x;
+      user.clip_rect.y = PIXELS_PER_UNIT * y;
+    }
+
+    user.arm_frame_time += dt;
+
+    if (user.arm_frame_time >= user.arm_frame_length)
+    {
+      user.arm_frame_time = 0.f;
+
+      const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
+
+      if (user.arm_frame < arm_anim_data.frames - 1)
+	++user.arm_frame;
+      else
+	user.arm_frame = 0;
+
+      auto arm_x(arm_anim_data.x + user.arm_frame);
+      auto arm_y(arm_anim_data.y);
+
+      user.arm_clip_rect.x = PIXELS_PER_UNIT * arm_x;
+      user.arm_clip_rect.y = PIXELS_PER_UNIT * arm_y;
+    }
+  }
 }
 
 
@@ -65,6 +131,18 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 }
 
 
+void RenderSystem::render()
+{
+  auto floor(active_user->floor);
+
+  render_chunks(floor);
+  render_tiles(floor);
+  render_items(floor);
+  render_doors(floor);
+  render_users(floor);
+}
+
+
 void RenderSystem::render_chunks(int floor)
 {
   for (int x(0); x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
@@ -85,6 +163,27 @@ void RenderSystem::render_chunks(int floor)
 	sdl_interface.renderer,
 	textures[chunk.texture],
 	nullptr, &dest_rect);
+    }
+  }
+}
+
+
+void RenderSystem::render_tiles(int floor)
+{
+  for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
+  {
+    for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
+    {
+      auto& chunk(
+	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
+
+      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+	  render_tile(chunk.floor_tiles[x][y]);
+
+      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
+	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
+	  render_tile(chunk.main_tiles[x][y]);
     }
   }
 }
@@ -113,39 +212,6 @@ void RenderSystem::render_tile(Tile& tile)
     tile.rotation,
     nullptr,
     SDL_FLIP_NONE);
-}
-
-
-void RenderSystem::render()
-{
-  auto floor(active_user->floor);
-
-  render_chunks(floor);
-  render_tiles(floor);
-  render_items(floor);
-  render_doors(floor);
-  render_users(floor);
-}
-
-
-void RenderSystem::render_tiles(int floor)
-{
-  for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
-  {
-    for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
-    {
-      auto& chunk(
-	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
-
-      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	  render_tile(chunk.floor_tiles[x][y]);
-
-      for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	  render_tile(chunk.main_tiles[x][y]);
-    }
-  }
 }
 
 
@@ -228,19 +294,6 @@ void RenderSystem::render_door(Door& door)
 }
 
 
-bool ends_with(string const& string, std::string const& suffix)
-{
-  if (string.length() >= suffix.length())
-  {
-    auto found(string.compare(string.length() - suffix.length(), suffix.length(), suffix));
-
-    if (found) return true;
-  }
-
-  return false;
-}
-
-
 void RenderSystem::render_users(int floor)
 {
   for (auto& user : entity_system.get_users(floor))
@@ -277,19 +330,4 @@ void RenderSystem::render_users(int floor)
       nullptr,
       arm_flip);
   }
-}
-
-
-void RenderSystem::update()
-{
-  SDL_SetRenderDrawColor(sdl_interface.renderer, 0, 0, 0, 0);
-  SDL_RenderClear(sdl_interface.renderer);
-
-  render();
-
-  interface_system.render();
-
-  if (debug) physics_system.render_debug();
-
-  SDL_RenderPresent(sdl_interface.renderer);
 }

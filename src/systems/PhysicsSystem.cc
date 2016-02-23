@@ -30,7 +30,7 @@ PhysicsSystem::~PhysicsSystem()
 }
 
 
-void PhysicsSystem::update(double dt)
+void PhysicsSystem::update(const double& dt)
 {
   if (map_system.is_dirty())
   {

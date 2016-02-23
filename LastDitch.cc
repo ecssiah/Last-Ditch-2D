@@ -25,15 +25,15 @@ LastDitch::LastDitch()
 
   cout << endl << "Starting Last Ditch..." << endl << endl;
 
-  for (auto dt(0.f); !input.exit; time_system.tick())
+  for (auto dt(0.0); !input.exit; time_system.tick())
   {
     input_system.update();
-    entity_system.update(dt);
+    entity_system.update();
     map_system.update();
     physics_system.update(dt);
     camera_system.update();
     interface_system.update();
-    render_system.update();
+    render_system.update(dt);
 
     dt = time_system.update();
   }
