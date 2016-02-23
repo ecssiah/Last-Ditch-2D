@@ -72,7 +72,7 @@ void InterfaceSystem::render()
 }
 
 
-void InterfaceSystem::render_element_at(StaticElement& element, int x, int y)
+void InterfaceSystem::render_element_at(Element& element, int x, int y)
 {
   auto& texture(textures[element.type]);
 
