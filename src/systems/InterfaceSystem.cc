@@ -22,10 +22,13 @@ InterfaceSystem::InterfaceSystem(
     production_menu_active(),
     status_menu_active(),
     active_user(_entity_system.get_active_user()),
+    date_and_time(),
     fonts(),
     textures()
 {
   fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+
+  date_and_time.type = "date_and_time";
 }
 
 
@@ -37,7 +40,6 @@ void InterfaceSystem::update()
   {
     input.menu = false;
     main_menu_active = !main_menu_active;
-
   }
 }
 
@@ -54,22 +56,25 @@ void InterfaceSystem::update_date_and_time()
   auto minute(time_system.get_minute());
   minute < 10 ? ss << "0" << minute : ss << minute;
 
+  date_and_time.text = ss.str();
+
   auto surface =
     TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {236, 255, 255});
 
-  textures["time"] = SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
+  textures[date_and_time.type] =
+    SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 }
 
 
 void InterfaceSystem::render()
 {
-  render_texture_at("time", SCREEN_SIZE_X - 120, 6);
+  render_element_at(date_and_time, SCREEN_SIZE_X - 120, 6);
 }
 
 
-void InterfaceSystem::render_texture_at(string texture_name, int x, int y)
+void InterfaceSystem::render_element_at(StaticElement& element, int x, int y)
 {
-  auto& texture(textures[texture_name]);
+  auto& texture(textures[element.type]);
 
   int w, h;
   SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
