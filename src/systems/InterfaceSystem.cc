@@ -24,8 +24,8 @@ InterfaceSystem::InterfaceSystem(
     active_user(_entity_system.get_active_user()),
     fonts(),
     textures(),
-    ui_elements(),
-    resizable_elements(),
+    base_ui_elements(),
+    base_resizable_elements(),
     date_and_time(nullptr)
 {
   fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
@@ -34,8 +34,8 @@ InterfaceSystem::InterfaceSystem(
   element.text = time_system.get_string();
   element.texture = "date_and_time";
   element.pos = {2, 2};
-  ui_elements.push_back(element);
-  date_and_time = &ui_elements.back();
+  base_ui_elements.push_back(element);
+  date_and_time = &base_ui_elements.back();
 }
 
 
@@ -76,8 +76,13 @@ void InterfaceSystem::update_date_and_time()
 
 void InterfaceSystem::render()
 {
-  for (auto& element : ui_elements)
+  for (auto& element : base_ui_elements)
     render_element(element);
+
+  if (main_menu_active)
+  {
+
+  }
 }
 
 

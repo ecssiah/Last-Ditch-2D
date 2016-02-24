@@ -39,8 +39,8 @@ class InterfaceSystem
   std::unordered_map<std::string, TTF_Font*> fonts;
   std::unordered_map<std::string, SDL_Texture*> textures;
 
-  std::vector<UIElement> ui_elements;
-  std::vector<ResizableElement> resizable_elements;
+  std::vector<UIElement> base_ui_elements;
+  std::vector<ResizableElement> base_resizable_elements;
 
   UIElement* date_and_time;
 

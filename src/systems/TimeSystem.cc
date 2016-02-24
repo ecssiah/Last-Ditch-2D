@@ -14,7 +14,7 @@ TimeSystem::TimeSystem()
     dt(0.0),
     game_minute_tracker(0.0)
 {
-  auto year(3012), month(12), day(30);
+  auto year(2484), month(12), day(30);
   auto hour(23), minute(55);
 
   game_minutes =
@@ -56,11 +56,22 @@ void TimeSystem::tick()
 string TimeSystem::get_string() const
 {
   stringstream ss;
-  ss << get_day() << "/" << get_month() << "/" << get_year() << " ";
-  ss << get_hour() << ":";
 
   auto minute(get_minute());
+  auto hour(get_hour());
+
+  hour < 10 ? ss << "0" << hour : ss << hour;
+  ss << ":";
   minute < 10 ? ss << "0" << minute : ss << minute;
+
+  auto day(get_day());
+  auto month(get_month());
+
+  ss << " ";
+  day < 10 ? ss << "0" << day : ss << day;
+  ss << "/";
+  month < 10 ? ss << "0" << month : ss << month;
+  ss << "/" << get_year();
 
   return ss.str();
 }
