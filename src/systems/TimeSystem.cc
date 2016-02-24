@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <sstream>
 
 using namespace ld;
 using namespace std;
@@ -49,4 +50,17 @@ double TimeSystem::update()
 void TimeSystem::tick()
 {
   start = chrono::steady_clock::now();
+}
+
+
+string TimeSystem::get_string() const
+{
+  stringstream ss;
+  ss << get_day() << "/" << get_month() << "/" << get_year() << " ";
+  ss << get_hour() << ":";
+
+  auto minute(get_minute());
+  minute < 10 ? ss << "0" << minute : ss << minute;
+
+  return ss.str();
 }

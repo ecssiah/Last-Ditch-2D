@@ -6,6 +6,7 @@
 #include "../StrUtil.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
+#include "../constants/UserConstants.h"
 
 using namespace ld;
 using namespace Eigen;
@@ -66,7 +67,7 @@ void RenderSystem::update_animations(const double& dt)
     {
       user.frame_time = 0.f;
 
-      const auto& anim_data(ANIMATION_DATA[user.type][user.animation]);
+      const auto& anim_data(USER_ANIMATION_DATA[user.type][user.animation]);
 
       if (user.frame < anim_data.frames - 1)
 	++user.frame;
@@ -86,7 +87,7 @@ void RenderSystem::update_animations(const double& dt)
     {
       user.arm_frame_time = 0.f;
 
-      const auto& arm_anim_data(ANIMATION_DATA[user.type][user.arm_animation]);
+      const auto& arm_anim_data(USER_ANIMATION_DATA[user.type][user.arm_animation]);
 
       if (user.arm_frame < arm_anim_data.frames - 1)
 	++user.arm_frame;

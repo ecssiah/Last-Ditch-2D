@@ -46,17 +46,13 @@ void EntitySystem::setup_users()
 
   kadijah.texture = USER_TYPE_TO_TEXTURE[kadijah.type];
   kadijah.animation = "body-idle-front";
-  kadijah.clip_rect.x =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].x;
-  kadijah.clip_rect.y =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.animation].y;
+  kadijah.clip_rect.x = USER_ANIMATION_DATA[kadijah.type][kadijah.animation].x;
+  kadijah.clip_rect.y = USER_ANIMATION_DATA[kadijah.type][kadijah.animation].y;
 
   kadijah.arm_texture = USER_TYPE_TO_TEXTURE[kadijah.type];
   kadijah.arm_animation = "arm-idle-nequip-front";
-  kadijah.arm_clip_rect.x =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
-  kadijah.arm_clip_rect.y =
-    PIXELS_PER_UNIT * ANIMATION_DATA[kadijah.type][kadijah.arm_animation].y;
+  kadijah.arm_clip_rect.x = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
+  kadijah.arm_clip_rect.y = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].y;
 
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();

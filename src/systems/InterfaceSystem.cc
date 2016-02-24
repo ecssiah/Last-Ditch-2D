@@ -22,13 +22,27 @@ InterfaceSystem::InterfaceSystem(
     production_menu_active(),
     status_menu_active(),
     active_user(_entity_system.get_active_user()),
-    date_and_time(),
     fonts(),
-    textures()
+    textures(),
+    ui_elements(),
+    resizable_elements(),
+    date_and_time(nullptr)
 {
   fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
 
-  date_and_time.type = "date_and_time";
+  UIElement element;
+  element.text = time_system.get_string();
+  element.texture = "date_and_time";
+  element.pos = {2, 2};
+  ui_elements.push_back(element);
+  date_and_time = &ui_elements.back();
+}
+
+
+InterfaceSystem::~InterfaceSystem()
+{
+  for (auto& keyvalue : textures)
+    SDL_DestroyTexture(keyvalue.second);
 }
 
 
@@ -46,42 +60,37 @@ void InterfaceSystem::update()
 
 void InterfaceSystem::update_date_and_time()
 {
-  stringstream ss;
-  ss <<
-    time_system.get_day() << "/" <<
-    time_system.get_month() << "/" <<
-    time_system.get_year() << " ";
-  ss << time_system.get_hour() << ":";
-
-  auto minute(time_system.get_minute());
-  minute < 10 ? ss << "0" << minute : ss << minute;
-
-  date_and_time.text = ss.str();
+  date_and_time->text = time_system.get_string();
 
   auto surface =
-    TTF_RenderText_Blended(fonts["jura-medium"], ss.str().c_str(), {236, 255, 255});
+    TTF_RenderText_Blended(
+      fonts["jura-medium"], date_and_time->text.c_str(), {236, 255, 255});
 
-  textures[date_and_time.type] =
+  if (textures[date_and_time->texture] != nullptr)
+    SDL_DestroyTexture(textures[date_and_time->texture]);
+
+  textures[date_and_time->texture] =
     SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
 }
 
 
 void InterfaceSystem::render()
 {
-  render_element_at(date_and_time, SCREEN_SIZE_X - 120, 6);
+  for (auto& element : ui_elements)
+    render_element(element);
 }
 
 
-void InterfaceSystem::render_element_at(Element& element, int x, int y)
+void InterfaceSystem::render_element(UIElement& element)
 {
-  auto& texture(textures[element.type]);
+  auto& texture(textures[element.texture]);
 
   int w, h;
   SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
   SDL_Rect dest_rect;
-  dest_rect.x = x;
-  dest_rect.y = y;
+  dest_rect.x = element.pos.x();
+  dest_rect.y = element.pos.y();
   dest_rect.w = w;
   dest_rect.h = h;
 

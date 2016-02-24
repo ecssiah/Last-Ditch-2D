@@ -4,9 +4,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <unordered_map>
+#include <vector>
 
 #include "../SDL_Interface.h"
-#include "../components/Element.h"
+#include "../components/UIElement.h"
+#include "../components/ResizableElement.h"
 #include "../components/User.h"
 #include "TimeSystem.h"
 #include "EntitySystem.h"
@@ -17,7 +19,9 @@ namespace ld
 class InterfaceSystem
 {
   void update_date_and_time();
-  void render_element_at(Element& element, int x, int y);
+
+  void render_element(UIElement& element);
+  void render_resizable_element(ResizableElement& element);
 
   Input& input;
   SDL_Interface& sdl_interface;
@@ -32,15 +36,19 @@ class InterfaceSystem
 
   User* active_user;
 
-  Element date_and_time;
-
   std::unordered_map<std::string, TTF_Font*> fonts;
   std::unordered_map<std::string, SDL_Texture*> textures;
+
+  std::vector<UIElement> ui_elements;
+  std::vector<ResizableElement> resizable_elements;
+
+  UIElement* date_and_time;
 
 public:
   InterfaceSystem(
     SDL_Interface& sdl_interface, Input& input,
     TimeSystem& time_system, EntitySystem& entity_system);
+  ~InterfaceSystem();
 
   void update();
   void render();

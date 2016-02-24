@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <string>
 
 #include "../constants/SimulationConstants.h"
 
@@ -26,6 +27,8 @@ public:
 
   double update();
   void tick();
+
+  std::string get_string() const;
 
   inline const int get_minute() const;
   inline const int get_hour() const;
