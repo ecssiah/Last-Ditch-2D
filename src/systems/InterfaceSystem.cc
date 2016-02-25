@@ -85,7 +85,7 @@ void InterfaceSystem::setup_main()
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 - 100};
   inventory_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
-  inventory_button.text = "inventory";
+  inventory_button.text = "Inventory";
 
   main_scalable_elements.push_back(inventory_button);
 
@@ -96,7 +96,9 @@ void InterfaceSystem::setup_main()
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 - 100,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
   equipment_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
-  equipment_button.text = "equipment";
+  equipment_button.text = "Equipment";
+
+  main_scalable_elements.push_back(equipment_button);
 
   ScalableElement production_button;
   production_button.type = "backdrop1";
@@ -105,7 +107,9 @@ void InterfaceSystem::setup_main()
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 + 100};
   production_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
-  production_button.text = "production";
+  production_button.text = "Production";
+
+  main_scalable_elements.push_back(production_button);
 
   ScalableElement management_button;
   management_button.type = "backdrop1";
@@ -114,7 +118,9 @@ void InterfaceSystem::setup_main()
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 + 100,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
   management_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
-  management_button.text = "management";
+  management_button.text = "Management";
+
+  main_scalable_elements.push_back(management_button);
 }
 
 
@@ -226,8 +232,8 @@ void InterfaceSystem::render_scalable_element(ScalableElement& element)
   SDL_Rect dest_rect;
   dest_rect.x = element.pos.x() + element.border;
   dest_rect.y = element.pos.y() + element.border;
-  dest_rect.w = element.size.x();
-  dest_rect.h = element.size.y();
+  dest_rect.w = element.size.x() - 2 * element.border;
+  dest_rect.h = element.size.y() - 2 * element.border;
 
   SDL_RenderCopy(
     sdl_interface.renderer,
@@ -256,36 +262,64 @@ void InterfaceSystem::render_scalable_sub_element(
   clip_rect.w = clip_data.w;
   clip_rect.h = clip_data.h;
 
-  int x(0), y(0);
-  if (sub_element == "tt")
-    x = element.border;
-  else if (sub_element == "tr")
-    x = element.size.x() - element.border;
-  else if (sub_element == "rr")
+  SDL_Rect dest_rect;
+
+  if (sub_element == "tr")
   {
-    x = element.size.x() - element.border;
-    y = element.border;
+    dest_rect.x = element.pos.x() + element.size.x() - element.border;
+    dest_rect.y = element.pos.y();
+    dest_rect.w = clip_data.w;
+    dest_rect.h = clip_data.h;
   }
   else if (sub_element == "br")
   {
-    x = element.size.x() - element.border;
-    y = element.size.y() - element.border;
+    dest_rect.x = element.pos.x() + element.size.x() - element.border;
+    dest_rect.y = element.pos.y() + element.size.y() - element.border;
+    dest_rect.w = clip_data.w;
+    dest_rect.h = clip_data.h;
+  }
+  else if (sub_element == "bl")
+  {
+    dest_rect.x = element.pos.x();
+    dest_rect.y = element.pos.y() + element.size.y() - element.border;
+    dest_rect.w = clip_data.w;
+    dest_rect.h = clip_data.h;
+  }
+  else if (sub_element == "tl")
+  {
+    dest_rect.x = element.pos.x();
+    dest_rect.y = element.pos.y();
+    dest_rect.w = clip_data.w;
+    dest_rect.h = clip_data.h;
+  }
+  else if (sub_element == "tt")
+  {
+    dest_rect.x = element.pos.x() + element.border;
+    dest_rect.y = element.pos.y();
+    dest_rect.w = element.size.x() - 2 * element.border;
+    dest_rect.h = clip_data.h;
+  }
+  else if (sub_element == "rr")
+  {
+    dest_rect.x = element.pos.x() + element.size.x() - element.border;
+    dest_rect.y = element.pos.y() + element.border;
+    dest_rect.w = clip_data.w;
+    dest_rect.h = element.size.y() - 2 * element.border;
   }
   else if (sub_element == "bb")
   {
-    x = element.border;
-    y = element.size.y() - element.border;
+    dest_rect.x = element.pos.x() + element.border;
+    dest_rect.y = element.pos.y() + element.size.y() - element.border;
+    dest_rect.w = element.size.x() - 2 * element.border;
+    dest_rect.h = clip_data.h;
   }
-  else if (sub_element == "bl")
-    y = element.size.y() - element.border;
   else if (sub_element == "ll")
-    y = element.border;
-
-  SDL_Rect dest_rect;
-  dest_rect.x = element.pos.x() + x;
-  dest_rect.y = element.pos.y() + y;
-  dest_rect.w = clip_data.w;
-  dest_rect.h = clip_data.h;
+  {
+    dest_rect.x = element.pos.x();
+    dest_rect.y = element.pos.y() + element.border;
+    dest_rect.w = clip_data.w;
+    dest_rect.h = element.size.y() - 2 * element.border;
+  }
 
   SDL_RenderCopy(
     sdl_interface.renderer,

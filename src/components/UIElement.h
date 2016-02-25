@@ -13,6 +13,7 @@ struct UIElement
       type(std::string()),
       texture(std::string()),
       text(std::string()),
+      text_texture(std::string()),
       pos(0, 0)
   {}
 
@@ -20,6 +21,7 @@ struct UIElement
   std::string type;
   std::string texture;
   std::string text;
+  std::string text_texture;
   Eigen::Vector2i pos;
 };
 
