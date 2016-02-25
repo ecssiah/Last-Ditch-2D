@@ -8,7 +8,7 @@
 
 #include "../SDL_Interface.h"
 #include "../components/UIElement.h"
-#include "../components/ResizableElement.h"
+#include "../components/ScalableElement.h"
 #include "../components/User.h"
 #include "TimeSystem.h"
 #include "EntitySystem.h"
@@ -18,10 +18,17 @@ namespace ld
 
 class InterfaceSystem
 {
+  void setup_base();
+  void setup_main();
+  void setup_inventory();
+  void setup_equipment();
+  void setup_production();
+  void setup_management();
+
   void update_date_and_time();
 
   void render_element(UIElement& element);
-  void render_resizable_element(ResizableElement& element);
+  void render_scalable_element(ScalableElement& element);
 
   Input& input;
   SDL_Interface& sdl_interface;
@@ -40,9 +47,12 @@ class InterfaceSystem
   std::unordered_map<std::string, SDL_Texture*> textures;
 
   std::vector<UIElement> base_ui_elements;
-  std::vector<ResizableElement> base_resizable_elements;
+  std::vector<ScalableElement> base_scalable_elements;
 
   UIElement* date_and_time;
+
+  std::vector<UIElement> main_ui_elements;
+  std::vector<ScalableElement> main_scalable_elements;
 
 public:
   InterfaceSystem(

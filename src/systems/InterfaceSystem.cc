@@ -3,6 +3,8 @@
 #include <iomanip>
 #include <sstream>
 
+#include "../constants/InterfaceConstants.h"
+
 using namespace ld;
 using namespace std;
 
@@ -25,17 +27,68 @@ InterfaceSystem::InterfaceSystem(
     fonts(),
     textures(),
     base_ui_elements(),
-    base_resizable_elements(),
-    date_and_time(nullptr)
+    base_scalable_elements(),
+    date_and_time(nullptr),
+    main_ui_elements(),
+    main_scalable_elements()
 {
   fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
 
-  UIElement element;
-  element.text = time_system.get_string();
-  element.texture = "date_and_time";
-  element.pos = {2, 2};
-  base_ui_elements.push_back(element);
+  setup_base();
+  setup_main();
+  setup_inventory();
+  setup_equipment();
+  setup_production();
+  setup_management();
+}
+
+
+void InterfaceSystem::setup_base()
+{
+  UIElement _date_and_time;
+  _date_and_time.texture = "date_and_time";
+  _date_and_time.pos = {2, 2};
+  _date_and_time.text = time_system.get_string();
+
+  base_ui_elements.push_back(_date_and_time);
   date_and_time = &base_ui_elements.back();
+}
+
+
+void InterfaceSystem::setup_main()
+{
+  ScalableElement inventory_button;
+  inventory_button.texture = "backdrop1";
+  inventory_button.pos =
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
+  inventory_button.text = "inventory";
+
+  main_scalable_elements.push_back(inventory_button);
+}
+
+
+void InterfaceSystem::setup_inventory()
+{
+
+}
+
+
+void InterfaceSystem::setup_equipment()
+{
+
+}
+
+
+void InterfaceSystem::setup_production()
+{
+
+}
+
+
+void InterfaceSystem::setup_management()
+{
+
 }
 
 
@@ -79,9 +132,16 @@ void InterfaceSystem::render()
   for (auto& element : base_ui_elements)
     render_element(element);
 
+  for (auto& element : base_scalable_elements)
+    render_scalable_element(element);
+
   if (main_menu_active)
   {
+    for (auto& element : main_ui_elements)
+      render_element(element);
 
+    for (auto& element : main_scalable_elements)
+      render_scalable_element(element);
   }
 }
 
@@ -100,4 +160,9 @@ void InterfaceSystem::render_element(UIElement& element)
   dest_rect.h = h;
 
   SDL_RenderCopy(sdl_interface.renderer, texture, nullptr, &dest_rect);
+}
+
+
+void InterfaceSystem::render_scalable_element(ScalableElement& element)
+{
 }

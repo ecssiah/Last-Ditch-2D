@@ -1,5 +1,5 @@
-#ifndef RESIZABLEELEMENT_H
-#define RESIZABLEELEMENT_H
+#ifndef SCALABLEELEMENT_H
+#define SCALABLEELEMENT_H
 
 #include <eigen3/Eigen/Geometry>
 
@@ -8,9 +8,9 @@
 namespace ld
 {
 
-struct ResizableElement : public UIElement
+struct ScalableElement : public UIElement
 {
-  ResizableElement()
+  ScalableElement()
     : UIElement(),
       size(60, 20)
   {
@@ -21,4 +21,4 @@ struct ResizableElement : public UIElement
 
 }
 
-#endif /* RESIZABLEELEMENT_H */
+#endif /* SCALABLEELEMENT_H */

@@ -9,10 +9,15 @@
 namespace ld
 {
 
+constexpr unsigned MAIN_MENU_BUTTON_SIZE_X(200);
+constexpr unsigned MAIN_MENU_BUTTON_SIZE_Y(20);
+
 static std::unordered_map<std::string, std::string>
 INTERFACE_TYPE_TO_TEXTURE(
+{
   {"backdrop1", "interface1"},
-);
+});
+
 
 static std::unordered_map<std::string, std::unordered_map<std::string, ClipData>>
 INTERFACE_CLIP_DATA(
