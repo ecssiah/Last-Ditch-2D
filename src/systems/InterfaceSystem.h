@@ -18,6 +18,10 @@ namespace ld
 
 class InterfaceSystem
 {
+  void setup_fonts();
+  void setup_textures();
+  SDL_Texture* load_texture(std::string name);
+
   void setup_base();
   void setup_main();
   void setup_inventory();
@@ -29,6 +33,7 @@ class InterfaceSystem
 
   void render_element(UIElement& element);
   void render_scalable_element(ScalableElement& element);
+  void render_scalable_sub_element(ScalableElement& element, string sub_element);
 
   Input& input;
   SDL_Interface& sdl_interface;

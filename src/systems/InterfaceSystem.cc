@@ -32,7 +32,8 @@ InterfaceSystem::InterfaceSystem(
     main_ui_elements(),
     main_scalable_elements()
 {
-  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+  setup_fonts();
+  setup_textures();
 
   setup_base();
   setup_main();
@@ -40,6 +41,26 @@ InterfaceSystem::InterfaceSystem(
   setup_equipment();
   setup_production();
   setup_management();
+}
+
+
+void InterfaceSystem::setup_fonts()
+{
+  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+}
+
+
+void InterfaceSystem::setup_textures()
+{
+  textures["interface1"] = load_texture("interface1");
+}
+
+
+SDL_Texture* InterfaceSystem::load_texture(std::string name)
+{
+  auto path("media/textures/" + name + ".png");
+
+  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }
 
 
@@ -58,13 +79,42 @@ void InterfaceSystem::setup_base()
 void InterfaceSystem::setup_main()
 {
   ScalableElement inventory_button;
-  inventory_button.texture = "backdrop1";
+  inventory_button.type = "backdrop1";
+  inventory_button.texture = "interface1";
   inventory_button.pos =
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 - 100};
+  inventory_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
   inventory_button.text = "inventory";
 
   main_scalable_elements.push_back(inventory_button);
+
+  ScalableElement equipment_button;
+  equipment_button.type = "backdrop1";
+  equipment_button.texture = "interface1";
+  equipment_button.pos =
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 - 100,
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
+  equipment_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+  equipment_button.text = "equipment";
+
+  ScalableElement production_button;
+  production_button.type = "backdrop1";
+  production_button.texture = "interface1";
+  production_button.pos =
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 + 100};
+  production_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+  production_button.text = "production";
+
+  ScalableElement management_button;
+  management_button.type = "backdrop1";
+  management_button.texture = "interface1";
+  management_button.pos =
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 + 100,
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
+  management_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+  management_button.text = "management";
 }
 
 
@@ -165,4 +215,80 @@ void InterfaceSystem::render_element(UIElement& element)
 
 void InterfaceSystem::render_scalable_element(ScalableElement& element)
 {
+  auto& clip_data(INTERFACE_CLIP_DATA[element.type]["ct"]);
+
+  SDL_Rect clip_rect;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
+
+  SDL_Rect dest_rect;
+  dest_rect.x = element.pos.x() + element.border;
+  dest_rect.y = element.pos.y() + element.border;
+  dest_rect.w = element.size.x();
+  dest_rect.h = element.size.y();
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    textures[element.texture],
+    &clip_rect, &dest_rect);
+
+  render_scalable_sub_element(element, "tl");
+  render_scalable_sub_element(element, "tt");
+  render_scalable_sub_element(element, "tr");
+  render_scalable_sub_element(element, "rr");
+  render_scalable_sub_element(element, "br");
+  render_scalable_sub_element(element, "bb");
+  render_scalable_sub_element(element, "bl");
+  render_scalable_sub_element(element, "ll");
+}
+
+
+void InterfaceSystem::render_scalable_sub_element(
+  ScalableElement& element, string sub_element)
+{
+  auto& clip_data(INTERFACE_CLIP_DATA[element.type][sub_element]);
+
+  SDL_Rect clip_rect;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
+
+  int x(0), y(0);
+  if (sub_element == "tt")
+    x = element.border;
+  else if (sub_element == "tr")
+    x = element.size.x() - element.border;
+  else if (sub_element == "rr")
+  {
+    x = element.size.x() - element.border;
+    y = element.border;
+  }
+  else if (sub_element == "br")
+  {
+    x = element.size.x() - element.border;
+    y = element.size.y() - element.border;
+  }
+  else if (sub_element == "bb")
+  {
+    x = element.border;
+    y = element.size.y() - element.border;
+  }
+  else if (sub_element == "bl")
+    y = element.size.y() - element.border;
+  else if (sub_element == "ll")
+    y = element.border;
+
+  SDL_Rect dest_rect;
+  dest_rect.x = element.pos.x() + x;
+  dest_rect.y = element.pos.y() + y;
+  dest_rect.w = clip_data.w;
+  dest_rect.h = clip_data.h;
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    textures[element.texture],
+    &clip_rect, &dest_rect);
 }

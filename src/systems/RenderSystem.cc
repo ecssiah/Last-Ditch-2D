@@ -40,6 +40,23 @@ RenderSystem::RenderSystem(
 }
 
 
+void RenderSystem::setup_textures()
+{
+  textures["kadijah"] = load_texture("kadijah");
+  textures["chunk_floor1"] = load_texture("chunk_floor1");
+  textures["tileset1"] = load_texture("tileset1");
+  textures["items1"] = load_texture("items1");
+}
+
+
+SDL_Texture* RenderSystem::load_texture(std::string name)
+{
+  auto path("media/textures/" + name + ".png");
+
+  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
+}
+
+
 void RenderSystem::update(const double& dt)
 {
   update_animations(dt);
@@ -308,21 +325,4 @@ void RenderSystem::render_users(int floor)
       nullptr,
       arm_flip);
   }
-}
-
-
-void RenderSystem::setup_textures()
-{
-  textures["kadijah"] = load_texture("kadijah");
-  textures["chunk_floor1"] = load_texture("chunk_floor1");
-  textures["tileset1"] = load_texture("tileset1");
-  textures["items1"] = load_texture("items1");
-}
-
-
-SDL_Texture* RenderSystem::load_texture(std::string name)
-{
-  auto path("media/textures/" + name + ".png");
-
-  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }
