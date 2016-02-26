@@ -9,7 +9,7 @@
 namespace ld
 {
 
-constexpr unsigned MAIN_MENU_BUTTON_SIZE_X(200);
+constexpr unsigned MAIN_MENU_BUTTON_SIZE_X(120);
 constexpr unsigned MAIN_MENU_BUTTON_SIZE_Y(20);
 
 static std::unordered_map<std::string, std::string>

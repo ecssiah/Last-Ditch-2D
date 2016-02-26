@@ -21,6 +21,7 @@ class InterfaceSystem
   void setup_fonts();
   void setup_textures();
   SDL_Texture* load_texture(std::string name);
+  void create_texture_from_text(string text, string texture_name);
 
   void setup_base();
   void setup_main();

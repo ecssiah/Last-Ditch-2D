@@ -12,12 +12,9 @@ struct ScalableElement : public UIElement
 {
   ScalableElement()
     : UIElement(),
-      size(200, 40),
       border(3)
-  {
-  }
+  {}
 
-  Eigen::Vector2i size;
   int border;
 };
 

@@ -14,7 +14,8 @@ struct UIElement
       texture(std::string()),
       text(std::string()),
       text_texture(std::string()),
-      pos(0, 0)
+      pos(0, 0),
+      size(120, 20)
   {}
 
   bool clicked;
@@ -23,6 +24,7 @@ struct UIElement
   std::string text;
   std::string text_texture;
   Eigen::Vector2i pos;
+  Eigen::Vector2i size;
 };
 
 }

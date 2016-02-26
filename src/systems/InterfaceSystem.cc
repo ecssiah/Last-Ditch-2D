@@ -67,9 +67,10 @@ SDL_Texture* InterfaceSystem::load_texture(std::string name)
 void InterfaceSystem::setup_base()
 {
   UIElement _date_and_time;
-  _date_and_time.texture = "date_and_time";
   _date_and_time.pos = {2, 2};
+  _date_and_time.size = {130, 20};
   _date_and_time.text = time_system.get_string();
+  _date_and_time.text_texture = "date_and_time_text";
 
   base_ui_elements.push_back(_date_and_time);
   date_and_time = &base_ui_elements.back();
@@ -78,14 +79,20 @@ void InterfaceSystem::setup_base()
 
 void InterfaceSystem::setup_main()
 {
+  auto vert_offset(100);
+  auto horz_offset(160);
+
   ScalableElement inventory_button;
   inventory_button.type = "backdrop1";
-  inventory_button.texture = "interface1";
   inventory_button.pos =
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 - 100};
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 - vert_offset};
   inventory_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+  inventory_button.texture = "interface1";
   inventory_button.text = "Inventory";
+  inventory_button.text_texture = "inventory_button_text";
+
+  create_texture_from_text(inventory_button.text, inventory_button.text_texture);
 
   main_scalable_elements.push_back(inventory_button);
 
@@ -93,10 +100,13 @@ void InterfaceSystem::setup_main()
   equipment_button.type = "backdrop1";
   equipment_button.texture = "interface1";
   equipment_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 - 100,
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 - horz_offset,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
   equipment_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
   equipment_button.text = "Equipment";
+  equipment_button.text_texture = "equipment_button_text";
+
+  create_texture_from_text(equipment_button.text, equipment_button.text_texture);
 
   main_scalable_elements.push_back(equipment_button);
 
@@ -105,9 +115,12 @@ void InterfaceSystem::setup_main()
   production_button.texture = "interface1";
   production_button.pos =
     {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 + 100};
+     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 + vert_offset};
   production_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
   production_button.text = "Production";
+  production_button.text_texture = "production_button_text";
+
+  create_texture_from_text(production_button.text, production_button.text_texture);
 
   main_scalable_elements.push_back(production_button);
 
@@ -115,10 +128,13 @@ void InterfaceSystem::setup_main()
   management_button.type = "backdrop1";
   management_button.texture = "interface1";
   management_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 + 100,
+    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 + horz_offset,
      SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
   management_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
   management_button.text = "Management";
+  management_button.text_texture = "management_button_text";
+
+  create_texture_from_text(management_button.text, management_button.text_texture);
 
   main_scalable_elements.push_back(management_button);
 }
@@ -167,19 +183,25 @@ void InterfaceSystem::update()
 }
 
 
+void InterfaceSystem::create_texture_from_text(string text, string texture_name)
+{
+  auto surface =
+    TTF_RenderText_Blended(
+      fonts["jura-medium"], text.c_str(), {236, 255, 255});
+
+  if (textures[texture_name] != nullptr)
+    SDL_DestroyTexture(textures[texture_name]);
+
+  textures[texture_name] =
+    SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
+}
+
+
 void InterfaceSystem::update_date_and_time()
 {
   date_and_time->text = time_system.get_string();
 
-  auto surface =
-    TTF_RenderText_Blended(
-      fonts["jura-medium"], date_and_time->text.c_str(), {236, 255, 255});
-
-  if (textures[date_and_time->texture] != nullptr)
-    SDL_DestroyTexture(textures[date_and_time->texture]);
-
-  textures[date_and_time->texture] =
-    SDL_CreateTextureFromSurface(sdl_interface.renderer, surface);
+  create_texture_from_text(date_and_time->text, date_and_time->text_texture);
 }
 
 
@@ -204,18 +226,37 @@ void InterfaceSystem::render()
 
 void InterfaceSystem::render_element(UIElement& element)
 {
-  auto& texture(textures[element.texture]);
+  if (element.texture != "")
+  {
+    auto& texture(textures[element.texture]);
 
-  int w, h;
-  SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+    int w, h;
+    SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
-  SDL_Rect dest_rect;
-  dest_rect.x = element.pos.x();
-  dest_rect.y = element.pos.y();
-  dest_rect.w = w;
-  dest_rect.h = h;
+    SDL_Rect dest_rect;
+    dest_rect.x = element.pos.x();
+    dest_rect.y = element.pos.y();
+    dest_rect.w = element.size.x();
+    dest_rect.h = element.size.y();
 
-  SDL_RenderCopy(sdl_interface.renderer, texture, nullptr, &dest_rect);
+    SDL_RenderCopy(sdl_interface.renderer, texture, nullptr, &dest_rect);
+  }
+
+  if (element.text_texture != "")
+  {
+    auto& text_texture(textures[element.text_texture]);
+
+    int tw, th;
+    SDL_QueryTexture(text_texture, nullptr, nullptr, &tw, &th);
+
+    SDL_Rect text_dest_rect;
+    text_dest_rect.x = element.pos.x() + (element.size.x() - tw) / 2;
+    text_dest_rect.y = element.pos.y() + (element.size.y() - th) / 2;
+    text_dest_rect.w = tw;
+    text_dest_rect.h = th;
+
+    SDL_RenderCopy(sdl_interface.renderer, text_texture, nullptr, &text_dest_rect);
+  }
 }
 
 
@@ -248,6 +289,22 @@ void InterfaceSystem::render_scalable_element(ScalableElement& element)
   render_scalable_sub_element(element, "bb");
   render_scalable_sub_element(element, "bl");
   render_scalable_sub_element(element, "ll");
+
+  if (element.text_texture != "")
+  {
+    auto& text_texture(textures[element.text_texture]);
+
+    int tw, th;
+    SDL_QueryTexture(text_texture, nullptr, nullptr, &tw, &th);
+
+    SDL_Rect text_dest_rect;
+    text_dest_rect.x = element.pos.x() + (element.size.x() - tw) / 2;
+    text_dest_rect.y = element.pos.y() + (element.size.y() - th) / 2;
+    text_dest_rect.w = tw;
+    text_dest_rect.h = th;
+
+    SDL_RenderCopy(sdl_interface.renderer, text_texture, nullptr, &text_dest_rect);
+  }
 }
 
 
