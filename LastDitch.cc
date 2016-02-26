@@ -10,7 +10,7 @@ LastDitch::LastDitch()
   : sdl_interface(),
     input(),
     rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
-    time_system(),
+    time_system(input),
     input_system(input),
     camera_system(),
     map_system(),
@@ -28,12 +28,17 @@ LastDitch::LastDitch()
   for (auto dt(0.0); !input.exit; time_system.tick())
   {
     input_system.update();
-    entity_system.update();
-    map_system.update();
-    physics_system.update(dt);
-    camera_system.update();
+
+    if (!input.pause)
+    {
+      entity_system.update();
+      map_system.update();
+      physics_system.update(dt);
+      camera_system.update();
+    }
+
     interface_system.update();
-    render_system.update(dt);
+    render_system.update(input.pause ? 0 : dt);
 
     dt = time_system.update();
   }

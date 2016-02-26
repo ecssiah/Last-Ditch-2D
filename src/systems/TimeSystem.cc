@@ -7,9 +7,10 @@
 using namespace ld;
 using namespace std;
 
-TimeSystem::TimeSystem()
+TimeSystem::TimeSystem(Input& _input)
   : start(chrono::steady_clock::now()),
     end(start),
+    input(_input),
     game_minutes(0),
     dt(0.0),
     game_minute_tracker(0.0)
@@ -35,12 +36,15 @@ double TimeSystem::update()
 
   dt = std::min(MAX_DELTA_TIME, 1e-6 * microseconds);
 
-  game_minute_tracker += dt;
-
-  if (game_minute_tracker >= LENGTH_OF_GAME_MINUTE)
+  if (!input.pause)
   {
-    ++game_minutes;
-    game_minute_tracker -= LENGTH_OF_GAME_MINUTE;
+    game_minute_tracker += dt;
+
+    if (game_minute_tracker >= LENGTH_OF_GAME_MINUTE)
+    {
+      ++game_minutes;
+      game_minute_tracker -= LENGTH_OF_GAME_MINUTE;
+    }
   }
 
   return dt;

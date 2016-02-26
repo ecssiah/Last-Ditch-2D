@@ -5,6 +5,7 @@
 #include <cmath>
 #include <string>
 
+#include "../components/Input.h"
 #include "../constants/SimulationConstants.h"
 
 namespace ld
@@ -17,13 +18,15 @@ class TimeSystem
   std::chrono::steady_clock::time_point start;
   std::chrono::steady_clock::time_point end;
 
+  Input& input;
+
   unsigned long long game_minutes;
 
   double dt;
   double game_minute_tracker;
 
 public:
-  TimeSystem();
+  TimeSystem(Input& input);
 
   double update();
   void tick();

@@ -40,6 +40,7 @@ void InputSystem::update()
       case SDLK_a: input.left = false; break;
       case SDLK_s: input.down = false; break;
       case SDLK_d: input.right = false; break;
+      case SDLK_SPACE: input.pause = !input.pause; break;
       case SDLK_TAB: input.menu = true; break;
       default: break;
       }

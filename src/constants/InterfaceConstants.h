@@ -12,6 +12,9 @@ namespace ld
 constexpr unsigned MAIN_MENU_BUTTON_SIZE_X(120);
 constexpr unsigned MAIN_MENU_BUTTON_SIZE_Y(20);
 
+constexpr unsigned INVENTORY_BASE_SIZE_X(600);
+constexpr unsigned INVENTORY_BASE_SIZE_Y(400);
+
 static std::unordered_map<std::string, std::string>
 INTERFACE_TYPE_TO_TEXTURE(
 {

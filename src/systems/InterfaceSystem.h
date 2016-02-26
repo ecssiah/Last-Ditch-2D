@@ -65,6 +65,18 @@ class InterfaceSystem
   std::vector<UIElement> main_ui_elements;
   std::vector<ScalableElement> main_scalable_elements;
 
+  std::vector<UIElement> inventory_ui_elements;
+  std::vector<ScalableElement> inventory_scalable_elements;
+
+  std::vector<UIElement> equipment_ui_elements;
+  std::vector<ScalableElement> equipment_scalable_elements;
+
+  std::vector<UIElement> production_ui_elements;
+  std::vector<ScalableElement> production_scalable_elements;
+
+  std::vector<UIElement> management_ui_elements;
+  std::vector<ScalableElement> management_scalable_elements;
+
 public:
   InterfaceSystem(
     SDL_Interface& sdl_interface, Input& input,

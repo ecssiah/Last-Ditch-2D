@@ -15,6 +15,7 @@ struct Input
       left(false),
       right(false),
       exit(false),
+      pause(false),
       activate(false),
       menu(false),
       sub_menu(false),
@@ -24,6 +25,7 @@ struct Input
   bool up, down;
   bool left, right;
   bool exit;
+  bool pause;
   bool activate;
   bool menu, sub_menu;
 

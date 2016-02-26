@@ -198,11 +198,7 @@ void EntitySystem::handle_activation()
     selection_point.x() < 0 || selection_point.x() >= MAP_SIZE_X ||
     selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
 
-  if (out_of_bounds)
-  {
-    input.activate = false;
-    return;
-  }
+  if (out_of_bounds) return;
 
   auto& chunk(
     map_system.get_chunk(selection_point.x(), selection_point.y(), active_user->floor));

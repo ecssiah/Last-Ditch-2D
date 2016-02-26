@@ -33,7 +33,15 @@ InterfaceSystem::InterfaceSystem(
     base_scalable_elements(),
     date_and_time(nullptr),
     main_ui_elements(),
-    main_scalable_elements()
+    main_scalable_elements(),
+    inventory_ui_elements(),
+    inventory_scalable_elements(),
+    equipment_ui_elements(),
+    equipment_scalable_elements(),
+    production_ui_elements(),
+    production_scalable_elements(),
+    management_ui_elements(),
+    management_scalable_elements()
 {
   setup_fonts();
   setup_textures();
@@ -145,7 +153,15 @@ void InterfaceSystem::setup_main()
 
 void InterfaceSystem::setup_inventory()
 {
+  ScalableElement inventory_base;
+  inventory_base.type = "backdrop1";
+  inventory_base.texture = "interface1";
+  inventory_base.size = {INVENTORY_BASE_SIZE_X, INVENTORY_BASE_SIZE_Y};
+  inventory_base.pos =
+    {(SCREEN_SIZE_X - INVENTORY_BASE_SIZE_X) / 2,
+     (SCREEN_SIZE_Y - INVENTORY_BASE_SIZE_Y) / 2};
 
+  inventory_scalable_elements.push_back(inventory_base);
 }
 
 
@@ -284,6 +300,15 @@ void InterfaceSystem::render()
       render_element(element);
 
     for (auto& element : main_scalable_elements)
+      render_scalable_element(element);
+  }
+
+  if (inventory_menu_active)
+  {
+    for (auto& element : inventory_ui_elements)
+      render_element(element);
+
+    for (auto& element : inventory_scalable_elements)
       render_scalable_element(element);
   }
 }
