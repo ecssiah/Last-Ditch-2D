@@ -182,6 +182,14 @@ void InterfaceSystem::update()
   {
     input.menu = false;
     main_menu_active = !main_menu_active;
+
+    if (main_menu_active)
+    {
+      inventory_menu_active = false;
+      equipment_menu_active = false;
+      production_menu_active = false;
+      management_menu_active = false;
+    }
   }
 
   if (main_menu_active)
