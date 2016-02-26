@@ -6,17 +6,20 @@
 #include "../constants/InterfaceConstants.h"
 
 using namespace ld;
+using namespace Eigen;
 using namespace std;
 
 InterfaceSystem::InterfaceSystem(
   SDL_Interface& _sdl_interface,
   Input& _input,
   TimeSystem& _time_system,
+  CameraSystem& _camera_system,
   EntitySystem& _entity_system
 )
   : sdl_interface(_sdl_interface),
     input(_input),
     time_system(_time_system),
+    camera_system(_camera_system),
     entity_system(_entity_system),
     main_menu_active(),
     inventory_menu_active(),
@@ -166,8 +169,8 @@ void InterfaceSystem::setup_management()
 
 InterfaceSystem::~InterfaceSystem()
 {
-  for (auto& keyvalue : textures)
-    SDL_DestroyTexture(keyvalue.second);
+  for (auto& kv : textures)
+    SDL_DestroyTexture(kv.second);
 }
 
 
@@ -180,6 +183,60 @@ void InterfaceSystem::update()
     input.menu = false;
     main_menu_active = !main_menu_active;
   }
+
+  if (main_menu_active)
+  {
+    if (input.activate)
+    {
+      if (check_element_for_hit(input.mouse_pos))
+      {
+	input.activate = false;
+      }
+    }
+  }
+
+  if (input.activate) input.activate = false;
+}
+
+
+bool InterfaceSystem::check_element_for_hit(Vector2i& mouse_pos)
+{
+  for (auto& element : main_scalable_elements)
+  {
+    auto hit(
+      mouse_pos.x() > element.pos.x() &&
+      mouse_pos.x() < element.pos.x() + element.size.x() &&
+      mouse_pos.y() > element.pos.y() &&
+      mouse_pos.y() < element.pos.y() + element.size.y());
+
+    if (hit)
+    {
+      if (element.text == "Inventory")
+      {
+	main_menu_active = false;
+	inventory_menu_active = true;
+      }
+      else if (element.text == "Equipment")
+      {
+	main_menu_active = false;
+	equipment_menu_active = true;
+      }
+      else if (element.text == "Production")
+      {
+	main_menu_active = false;
+	production_menu_active = true;
+      }
+      else if (element.text == "Management")
+      {
+	main_menu_active = false;
+	management_menu_active = true;
+      }
+
+      return true;
+    }
+  }
+
+  return false;
 }
 
 

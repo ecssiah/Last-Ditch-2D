@@ -16,7 +16,7 @@ LastDitch::LastDitch()
     map_system(),
     entity_system(rng, input, camera_system, map_system),
     physics_system(sdl_interface.renderer, map_system, entity_system),
-    interface_system(sdl_interface, input, time_system, entity_system),
+    interface_system(sdl_interface, input, time_system, camera_system, entity_system),
     render_system(
       sdl_interface, map_system, entity_system, camera_system,
       interface_system, physics_system)

@@ -192,21 +192,32 @@ void EntitySystem::apply_user_inputs()
 
 void EntitySystem::handle_activation()
 {
-  input.activate = false;
-
   Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
 
   auto out_of_bounds(
     selection_point.x() < 0 || selection_point.x() >= MAP_SIZE_X ||
     selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
 
-  if (out_of_bounds) return;
+  if (out_of_bounds)
+  {
+    input.activate = false;
+    return;
+  }
 
   auto& chunk(
     map_system.get_chunk(selection_point.x(), selection_point.y(), active_user->floor));
 
-  if (find_and_interact_door(selection_point, chunk)) return;
-  if (find_and_interact_item(selection_point, chunk)) return;
+  if (find_and_interact_door(selection_point, chunk))
+  {
+    input.activate = false;
+    return;
+  }
+
+  if (find_and_interact_item(selection_point, chunk))
+  {
+    input.activate = false;
+    return;
+  }
 }
 
 

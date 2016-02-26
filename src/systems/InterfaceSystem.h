@@ -1,6 +1,7 @@
 #ifndef INTERFACESYSTEM_H
 #define INTERFACESYSTEM_H
 
+#include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <unordered_map>
@@ -23,6 +24,8 @@ class InterfaceSystem
   SDL_Texture* load_texture(std::string name);
   void create_texture_from_text(string text, string texture_name);
 
+  bool check_element_for_hit(Eigen::Vector2i& mouse_pos);
+
   void setup_base();
   void setup_main();
   void setup_inventory();
@@ -39,12 +42,14 @@ class InterfaceSystem
   Input& input;
   SDL_Interface& sdl_interface;
   TimeSystem& time_system;
+  CameraSystem& camera_system;
   EntitySystem& entity_system;
 
   bool main_menu_active;
   bool inventory_menu_active;
   bool equipment_menu_active;
   bool production_menu_active;
+  bool management_menu_active;
   bool status_menu_active;
 
   User* active_user;
@@ -63,7 +68,7 @@ class InterfaceSystem
 public:
   InterfaceSystem(
     SDL_Interface& sdl_interface, Input& input,
-    TimeSystem& time_system, EntitySystem& entity_system);
+    TimeSystem& time_system, CameraSystem& camera_system, EntitySystem& entity_system);
   ~InterfaceSystem();
 
   void update();
