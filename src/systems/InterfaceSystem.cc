@@ -204,32 +204,12 @@ void InterfaceSystem::update()
 
   if (input.menu)
   {
-    input.menu = false;
-    main_menu_active = !main_menu_active;
-
-    if (main_menu_active)
-    {
-      input.pause = true;
-      inventory_menu_active = false;
-      equipment_menu_active = false;
-      production_menu_active = false;
-      management_menu_active = false;
-    }
-    else
-    {
-      input.pause = false;
-    }
+    handle_menu_activation();
   }
 
   if (main_menu_active)
   {
-    if (input.activate)
-    {
-      if (check_element_for_hit(input.mouse_pos))
-      {
-	input.activate = false;
-      }
-    }
+    update_main_menu();
   }
   else if (inventory_menu_active)
   {
@@ -248,11 +228,87 @@ void InterfaceSystem::update()
 
   }
 
-  if (input.activate) input.activate = false;
+  if (input.activate)
+  {
+    cout << "Activation not used" << endl;
+    input.activate = false;
+  }
 }
 
 
-bool InterfaceSystem::check_element_for_hit(Vector2i& mouse_pos)
+void InterfaceSystem::update_main_menu()
+{
+  if (input.activate)
+  {
+    auto element(find_scalable_element_at(input.mouse_pos));
+
+    if (element)
+    {
+      input.activate = false;
+
+      if (element->text == "Inventory")
+      {
+	main_menu_active = false;
+	inventory_menu_active = true;
+      }
+      else if (element->text == "Equipment")
+      {
+	main_menu_active = false;
+	equipment_menu_active = true;
+      }
+      else if (element->text == "Production")
+      {
+	main_menu_active = false;
+	production_menu_active = true;
+      }
+      else if (element->text == "Management")
+      {
+	main_menu_active = false;
+	management_menu_active = true;
+      }
+    }
+  }
+}
+
+
+void InterfaceSystem::handle_menu_activation()
+{
+  input.menu = false;
+
+  if (main_menu_active)
+  {
+    input.pause = false;
+    main_menu_active = false;
+  }
+  else if (inventory_menu_active)
+  {
+    input.pause = false;
+    inventory_menu_active = false;
+  }
+  else if (equipment_menu_active)
+  {
+    input.pause = false;
+    equipment_menu_active = false;
+  }
+  else if (production_menu_active)
+  {
+    input.pause = false;
+    production_menu_active = false;
+  }
+  else if (management_menu_active)
+  {
+    input.pause = false;
+    management_menu_active = false;
+  }
+  else
+  {
+    input.pause = true;
+    main_menu_active = true;
+  }
+}
+
+
+ScalableElement* InterfaceSystem::find_scalable_element_at(Vector2i& mouse_pos)
 {
   for (auto& element : main_scalable_elements)
   {
@@ -263,33 +319,10 @@ bool InterfaceSystem::check_element_for_hit(Vector2i& mouse_pos)
       mouse_pos.y() < element.pos.y() + element.size.y());
 
     if (hit)
-    {
-      if (element.text == "Inventory")
-      {
-	main_menu_active = false;
-	inventory_menu_active = true;
-      }
-      else if (element.text == "Equipment")
-      {
-	main_menu_active = false;
-	equipment_menu_active = true;
-      }
-      else if (element.text == "Production")
-      {
-	main_menu_active = false;
-	production_menu_active = true;
-      }
-      else if (element.text == "Management")
-      {
-	main_menu_active = false;
-	management_menu_active = true;
-      }
-
-      return true;
-    }
+      return &element;
   }
 
-  return false;
+  return nullptr;
 }
 
 
@@ -342,6 +375,39 @@ void InterfaceSystem::render()
       render_element(element);
 
     for (auto& element : inventory_scalable_elements)
+      render_scalable_element(element);
+  }
+
+  if (equipment_menu_active)
+  {
+    render_scalable_element(sub_menu_base);
+
+    for (auto& element : equipment_ui_elements)
+      render_element(element);
+
+    for (auto& element : equipment_scalable_elements)
+      render_scalable_element(element);
+  }
+
+  if (production_menu_active)
+  {
+    render_scalable_element(sub_menu_base);
+
+    for (auto& element : production_ui_elements)
+      render_element(element);
+
+    for (auto& element : production_scalable_elements)
+      render_scalable_element(element);
+  }
+
+  if (management_menu_active)
+  {
+    render_scalable_element(sub_menu_base);
+
+    for (auto& element : management_ui_elements)
+      render_element(element);
+
+    for (auto& element : management_scalable_elements)
       render_scalable_element(element);
   }
 }

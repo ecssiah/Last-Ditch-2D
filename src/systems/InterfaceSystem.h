@@ -22,9 +22,11 @@ class InterfaceSystem
   void setup_fonts();
   void setup_textures();
   SDL_Texture* load_texture(std::string name);
-  void create_texture_from_text(string text, string texture_name, string font_name = "jura-medium-14");
+  void create_texture_from_text(
+    string text, string texture_name, string font_name = "jura-medium-14");
 
-  bool check_element_for_hit(Eigen::Vector2i& mouse_pos);
+  ScalableElement* find_scalable_element_at(Eigen::Vector2i& mouse_pos);
+  void handle_menu_activation();
 
   void setup_base();
   void setup_main();
@@ -34,6 +36,7 @@ class InterfaceSystem
   void setup_management();
 
   void update_date_and_time();
+  void update_main_menu();
 
   void render_element(UIElement& element);
   void render_scalable_element(ScalableElement& element);
