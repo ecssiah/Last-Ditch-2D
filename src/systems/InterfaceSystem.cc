@@ -27,11 +27,12 @@ InterfaceSystem::InterfaceSystem(
     production_menu_active(),
     status_menu_active(),
     active_user(_entity_system.get_active_user()),
+    date_and_time(),
+    sub_menu_base(),
     fonts(),
     textures(),
     base_ui_elements(),
     base_scalable_elements(),
-    date_and_time(nullptr),
     main_ui_elements(),
     main_scalable_elements(),
     inventory_ui_elements(),
@@ -57,7 +58,8 @@ InterfaceSystem::InterfaceSystem(
 
 void InterfaceSystem::setup_fonts()
 {
-  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+  fonts["jura-medium-14"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+  fonts["jura-medium-16"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 16);
 }
 
 
@@ -77,14 +79,17 @@ SDL_Texture* InterfaceSystem::load_texture(std::string name)
 
 void InterfaceSystem::setup_base()
 {
-  UIElement _date_and_time;
-  _date_and_time.pos = {2, 2};
-  _date_and_time.size = {130, 20};
-  _date_and_time.text = time_system.get_string();
-  _date_and_time.text_texture = "date_and_time_text";
+  date_and_time.pos = {2, 2};
+  date_and_time.size = {130, 20};
+  date_and_time.text = time_system.get_string();
+  date_and_time.text_texture = "date_and_time_text";
 
-  base_ui_elements.push_back(_date_and_time);
-  date_and_time = &base_ui_elements.back();
+  sub_menu_base.type = "backdrop1";
+  sub_menu_base.texture = "interface1";
+  sub_menu_base.size = {SUB_MENU_BASE_SIZE_X, SUB_MENU_BASE_SIZE_Y};
+  sub_menu_base.pos =
+    {(SCREEN_SIZE_X - SUB_MENU_BASE_SIZE_X) / 2,
+     (SCREEN_SIZE_Y - SUB_MENU_BASE_SIZE_Y) / 2};
 }
 
 
@@ -153,15 +158,18 @@ void InterfaceSystem::setup_main()
 
 void InterfaceSystem::setup_inventory()
 {
-  ScalableElement inventory_base;
-  inventory_base.type = "backdrop1";
-  inventory_base.texture = "interface1";
-  inventory_base.size = {INVENTORY_BASE_SIZE_X, INVENTORY_BASE_SIZE_Y};
-  inventory_base.pos =
-    {(SCREEN_SIZE_X - INVENTORY_BASE_SIZE_X) / 2,
-     (SCREEN_SIZE_Y - INVENTORY_BASE_SIZE_Y) / 2};
+  UIElement inventory_title;
+  inventory_title.text = "Inventory";
+  inventory_title.text_texture = "inventory_title";
+  inventory_title.size = {200, 40};
+  inventory_title.pos =
+    {sub_menu_base.pos.x() + (SUB_MENU_BASE_SIZE_X - inventory_title.size.x()) / 2,
+     sub_menu_base.pos.y() + (SUB_MENU_BASE_SIZE_Y - inventory_title.size.y()) / 2};
 
-  inventory_scalable_elements.push_back(inventory_base);
+  create_texture_from_text(
+    inventory_title.text, inventory_title.text_texture, "jura-medium-16");
+
+  inventory_ui_elements.push_back(inventory_title);
 }
 
 
@@ -201,10 +209,15 @@ void InterfaceSystem::update()
 
     if (main_menu_active)
     {
+      input.pause = true;
       inventory_menu_active = false;
       equipment_menu_active = false;
       production_menu_active = false;
       management_menu_active = false;
+    }
+    else
+    {
+      input.pause = false;
     }
   }
 
@@ -217,6 +230,22 @@ void InterfaceSystem::update()
 	input.activate = false;
       }
     }
+  }
+  else if (inventory_menu_active)
+  {
+
+  }
+  else if (equipment_menu_active)
+  {
+
+  }
+  else if (production_menu_active)
+  {
+
+  }
+  else if (management_menu_active)
+  {
+
   }
 
   if (input.activate) input.activate = false;
@@ -264,11 +293,11 @@ bool InterfaceSystem::check_element_for_hit(Vector2i& mouse_pos)
 }
 
 
-void InterfaceSystem::create_texture_from_text(string text, string texture_name)
+void InterfaceSystem::create_texture_from_text(string text, string texture_name, string font_name)
 {
   auto surface =
     TTF_RenderText_Blended(
-      fonts["jura-medium"], text.c_str(), {236, 255, 255});
+      fonts[font_name], text.c_str(), {236, 255, 255});
 
   if (textures[texture_name] != nullptr)
     SDL_DestroyTexture(textures[texture_name]);
@@ -280,14 +309,16 @@ void InterfaceSystem::create_texture_from_text(string text, string texture_name)
 
 void InterfaceSystem::update_date_and_time()
 {
-  date_and_time->text = time_system.get_string();
+  date_and_time.text = time_system.get_string();
 
-  create_texture_from_text(date_and_time->text, date_and_time->text_texture);
+  create_texture_from_text(date_and_time.text, date_and_time.text_texture);
 }
 
 
 void InterfaceSystem::render()
 {
+  render_element(date_and_time);
+
   for (auto& element : base_ui_elements)
     render_element(element);
 
@@ -305,6 +336,8 @@ void InterfaceSystem::render()
 
   if (inventory_menu_active)
   {
+    render_scalable_element(sub_menu_base);
+
     for (auto& element : inventory_ui_elements)
       render_element(element);
 

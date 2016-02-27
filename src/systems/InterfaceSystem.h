@@ -22,7 +22,7 @@ class InterfaceSystem
   void setup_fonts();
   void setup_textures();
   SDL_Texture* load_texture(std::string name);
-  void create_texture_from_text(string text, string texture_name);
+  void create_texture_from_text(string text, string texture_name, string font_name = "jura-medium-14");
 
   bool check_element_for_hit(Eigen::Vector2i& mouse_pos);
 
@@ -54,13 +54,14 @@ class InterfaceSystem
 
   User* active_user;
 
+  UIElement date_and_time;
+  ScalableElement sub_menu_base;
+
   std::unordered_map<std::string, TTF_Font*> fonts;
   std::unordered_map<std::string, SDL_Texture*> textures;
 
   std::vector<UIElement> base_ui_elements;
   std::vector<ScalableElement> base_scalable_elements;
-
-  UIElement* date_and_time;
 
   std::vector<UIElement> main_ui_elements;
   std::vector<ScalableElement> main_scalable_elements;
