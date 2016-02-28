@@ -42,8 +42,6 @@ LastDitch::LastDitch()
 
     dt = time_system.update();
   }
-
-  sdl_interface.shutdown();
 }
 
 

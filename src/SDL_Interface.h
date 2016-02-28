@@ -23,6 +23,7 @@ class SDL_Interface
 
 public:
   SDL_Interface();
+  ~SDL_Interface();
 
   void create_texture_from_text(
     std::string text, std::string texture_name, std::string font_name = "jura-medium-14");
@@ -30,8 +31,6 @@ public:
   void render_element(UIElement& element);
   void render_scalable_element(ScalableElement& element);
   void render_scalable_sub_element(ScalableElement& element, std::string sub_element);
-
-  void shutdown();
 
   SDL_Window* window;
   SDL_Renderer* renderer;

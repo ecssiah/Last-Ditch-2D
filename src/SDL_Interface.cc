@@ -30,6 +30,21 @@ SDL_Interface::SDL_Interface()
 }
 
 
+SDL_Interface::~SDL_Interface()
+{
+  for (auto& kv : textures) SDL_DestroyTexture(kv.second);
+
+  SDL_DestroyWindow(window);
+  SDL_DestroyRenderer(renderer);
+
+  for (auto& kv : fonts) TTF_CloseFont(kv.second);
+
+  TTF_Quit();
+  IMG_Quit();
+  SDL_Quit();
+}
+
+
 void SDL_Interface::setup_fonts()
 {
   fonts["jura-medium-14"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
@@ -52,19 +67,6 @@ void SDL_Interface::setup_textures()
   textures["tileset1"] = load_texture("tileset1");
   textures["items1"] = load_texture("items1");
   textures["ui1"] = load_texture("ui1");
-}
-
-
-void SDL_Interface::shutdown()
-{
-  for (auto& kv : textures) SDL_DestroyTexture(kv.second);
-
-  SDL_DestroyWindow(window);
-  SDL_DestroyRenderer(renderer);
-
-  TTF_Quit();
-  IMG_Quit();
-  SDL_Quit();
 }
 
 
