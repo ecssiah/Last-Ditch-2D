@@ -16,10 +16,10 @@ LastDitch::LastDitch()
     map_system(),
     entity_system(rng, input, camera_system, map_system),
     physics_system(sdl_interface.renderer, map_system, entity_system),
-    interface_system(sdl_interface, input, time_system, camera_system, entity_system),
+    ui_system(sdl_interface, input, time_system, entity_system),
     render_system(
       sdl_interface, map_system, entity_system, camera_system,
-      interface_system, physics_system)
+      ui_system, physics_system)
 {
   camera_system.set_target(entity_system.get_active_user());
 
@@ -37,7 +37,7 @@ LastDitch::LastDitch()
       camera_system.update();
     }
 
-    interface_system.update();
+    ui_system.update();
     render_system.update(input.pause ? 0 : dt);
 
     dt = time_system.update();

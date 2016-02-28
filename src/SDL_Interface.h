@@ -5,49 +5,40 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <string>
+#include <unordered_map>
 
-#include "constants/RenderConstants.h"
-
-using namespace std;
+#include "components/UIElement.h"
+#include "components/ScalableElement.h"
 
 namespace ld
 {
 
-struct SDL_Interface
+class SDL_Interface
 {
-  SDL_Interface()
-    : window(nullptr),
-      renderer(nullptr)
-  {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-      cout << "SDL_Init error: " << SDL_GetError() << endl;
+  void setup_fonts();
+  void setup_textures();
 
-    window =
-      SDL_CreateWindow(
-	"Last Ditch", 100, 100, SCREEN_SIZE_X, SCREEN_SIZE_Y, SDL_WINDOW_SHOWN);
-    renderer =
-      SDL_CreateRenderer(
-	window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  SDL_Texture* load_texture(std::string name);
 
-    TTF_Init();
+public:
+  SDL_Interface();
 
-    auto img_flags(IMG_INIT_PNG);
-    IMG_Init(img_flags);
-  }
+  void create_texture_from_text(
+    std::string text, std::string texture_name, std::string font_name = "jura-medium-14");
 
+  void render_element(UIElement& element);
+  void render_scalable_element(ScalableElement& element);
+  void render_scalable_sub_element(ScalableElement& element, std::string sub_element);
 
-  void shutdown()
-  {
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-
-    TTF_Quit();
-    IMG_Quit();
-    SDL_Quit();
-  }
+  void shutdown();
 
   SDL_Window* window;
   SDL_Renderer* renderer;
+
+  std::unordered_map<std::string, TTF_Font*> fonts;
+  std::unordered_map<std::string, SDL_Texture*> textures;
+
 };
 
 }

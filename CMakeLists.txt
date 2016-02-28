@@ -5,6 +5,7 @@ project(LastDitch)
 set(
   HEADERS
   ./LastDitch.h
+  ./src/SDL_Interface.h
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
   ./src/systems/EntitySystem.h
@@ -12,12 +13,17 @@ set(
   ./src/systems/PhysicsSystem.h
   ./src/systems/MapSystem.h
   ./src/systems/CameraSystem.h
-  ./src/systems/InterfaceSystem.h
+  ./src/systems/UISystem.h
+  ./src/systems/InventoryUISystem.h
+  ./src/systems/ProductionUISystem.h
+  ./src/systems/ManagementUISystem.h
+  ./src/systems/StatusUISystem.h
   ./src/systems/RenderSystem.h)
 
 set(
   SOURCES
   ./LastDitch.cc
+  ./src/SDL_Interface.cc
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
   ./src/systems/EntitySystem.cc
@@ -25,7 +31,11 @@ set(
   ./src/systems/PhysicsSystem.cc
   ./src/systems/MapSystem.cc
   ./src/systems/CameraSystem.cc
-  ./src/systems/InterfaceSystem.cc
+  ./src/systems/UISystem.cc
+  ./src/systems/InventoryUISystem.cc
+  ./src/systems/ProductionUISystem.cc
+  ./src/systems/ManagementUISystem.cc
+  ./src/systems/StatusUISystem.cc
   ./src/systems/RenderSystem.cc)
 
 add_executable(LastDitch ${HEADERS} ${SOURCES})

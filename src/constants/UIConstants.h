@@ -1,5 +1,5 @@
-#ifndef INTERFACECONSTANTS_H
-#define INTERFACECONSTANTS_H
+#ifndef UICONSTANTS_H
+#define UICONSTANTS_H
 
 #include <string>
 #include <unordered_map>
@@ -16,14 +16,14 @@ constexpr unsigned SUB_MENU_BASE_SIZE_X(600);
 constexpr unsigned SUB_MENU_BASE_SIZE_Y(400);
 
 static std::unordered_map<std::string, std::string>
-INTERFACE_TYPE_TO_TEXTURE(
+UI_TYPE_TO_TEXTURE(
 {
-  {"backdrop1", "interface1"},
+  {"backdrop1", "ui1"},
 });
 
 
 static std::unordered_map<std::string, std::unordered_map<std::string, ClipData>>
-INTERFACE_CLIP_DATA(
+UI_CLIP_DATA(
 {
   {"backdrop1",
     {
@@ -42,4 +42,4 @@ INTERFACE_CLIP_DATA(
 
 }
 
-#endif /* INTERFACECONSTANTS_H */
+#endif /* UICONSTANTS_H */

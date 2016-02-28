@@ -13,7 +13,7 @@
 #include "src/systems/EntitySystem.h"
 #include "src/systems/PhysicsSystem.h"
 #include "src/systems/CameraSystem.h"
-#include "src/systems/InterfaceSystem.h"
+#include "src/systems/UISystem.h"
 #include "src/systems/RenderSystem.h"
 
 namespace ld
@@ -35,7 +35,7 @@ class LastDitch
   EntitySystem entity_system;
   PhysicsSystem physics_system;
   CameraSystem camera_system;
-  InterfaceSystem interface_system;
+  UISystem ui_system;
   RenderSystem render_system;
 
 public:

@@ -10,7 +10,7 @@
 #include "MapSystem.h"
 #include "EntitySystem.h"
 #include "CameraSystem.h"
-#include "InterfaceSystem.h"
+#include "UISystem.h"
 #include "PhysicsSystem.h"
 
 namespace ld
@@ -41,7 +41,7 @@ class RenderSystem
   MapSystem& map_system;
   EntitySystem& entity_system;
   CameraSystem& camera_system;
-  InterfaceSystem& interface_system;
+  UISystem& ui_system;
   PhysicsSystem& physics_system;
 
   User* active_user;
@@ -54,7 +54,7 @@ public:
     MapSystem& map_system,
     EntitySystem& entity_system,
     CameraSystem& camera_system,
-    InterfaceSystem& interface_system,
+    UISystem& ui_system,
     PhysicsSystem& physics_system);
 
   void update(const double& dt);

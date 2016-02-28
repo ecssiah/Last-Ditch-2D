@@ -18,7 +18,7 @@ RenderSystem::RenderSystem(
   MapSystem& _map_system,
   EntitySystem& _entity_system,
   CameraSystem& _camera_system,
-  InterfaceSystem& _interface_system,
+  UISystem& _ui_system,
   PhysicsSystem& _physics_system
 )
   : debug(false),
@@ -26,26 +26,15 @@ RenderSystem::RenderSystem(
     map_system(_map_system),
     entity_system(_entity_system),
     camera_system(_camera_system),
-    interface_system(_interface_system),
+    ui_system(_ui_system),
     physics_system(_physics_system),
     active_user(_entity_system.get_active_user()),
     debug_draw(_sdl_interface.renderer, _camera_system),
     textures()
 {
-  setup_textures();
-
   physics_system.set_debug_draw(debug_draw);
 
   cout << "RenderSystem ready" << endl;
-}
-
-
-void RenderSystem::setup_textures()
-{
-  textures["kadijah"] = load_texture("kadijah");
-  textures["chunk_floor1"] = load_texture("chunk_floor1");
-  textures["tileset1"] = load_texture("tileset1");
-  textures["items1"] = load_texture("items1");
 }
 
 
@@ -66,7 +55,7 @@ void RenderSystem::update(const double& dt)
 
   render();
 
-  interface_system.render();
+  ui_system.render();
 
   if (debug) physics_system.render_debug();
 
@@ -151,7 +140,7 @@ void RenderSystem::render_chunks(int floor)
 
       SDL_RenderCopy(
 	sdl_interface.renderer,
-	textures[chunk.texture],
+	sdl_interface.textures[chunk.texture],
 	nullptr, &dest_rect);
     }
   }
@@ -199,7 +188,7 @@ void RenderSystem::render_tile(Tile& tile)
 
   SDL_RenderCopyEx(
     sdl_interface.renderer,
-    textures[tile.texture],
+    sdl_interface.textures[tile.texture],
     &clip_rect, &dest_rect,
     tile.rotation,
     nullptr,
@@ -242,7 +231,7 @@ void RenderSystem::render_item(Item& item)
 
   SDL_RenderCopy(
     sdl_interface.renderer,
-    textures[item.texture],
+    sdl_interface.textures[item.texture],
     &clip_rect, &dest_rect);
 }
 
@@ -284,7 +273,7 @@ void RenderSystem::render_door(Door& door)
 
   SDL_RenderCopy(
     sdl_interface.renderer,
-    textures[door.texture],
+    sdl_interface.textures[door.texture],
     &clip_rect, &dest_rect);
 }
 
@@ -306,7 +295,7 @@ void RenderSystem::render_users(int floor)
 
     SDL_RenderCopyEx(
       sdl_interface.renderer,
-      textures[user.texture],
+      sdl_interface.textures[user.texture],
       &user.clip_rect, &dest_rect,
       0,
       nullptr,
@@ -319,7 +308,7 @@ void RenderSystem::render_users(int floor)
 
     SDL_RenderCopyEx(
       sdl_interface.renderer,
-      textures[user.arm_texture],
+      sdl_interface.textures[user.arm_texture],
       &user.arm_clip_rect, &dest_rect,
       0,
       nullptr,
