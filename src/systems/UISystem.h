@@ -23,14 +23,14 @@ namespace ld
 
 class UISystem
 {
-  ScalableElement* find_scalable_element_at(Eigen::Vector2i& mouse_pos);
-  void handle_menu_activation();
-
   void setup_base();
   void setup_main();
 
-  void update_date_and_time();
-  void update_main_menu();
+  void update_base();
+  void update_main();
+
+  void handle_menu_activation();
+  ScalableElement* find_scalable_element_at(Eigen::Vector2i& mouse_pos);
 
   Input& input;
   SDL_Interface& sdl_interface;

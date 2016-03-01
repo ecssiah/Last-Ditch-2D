@@ -37,6 +37,59 @@ UISystem::UISystem(
 }
 
 
+void UISystem::update()
+{
+  if (base_active) update_base();
+  if (input.menu) handle_menu_activation();
+
+  if (main_active)
+    update_main();
+  else if (inventory_ui_system.is_active())
+    inventory_ui_system.update();
+  else if (production_ui_system.is_active())
+    production_ui_system.update();
+  else if (management_ui_system.is_active())
+    management_ui_system.update();
+  else if (status_ui_system.is_active())
+    status_ui_system.update();
+
+  if (input.activate)
+  {
+    cout << "activation not used" << endl;
+    input.activate = false;
+  }
+}
+
+
+void UISystem::render()
+{
+  if (base_active)
+  {
+    sdl_interface.render_element(date_and_time);
+
+    for (auto& element : base_ui_elements)
+      sdl_interface.render_element(element);
+
+    for (auto& element : base_scalable_elements)
+      sdl_interface.render_scalable_element(element);
+  }
+
+  if (main_active)
+  {
+    for (auto& element : main_ui_elements)
+      sdl_interface.render_element(element);
+
+    for (auto& element : main_scalable_elements)
+      sdl_interface.render_scalable_element(element);
+  }
+
+  if (inventory_ui_system.is_active()) inventory_ui_system.render();
+  if (production_ui_system.is_active()) production_ui_system.render();
+  if (management_ui_system.is_active()) management_ui_system.render();
+  if (status_ui_system.is_active()) status_ui_system.render();
+}
+
+
 void UISystem::setup_base()
 {
   date_and_time.pos = {2, 2};
@@ -114,35 +167,15 @@ void UISystem::setup_main()
 }
 
 
-void UISystem::update()
+void UISystem::update_base()
 {
-  update_date_and_time();
+  date_and_time.text = time_system.get_string();
 
-  if (input.menu)
-  {
-    handle_menu_activation();
-  }
-
-  if (main_active)
-    update_main_menu();
-  else if (inventory_ui_system.is_active())
-    inventory_ui_system.update();
-  else if (production_ui_system.is_active())
-    production_ui_system.update();
-  else if (management_ui_system.is_active())
-    management_ui_system.update();
-  else if (status_ui_system.is_active())
-    status_ui_system.update();
-
-  if (input.activate)
-  {
-    cout << "Activation not used" << endl;
-    input.activate = false;
-  }
+  sdl_interface.create_texture_from_text(date_and_time.text, date_and_time.text_texture);
 }
 
 
-void UISystem::update_main_menu()
+void UISystem::update_main()
 {
   if (input.activate)
   {
@@ -224,46 +257,8 @@ ScalableElement* UISystem::find_scalable_element_at(Vector2i& mouse_pos)
       mouse_pos.y() > element.pos.y() &&
       mouse_pos.y() < element.pos.y() + element.size.y());
 
-    if (hit)
-      return &element;
+    if (hit) return &element;
   }
 
   return nullptr;
-}
-
-
-void UISystem::update_date_and_time()
-{
-  date_and_time.text = time_system.get_string();
-
-  sdl_interface.create_texture_from_text(date_and_time.text, date_and_time.text_texture);
-}
-
-
-void UISystem::render()
-{
-  if (base_active)
-  {
-    sdl_interface.render_element(date_and_time);
-
-    for (auto& element : base_ui_elements)
-      sdl_interface.render_element(element);
-
-    for (auto& element : base_scalable_elements)
-      sdl_interface.render_scalable_element(element);
-  }
-
-  if (main_active)
-  {
-    for (auto& element : main_ui_elements)
-      sdl_interface.render_element(element);
-
-    for (auto& element : main_scalable_elements)
-      sdl_interface.render_scalable_element(element);
-  }
-
-  if (inventory_ui_system.is_active()) inventory_ui_system.render();
-  if (production_ui_system.is_active()) production_ui_system.render();
-  if (management_ui_system.is_active()) management_ui_system.render();
-  if (status_ui_system.is_active()) status_ui_system.render();
 }
