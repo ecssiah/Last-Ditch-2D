@@ -23,7 +23,8 @@ UISystem::UISystem(
     production_ui_system(_sdl_interface, _input),
     management_ui_system(_sdl_interface, _input),
     status_ui_system(_sdl_interface, _input),
-    main_menu_active(),
+    base_active(true),
+    main_active(false),
     active_user(_entity_system.get_active_user()),
     date_and_time(),
     base_ui_elements(),
@@ -122,10 +123,16 @@ void UISystem::update()
     handle_menu_activation();
   }
 
-  if (main_menu_active)
-  {
+  if (main_active)
     update_main_menu();
-  }
+  else if (inventory_ui_system.is_active())
+    inventory_ui_system.update();
+  else if (production_ui_system.is_active())
+    production_ui_system.update();
+  else if (management_ui_system.is_active())
+    management_ui_system.update();
+  else if (status_ui_system.is_active())
+    status_ui_system.update();
 
   if (input.activate)
   {
@@ -147,19 +154,23 @@ void UISystem::update_main_menu()
 
       if (element->text == "Inventory")
       {
-	main_menu_active = false;
+	main_active = false;
+	inventory_ui_system.set_active(true);
       }
       else if (element->text == "Production")
       {
-	main_menu_active = false;
+	main_active = false;
+	production_ui_system.set_active(true);
       }
       else if (element->text == "Management")
       {
-	main_menu_active = false;
+	main_active = false;
+	management_ui_system.set_active(true);
       }
       else if (element->text == "Status")
       {
-	main_menu_active = false;
+	main_active = false;
+	status_ui_system.set_active(true);
       }
     }
   }
@@ -170,15 +181,35 @@ void UISystem::handle_menu_activation()
 {
   input.menu = false;
 
-  if (main_menu_active)
+  if (main_active)
   {
     input.pause = false;
-    main_menu_active = false;
+    main_active = false;
+  }
+  else if (inventory_ui_system.is_active())
+  {
+    input.pause = false;
+    inventory_ui_system.set_active(false);
+  }
+  else if (production_ui_system.is_active())
+  {
+    input.pause = false;
+    production_ui_system.set_active(false);
+  }
+  else if (management_ui_system.is_active())
+  {
+    input.pause = false;
+    management_ui_system.set_active(false);
+  }
+  else if (status_ui_system.is_active())
+  {
+    input.pause = false;
+    status_ui_system.set_active(false);
   }
   else
   {
     input.pause = true;
-    main_menu_active = true;
+    main_active = true;
   }
 }
 
@@ -211,15 +242,18 @@ void UISystem::update_date_and_time()
 
 void UISystem::render()
 {
-  sdl_interface.render_element(date_and_time);
+  if (base_active)
+  {
+    sdl_interface.render_element(date_and_time);
 
-  for (auto& element : base_ui_elements)
-    sdl_interface.render_element(element);
+    for (auto& element : base_ui_elements)
+      sdl_interface.render_element(element);
 
-  for (auto& element : base_scalable_elements)
-    sdl_interface.render_scalable_element(element);
+    for (auto& element : base_scalable_elements)
+      sdl_interface.render_scalable_element(element);
+  }
 
-  if (main_menu_active)
+  if (main_active)
   {
     for (auto& element : main_ui_elements)
       sdl_interface.render_element(element);
@@ -227,4 +261,9 @@ void UISystem::render()
     for (auto& element : main_scalable_elements)
       sdl_interface.render_scalable_element(element);
   }
+
+  if (inventory_ui_system.is_active()) inventory_ui_system.render();
+  if (production_ui_system.is_active()) production_ui_system.render();
+  if (management_ui_system.is_active()) management_ui_system.render();
+  if (status_ui_system.is_active()) status_ui_system.render();
 }

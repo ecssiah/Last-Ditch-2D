@@ -42,7 +42,8 @@ class UISystem
   ManagementUISystem management_ui_system;
   StatusUISystem status_ui_system;
 
-  bool main_menu_active;
+  bool base_active;
+  bool main_active;
 
   User* active_user;
 

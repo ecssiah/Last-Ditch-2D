@@ -28,11 +28,12 @@ class InventoryUISystem
 public:
   InventoryUISystem(SDL_Interface& sdl_interface, Input& input);
 
-  const bool& get_active() const { return active; }
-  void set_active(bool _active) { active = _active; }
-
   void update();
   void render();
+
+  const bool& is_active() const { return active; }
+  void set_active(bool _active) { active = _active; }
+
 };
 
 }
