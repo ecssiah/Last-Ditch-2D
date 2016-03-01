@@ -19,7 +19,7 @@ UISystem::UISystem(
     input(_input),
     time_system(_time_system),
     entity_system(_entity_system),
-    inventory_ui_system(_sdl_interface, _input),
+    inventory_ui_system(_sdl_interface, _input, _entity_system),
     production_ui_system(_sdl_interface, _input),
     management_ui_system(_sdl_interface, _input),
     status_ui_system(_sdl_interface, _input),

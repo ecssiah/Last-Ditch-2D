@@ -5,11 +5,14 @@
 using namespace ld;
 
 InventoryUISystem::InventoryUISystem(
-  SDL_Interface& _sdl_interface, Input& _input
+  SDL_Interface& _sdl_interface, Input& _input, EntitySystem& _entity_system
 )
   : sdl_interface(_sdl_interface),
     input(_input),
+    entity_system(_entity_system),
     active(false),
+    menu_base(),
+    inventory_list(),
     ui_elements(),
     scalable_elements()
 {
@@ -56,4 +59,7 @@ void InventoryUISystem::setup()
   sdl_interface.create_texture_from_text(title.text, title.text_texture, "jura-medium-22");
 
   ui_elements.push_back(title);
+
+  inventory_list.type = "list1";
+  inventory_list.texture = "ui1";
 }
