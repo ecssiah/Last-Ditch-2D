@@ -27,8 +27,9 @@ class InventoryUISystem
   ScalableElement menu_base;
   ScrollableElement inventory_list;
 
-  std::vector<UIElement> ui_elements;
+  std::vector<UIElement> elements;
   std::vector<ScalableElement> scalable_elements;
+  std::vector<ScrollableElement> scrollable_elements;
 
 public:
   InventoryUISystem(SDL_Interface& sdl_interface, Input& input, EntitySystem& entity_system);

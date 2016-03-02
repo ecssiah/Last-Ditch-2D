@@ -19,6 +19,7 @@ static std::unordered_map<std::string, std::string>
 UI_TYPE_TO_TEXTURE(
 {
   {"backdrop1", "ui1"},
+  {"list1", "ui1"},
 });
 
 

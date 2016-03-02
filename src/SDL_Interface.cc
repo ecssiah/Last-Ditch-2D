@@ -47,8 +47,8 @@ SDL_Interface::~SDL_Interface()
 
 void SDL_Interface::setup_fonts()
 {
-  fonts["jura-medium-14"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
-  fonts["jura-medium-22"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 22);
+  fonts["jura-small"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 18);
 }
 
 
@@ -123,22 +123,7 @@ void SDL_Interface::render_element(UIElement& element)
 
 void SDL_Interface::render_scalable_element(ScalableElement& element)
 {
-  auto& clip_data(UI_CLIP_DATA[element.type]["ct"]);
-
-  SDL_Rect clip_rect;
-  clip_rect.x = clip_data.x;
-  clip_rect.y = clip_data.y;
-  clip_rect.w = clip_data.w;
-  clip_rect.h = clip_data.h;
-
-  SDL_Rect dest_rect;
-  dest_rect.x = element.pos.x() + element.border;
-  dest_rect.y = element.pos.y() + element.border;
-  dest_rect.w = element.size.x() - 2 * element.border;
-  dest_rect.h = element.size.y() - 2 * element.border;
-
-  SDL_RenderCopy(renderer, textures[element.texture], &clip_rect, &dest_rect);
-
+  render_scalable_sub_element(element, "ct");
   render_scalable_sub_element(element, "tl");
   render_scalable_sub_element(element, "tt");
   render_scalable_sub_element(element, "tr");
@@ -177,8 +162,14 @@ void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string
   clip_rect.h = clip_data.h;
 
   SDL_Rect dest_rect;
-
-  if (sub_element == "tr")
+  if (sub_element == "ct")
+  {
+    dest_rect.x = element.pos.x() + element.border;
+    dest_rect.y = element.pos.y() + element.border;
+    dest_rect.w = element.size.x() - 2 * element.border;
+    dest_rect.h = element.size.y() - 2 * element.border;
+  }
+  else if (sub_element == "tr")
   {
     dest_rect.x = element.pos.x() + element.size.x() - element.border;
     dest_rect.y = element.pos.y();
@@ -236,4 +227,11 @@ void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string
   }
 
   SDL_RenderCopy(renderer, textures[element.texture], &clip_rect, &dest_rect);
+}
+
+
+void SDL_Interface::render_scrollable_element(ScrollableElement& element)
+{
+  SDL_Rect clip_rect;
+  SDL_Rect dest_rect;
 }

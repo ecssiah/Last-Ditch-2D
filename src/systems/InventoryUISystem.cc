@@ -1,5 +1,6 @@
 #include "InventoryUISystem.h"
 
+#include "../components/Item.h"
 #include "../constants/UIConstants.h"
 
 using namespace ld;
@@ -13,7 +14,7 @@ InventoryUISystem::InventoryUISystem(
     active(false),
     menu_base(),
     inventory_list(),
-    ui_elements(),
+    elements(),
     scalable_elements()
 {
   setup();
@@ -22,8 +23,6 @@ InventoryUISystem::InventoryUISystem(
 
 void InventoryUISystem::update()
 {
-
-
 }
 
 
@@ -31,11 +30,14 @@ void InventoryUISystem::render()
 {
   sdl_interface.render_scalable_element(menu_base);
 
-  for (auto& element : ui_elements)
+  for (auto& element : elements)
     sdl_interface.render_element(element);
 
   for (auto& element : scalable_elements)
     sdl_interface.render_scalable_element(element);
+
+  for (auto& element : scrollable_elements)
+    sdl_interface.render_scrollable_element(element);
 }
 
 
@@ -56,10 +58,19 @@ void InventoryUISystem::setup()
     {menu_base.pos.x() + (SUB_MENU_BASE_SIZE_X - title.size.x()) / 2,
      menu_base.pos.y()};
 
-  sdl_interface.create_texture_from_text(title.text, title.text_texture, "jura-medium-22");
+  sdl_interface.create_texture_from_text(title.text, title.text_texture, "jura-medium");
 
-  ui_elements.push_back(title);
+  elements.push_back(title);
 
   inventory_list.type = "list1";
   inventory_list.texture = "ui1";
+  inventory_list.size = {200, 600};
+  inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
+
+  scrollable_elements.push_back(inventory_list);
+
+  Item test_item;
+  test_item.type = "container1";
+
+  inventory_list.item_list.push_back(test_item);
 }

@@ -52,7 +52,7 @@ void ManagementUISystem::setup()
     {menu_base.pos.x() + (SUB_MENU_BASE_SIZE_X - title.size.x()) / 2,
      menu_base.pos.y()};
 
-  sdl_interface.create_texture_from_text(title.text, title.text_texture, "jura-medium-22");
+  sdl_interface.create_texture_from_text(title.text, title.text_texture, "jura-medium");
 
   ui_elements.push_back(title);
 }
