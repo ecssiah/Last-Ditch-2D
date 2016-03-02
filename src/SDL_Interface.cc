@@ -71,17 +71,13 @@ void SDL_Interface::setup_textures()
 
 
 void SDL_Interface::create_texture_from_text(
-  string text, string texture_name, string font_name)
+  string text, string texture_name, string font_name, SDL_Color color)
 {
-  auto surface =
-    TTF_RenderText_Blended(
-      fonts[font_name], text.c_str(), {236, 255, 255});
+  auto surface = TTF_RenderText_Blended(fonts[font_name], text.c_str(), color);
 
-  if (textures[texture_name] != nullptr)
-    SDL_DestroyTexture(textures[texture_name]);
+  if (textures[texture_name] != nullptr) SDL_DestroyTexture(textures[texture_name]);
 
-  textures[texture_name] =
-    SDL_CreateTextureFromSurface(renderer, surface);
+  textures[texture_name] = SDL_CreateTextureFromSurface(renderer, surface);
 }
 
 

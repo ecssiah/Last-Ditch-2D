@@ -95,11 +95,13 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
     auto string(inventory.items[i].name);
     auto texture("inventory-list-" + to_string(i) + "-text");
 
-    sdl_interface.create_texture_from_text(string, texture);
+    SDL_Color color;
+    if (i == inventory_list->current_index)
+      color = {255, 255, 255};
+    else
+      color = {200, 210, 210};
+
+    sdl_interface.create_texture_from_text(string, texture, "jura-small", color);
     inventory_list->list_elements.push_back({string, texture});
-
-    cout << string << " " << texture << " ";
   }
-
-  cout << endl;
 }

@@ -40,9 +40,9 @@ UISystem::UISystem(
 void UISystem::update()
 {
   if (base_active) update_base();
-  if (input.menu) handle_menu_activation();
+  if (main_active) update_main();
 
-  update_main();
+  if (input.menu) handle_menu_activation();
 
   inventory_ui_system.update();
   production_ui_system.update();
@@ -173,7 +173,31 @@ void UISystem::update_base()
 
 void UISystem::update_main()
 {
-  if (input.activate)
+  if (input.up)
+  {
+    input.up = false;
+    main_active = false;
+    inventory_ui_system.set_active(true);
+  }
+  else if (input.right)
+  {
+    input.right = false;
+    main_active = false;
+    production_ui_system.set_active(true);
+  }
+  else if (input.down)
+  {
+    input.down = false;
+    main_active = false;
+    management_ui_system.set_active(true);
+  }
+  else if (input.left)
+  {
+    input.left = false;
+    main_active = false;
+    status_ui_system.set_active(true);
+  }
+  else if (input.activate)
   {
     auto element(find_scalable_element_at(input.mouse_pos));
 
