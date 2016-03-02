@@ -56,6 +56,7 @@ void EntitySystem::setup_users()
 
   Item test_item;
   test_item.type = "scrub1";
+  test_item.name = ITEM_DEFAULT_NAMES[test_item.type];
   test_item.texture = ITEM_TYPE_TO_TEXTURE[test_item.type];
 
   kadijah.inventory.items.push_back(test_item);
@@ -84,6 +85,7 @@ void EntitySystem::setup_items()
 
       Item item;
       item.type = get_random_type();
+      item.name = ITEM_DEFAULT_NAMES[item.type];
       item.texture = ITEM_TYPE_TO_TEXTURE[item.type];
       item.floor = floor;
 

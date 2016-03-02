@@ -10,11 +10,13 @@ struct Item : public Entity
 {
   Item()
     : Entity(),
+      name(std::string()),
       weight(1.f),
       radius(.5f),
       contained(false)
   {}
 
+  std::string name;
   float weight;
   float radius;
   bool contained;

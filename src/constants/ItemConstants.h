@@ -10,25 +10,31 @@
 namespace ld
 {
 
+const std::string i1("scrub1");
+const std::string i2("container1");
+
 static std::vector<std::string> ITEM_TYPES(
+  {i1, i2});
+
+static std::unordered_map<std::string, std::string> ITEM_DEFAULT_NAMES(
 {
-  "scrub1",
-  "container1",
+  {i1, "Scrub, center"},
+  {i2, "Small container, empty"}
 });
 
 static std::unordered_map<std::string, std::string> ITEM_TYPE_TO_TEXTURE(
 {
-  {"scrub1", "items1"},
-  {"container1", "items1"},
+  {i1, "items1"},
+  {i2, "items1"},
 });
 
 
 static std::unordered_map<std::string, ClipData> ITEM_CLIP_DATA(
 {
-  {"scrub1",
+  {i1,
     {0 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
      PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}},
-  {"container1",
+  {i2,
     {1 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
      PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}},
 });

@@ -92,7 +92,7 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 
   for (auto i(0); i < inventory.items.size(); ++i)
   {
-    auto string(inventory.items[i].type);
+    auto string(inventory.items[i].name);
     auto texture("inventory-list-" + to_string(i) + "-text");
 
     sdl_interface.create_texture_from_text(string, texture);
