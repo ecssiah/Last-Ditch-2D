@@ -1,9 +1,9 @@
 #ifndef SCROLLABLEELEMENT_H
 #define SCROLLABLEELEMENT_H
 
-#include <vector>
+#include <unordered_map>
 
-#include "Item.h"
+#include "ListElement.h"
 #include "UIElement.h"
 
 namespace ld
@@ -14,11 +14,11 @@ struct ScrollableElement : public UIElement
   ScrollableElement()
     : UIElement(),
       current_index(0),
-      item_list()
+      list_elements()
   {}
 
   unsigned current_index;
-  std::vector<Item> item_list;
+  std::vector<ListElement> list_elements;
 };
 
 }

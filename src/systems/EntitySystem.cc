@@ -54,6 +54,12 @@ void EntitySystem::setup_users()
   kadijah.arm_clip_rect.x = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
   kadijah.arm_clip_rect.y = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].y;
 
+  Item test_item;
+  test_item.type = "scrub1";
+  test_item.texture = ITEM_TYPE_TO_TEXTURE[test_item.type];
+
+  kadijah.inventory.items.push_back(test_item);
+
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
 }
@@ -78,7 +84,7 @@ void EntitySystem::setup_items()
 
       Item item;
       item.type = get_random_type();
-      item.texture = MAP_TYPE_TO_TEXTURE[item.type];
+      item.texture = ITEM_TYPE_TO_TEXTURE[item.type];
       item.floor = floor;
 
       while (1)
@@ -212,6 +218,7 @@ void EntitySystem::handle_activation()
   if (find_and_interact_item(selection_point, chunk))
   {
     input.activate = false;
+    active_user->inventory.modified = true;
     return;
   }
 }

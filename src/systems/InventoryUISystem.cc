@@ -1,9 +1,12 @@
 #include "InventoryUISystem.h"
 
+#include <iostream>
+
 #include "../components/Item.h"
 #include "../constants/UIConstants.h"
 
 using namespace ld;
+using namespace std;
 
 InventoryUISystem::InventoryUISystem(
   SDL_Interface& _sdl_interface, Input& _input, EntitySystem& _entity_system
@@ -11,9 +14,10 @@ InventoryUISystem::InventoryUISystem(
   : sdl_interface(_sdl_interface),
     input(_input),
     entity_system(_entity_system),
+    active_user(_entity_system.get_active_user()),
     active(false),
     menu_base(),
-    inventory_list(),
+    inventory_list(nullptr),
     elements(),
     scalable_elements()
 {
@@ -23,6 +27,13 @@ InventoryUISystem::InventoryUISystem(
 
 void InventoryUISystem::update()
 {
+  if (active_user->inventory.modified)
+  {
+    cout << "testing" << endl;
+    update_inventory_list(active_user->inventory);
+
+    active_user->inventory.modified = false;
+  }
 }
 
 
@@ -62,15 +73,33 @@ void InventoryUISystem::setup()
 
   elements.push_back(title);
 
-  inventory_list.type = "list1";
-  inventory_list.texture = "ui1";
-  inventory_list.size = {200, 600};
-  inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
+  ScrollableElement _inventory_list;
+  _inventory_list.type = "list1";
+  _inventory_list.texture = "ui1";
+  _inventory_list.size = {400, 600};
+  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
 
-  scrollable_elements.push_back(inventory_list);
+  scrollable_elements.push_back(_inventory_list);
+  inventory_list = &scrollable_elements.back();
 
-  Item test_item;
-  test_item.type = "container1";
+  update_inventory_list(active_user->inventory);
+}
 
-  inventory_list.item_list.push_back(test_item);
+
+void InventoryUISystem::update_inventory_list(Inventory& inventory)
+{
+  inventory_list->list_elements.clear();
+
+  for (auto i(0); i < inventory.items.size(); ++i)
+  {
+    auto string(inventory.items[i].type);
+    auto texture("inventory-list-" + to_string(i) + "-text");
+
+    sdl_interface.create_texture_from_text(string, texture);
+    inventory_list->list_elements.push_back({string, texture});
+
+    cout << string << " " << texture << " ";
+  }
+
+  cout << endl;
 }

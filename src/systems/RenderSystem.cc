@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "../StrUtil.h"
+#include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 #include "../constants/UserConstants.h"
@@ -54,7 +55,6 @@ void RenderSystem::update(const double& dt)
   SDL_RenderClear(sdl_interface.renderer);
 
   render();
-
   ui_system.render();
 
   if (debug) physics_system.render_debug();
@@ -213,7 +213,7 @@ void RenderSystem::render_items(int floor)
 
 void RenderSystem::render_item(Item& item)
 {
-  auto clip_data(MAP_CLIP_DATA[item.type]);
+  auto clip_data(ITEM_CLIP_DATA[item.type]);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;

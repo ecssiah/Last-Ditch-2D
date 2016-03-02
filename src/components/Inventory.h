@@ -11,12 +11,15 @@ namespace ld
 struct Inventory
 {
   Inventory()
-    : weight(0.f),
+    : modified(false),
+      weight(0.f),
       max_weight(20.f),
       area(0.f),
       max_area(100.f),
       items()
   {}
+
+  bool modified;
 
   float weight, max_weight;
   float area, max_area;

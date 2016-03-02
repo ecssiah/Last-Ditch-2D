@@ -27,8 +27,6 @@ static std::unordered_map<std::string, std::string> MAP_TYPE_TO_TEXTURE(
   {"floor1", "tileset1"},
   {"stairs_up1", "tileset1"},
   {"stairs_down1", "tileset1"},
-  {"scrub1", "items1"},
-  {"container1", "items1"},
 });
 
 
@@ -46,12 +44,6 @@ static std::unordered_map<std::string, ClipData> MAP_CLIP_DATA(
     {1 * PIXELS_PER_UNIT, 2 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}},
   {"floor1",
     {0 * PIXELS_PER_UNIT, 3 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}},
-  {"scrub1",
-    {0 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
-     PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}},
-  {"container1",
-    {1 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
-     PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}},
 });
 
 

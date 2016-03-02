@@ -42,20 +42,16 @@ void UISystem::update()
   if (base_active) update_base();
   if (input.menu) handle_menu_activation();
 
-  if (main_active)
-    update_main();
-  else if (inventory_ui_system.is_active())
-    inventory_ui_system.update();
-  else if (production_ui_system.is_active())
-    production_ui_system.update();
-  else if (management_ui_system.is_active())
-    management_ui_system.update();
-  else if (status_ui_system.is_active())
-    status_ui_system.update();
+  update_main();
+
+  inventory_ui_system.update();
+  production_ui_system.update();
+  management_ui_system.update();
+  status_ui_system.update();
 
   if (input.activate)
   {
-    cout << "activation not used" << endl;
+    cout << "activation not used during update" << endl;
     input.activate = false;
   }
 }

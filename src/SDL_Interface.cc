@@ -232,6 +232,17 @@ void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string
 
 void SDL_Interface::render_scrollable_element(ScrollableElement& element)
 {
-  SDL_Rect clip_rect;
   SDL_Rect dest_rect;
+
+  for (auto i(0); i < element.list_elements.size(); ++i)
+  {
+    auto& list_element(element.list_elements[i]);
+
+    dest_rect.x = element.pos.x() + 6;
+    dest_rect.y = element.pos.y() + 6 + i * 30;
+    dest_rect.w = element.size.x();
+    dest_rect.h = 30;
+
+    SDL_RenderCopy(renderer, textures[list_element.texture], nullptr, &dest_rect);
+  }
 }
