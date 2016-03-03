@@ -29,9 +29,7 @@ void InventoryUISystem::update()
 {
   if (active_user->inventory.modified)
   {
-    cout << "testing" << endl;
     update_inventory_list(active_user->inventory);
-
     active_user->inventory.modified = false;
   }
 }
