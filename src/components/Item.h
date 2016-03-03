@@ -12,14 +12,12 @@ struct Item : public Entity
   Item()
     : Entity(),
       name(std::string()),
-      utility(NONE),
       weight(1.f),
       radius(.5f),
       contained(false)
   {}
 
   std::string name;
-  Utility utility;
   float weight;
   float radius;
   bool contained;

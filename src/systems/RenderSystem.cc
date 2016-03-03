@@ -170,7 +170,7 @@ void RenderSystem::render_tiles(int floor)
 
 void RenderSystem::render_tile(Tile& tile)
 {
-  auto clip_data(MAP_CLIP_DATA[tile.type]);
+  auto& clip_data(TILE_INFO[tile.type].clip_data);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;
@@ -213,7 +213,7 @@ void RenderSystem::render_items(int floor)
 
 void RenderSystem::render_item(Item& item)
 {
-  auto clip_data(ITEM_CLIP_DATA[item.type]);
+  auto& clip_data(ITEM_INFO[item.type].clip_data);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;
@@ -254,8 +254,7 @@ void RenderSystem::render_doors(int floor)
 
 void RenderSystem::render_door(Door& door)
 {
-  auto full_type(door.open ? door.type + "_open" : door.type + "_closed");
-  auto clip_data(MAP_CLIP_DATA[full_type]);
+  auto& clip_data(TILE_INFO[door.type + (door.open ? "_open" : "_closed")].clip_data);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;

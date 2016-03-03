@@ -56,8 +56,8 @@ void EntitySystem::setup_users()
 
   Item test_item;
   test_item.type = "scrub1";
-  test_item.name = ITEM_DEFAULT_NAMES[test_item.type];
-  test_item.texture = ITEM_TYPE_TO_TEXTURE[test_item.type];
+  test_item.name = ITEM_INFO[test_item.type].name;
+  test_item.texture = ITEM_INFO[test_item.type].texture;
 
   kadijah.inventory.items.push_back(test_item);
 
@@ -68,9 +68,12 @@ void EntitySystem::setup_users()
 
 std::string EntitySystem::get_random_type()
 {
-  uniform_int_distribution<> type_dist(0, ITEM_TYPES.size() - 1);
+  uniform_int_distribution<> type_dist(0, ITEM_INFO.size() - 1);
 
-  return ITEM_TYPES[type_dist(rng)];
+  auto it(std::next(std::begin(ITEM_INFO), type_dist(rng)));
+  auto random_type((*it).first);
+
+  return random_type;
 }
 
 
@@ -85,8 +88,8 @@ void EntitySystem::setup_items()
 
       Item item;
       item.type = get_random_type();
-      item.name = ITEM_DEFAULT_NAMES[item.type];
-      item.texture = ITEM_TYPE_TO_TEXTURE[item.type];
+      item.name = ITEM_INFO[item.type].name;
+      item.texture = ITEM_INFO[item.type].texture;
       item.floor = floor;
 
       while (1)
@@ -241,7 +244,7 @@ bool EntitySystem::find_and_interact_door(Vector2f& selection_point, Chunk& chun
 
     if (!in_range) continue;
 
-    map_system.open_door(door);
+    map_system.use_door(door);
 
     return true;
   }

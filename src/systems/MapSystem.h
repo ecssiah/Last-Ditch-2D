@@ -31,7 +31,7 @@ public:
   const bool& is_dirty() const { return dirty; }
   void set_dirty(bool dirty_) { dirty = dirty_; }
 
-  void open_door(Door& door);
+  void use_door(Door& door);
 
   Chunk& get_chunk(int x, int y, int floor);
   Chunk& get_chunk(float x, float y, int floor);
