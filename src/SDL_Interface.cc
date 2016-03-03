@@ -149,7 +149,7 @@ void SDL_Interface::render_scalable_element(ScalableElement& element)
 
 void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string sub_element)
 {
-  auto& clip_data(UI_CLIP_DATA[element.type][sub_element]);
+  auto& clip_data(ELEMENT_INFO[element.type + sub_element].clip_data);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;
