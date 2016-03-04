@@ -254,7 +254,7 @@ void RenderSystem::render_doors(int floor)
 
 void RenderSystem::render_door(Door& door)
 {
-  auto& clip_data(TILE_INFO[door.type + (door.open ? "_open" : "_closed")].clip_data);
+  auto& clip_data(TILE_INFO[door.type + (door.open ? "-open" : "-closed")].clip_data);
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;

@@ -36,46 +36,46 @@ struct TileInfo
 static std::unordered_map<std::string, TileInfo>
 TILE_INFO(
 {
-  {"wall1",
+  {
+    "wall1",
     {
       "tileset1",
       {0 * PIXELS_PER_UNIT, 0 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
-  {"door1_open",
+  {
+    "door1-open",
     {
       "tileset1",
       {0 * PIXELS_PER_UNIT, 1 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
-  {"door1_closed",
+  {
+    "door1-closed",
     {
       "tileset1",
       {1 * PIXELS_PER_UNIT, 1 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
-  {"floor1",
+  {
+    "floor1",
     {
       "tileset1",
-      {0 * PIXELS_PER_UNIT, 2 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
+      {0 * PIXELS_PER_UNIT, 3 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
-  {"stairs1_up",
+  {
+    "stairs1-up",
     {
       "tileset1",
       {1 * PIXELS_PER_UNIT, 2 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
-  {"stairs1_down",
+  {
+    "stairs1-down",
     {
       "tileset1",
-      {2 * PIXELS_PER_UNIT, 2 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
-    }
-  },
-  {"floor1",
-    {
-      "tileset1",
-      {0 * PIXELS_PER_UNIT, 3 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
+      {0 * PIXELS_PER_UNIT, 2 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
 });

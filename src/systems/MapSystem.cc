@@ -70,8 +70,8 @@ void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
   create_door("door1", x_, y_ + h_ / 2, floor_);
   set_floor_tile("floor1", x_, y_ + h_ / 2, floor_);
 
-  set_main_tile("stairs_up1", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
-  set_main_tile("stairs_down1", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
+  set_main_tile("stairs1-up", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
+  set_main_tile("stairs1-down", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
 }
 
 
@@ -155,7 +155,7 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
 {
   Door door;
   door.type = type;
-  door.texture = TILE_INFO[type + "_closed"].texture;
+  door.texture = TILE_INFO[type + "-closed"].texture;
   door.pos = {x, y};
   door.floor = floor;
   door.rotation = rotation;

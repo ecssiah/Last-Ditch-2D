@@ -27,23 +27,26 @@ struct ItemInfo
 };
 
 
+constexpr unsigned HALF_UNIT(PIXELS_PER_UNIT / 2);
+
+
 static std::unordered_map<std::string, ItemInfo>
 ITEM_INFO(
 {
-  {"scrub1",
+  {
+    "scrub1",
     {
       "Scrub 1",
       "items1",
-      {0 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
-       PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}
+      {0 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
-  {"container1",
+  {
+    "container1",
     {
       "Container 1",
       "items1",
-      {1 * PIXELS_PER_UNIT / 2, 0 * PIXELS_PER_UNIT / 2,
-       PIXELS_PER_UNIT / 2, PIXELS_PER_UNIT / 2}
+      {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
 });
