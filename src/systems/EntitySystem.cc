@@ -44,15 +44,15 @@ void EntitySystem::setup_users()
   kadijah.radius = .48f;
   kadijah.speed = 50.f;
 
-  kadijah.texture = USER_TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.texture = USER_INFO[kadijah.type].texture;
   kadijah.animation = "body-idle-front";
-  kadijah.clip_rect.x = USER_ANIMATION_DATA[kadijah.type][kadijah.animation].x;
-  kadijah.clip_rect.y = USER_ANIMATION_DATA[kadijah.type][kadijah.animation].y;
+  kadijah.clip_rect.x = USER_INFO[kadijah.type].anim_data[kadijah.animation].clip_x;
+  kadijah.clip_rect.y = USER_INFO[kadijah.type].anim_data[kadijah.animation].clip_y;
 
-  kadijah.arm_texture = USER_TYPE_TO_TEXTURE[kadijah.type];
+  kadijah.arm_texture = USER_INFO[kadijah.type].texture;
   kadijah.arm_animation = "arm-idle-nequip-front";
-  kadijah.arm_clip_rect.x = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].x;
-  kadijah.arm_clip_rect.y = USER_ANIMATION_DATA[kadijah.type][kadijah.arm_animation].y;
+  kadijah.arm_clip_rect.x = USER_INFO[kadijah.type].anim_data[kadijah.arm_animation].clip_x;
+  kadijah.arm_clip_rect.y = USER_INFO[kadijah.type].anim_data[kadijah.arm_animation].clip_y;
 
   Item test_item;
   test_item.type = "scrub1";
