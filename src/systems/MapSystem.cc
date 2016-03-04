@@ -49,29 +49,30 @@ void MapSystem::setup_map()
 }
 
 
-void MapSystem::layout_room(int x_, int y_, int w_, int h_, int floor_)
+void MapSystem::layout_room(int _x, int _y, int _w, int _h, int floor_)
 {
-  for (auto x(x_); x < x_ + w_; ++x)
+  for (auto x(_x); x < _x + _w; ++x)
   {
-    set_main_tile("wall1", x, y_, floor_);
-    set_main_tile("wall1", x, y_ + h_ - 1, floor_);
+    set_main_tile("wall1", x, _y, floor_);
+    set_main_tile("wall1", x, _y + _h - 1, floor_);
   }
 
-  for (auto y(y_); y < y_ + h_; ++y)
+  for (auto y(_y); y < _y + _h; ++y)
   {
-    set_main_tile("wall1", x_, y, floor_);
-    set_main_tile("wall1", x_ + w_ - 1, y, floor_);
+    set_main_tile("wall1", _x, y, floor_);
+    set_main_tile("wall1", _x + _w - 1, y, floor_);
   }
 
-  for (auto x(x_ + 1); x < x_ + w_ - 1; ++x)
-    for (auto y(y_ + 1); y < y_ + h_ - 1; ++y)
+  for (auto x(_x + 1); x < _x + _w - 1; ++x)
+    for (auto y(_y + 1); y < _y + _h - 1; ++y)
       set_floor_tile("floor1", x, y, floor_);
 
-  create_door("door1", x_, y_ + h_ / 2, floor_);
-  set_floor_tile("floor1", x_, y_ + h_ / 2, floor_);
+  create_door("door1", _x, _y + _h / 2, floor_);
+  set_main_tile("", _x, _y + _h / 2, floor_, 0, false);
+  set_floor_tile("floor1", _x, _y + _h / 2, floor_);
 
-  set_main_tile("stairs1-up", x_ + w_ / 2 + 1, y_ + h_ / 2 + 1, floor_, 90, false);
-  set_main_tile("stairs1-down", x_ + w_ / 2, y_ + h_ / 2 - 1, floor_, 0, false);
+  set_main_tile("stairs1-up", _x + _w / 2 + 1, _y + _h / 2 + 1, floor_);
+  set_main_tile("stairs1-down", _x + _w / 2, _y + _h / 2 + 1, floor_);
 }
 
 
@@ -162,8 +163,6 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
 
   auto& chunk(get_chunk(x, y, floor));
   chunk.doors.push_back(door);
-
-  set_main_tile("", x, y, floor, 0, false);
 }
 
 
