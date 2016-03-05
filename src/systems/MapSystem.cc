@@ -49,30 +49,30 @@ void MapSystem::setup_map()
 }
 
 
-void MapSystem::layout_room(int _x, int _y, int _w, int _h, int floor_)
+void MapSystem::layout_room(int _x, int _y, int _w, int _h, int _floor)
 {
   for (auto x(_x); x < _x + _w; ++x)
   {
-    set_main_tile("wall1", x, _y, floor_);
-    set_main_tile("wall1", x, _y + _h - 1, floor_);
+    set_main_tile("wall1", x, _y, _floor);
+    set_main_tile("wall1", x, _y + _h - 1, _floor);
   }
 
   for (auto y(_y); y < _y + _h; ++y)
   {
-    set_main_tile("wall1", _x, y, floor_);
-    set_main_tile("wall1", _x + _w - 1, y, floor_);
+    set_main_tile("wall1", _x, y, _floor);
+    set_main_tile("wall1", _x + _w - 1, y, _floor);
   }
 
   for (auto x(_x + 1); x < _x + _w - 1; ++x)
     for (auto y(_y + 1); y < _y + _h - 1; ++y)
-      set_floor_tile("floor1", x, y, floor_);
+      set_floor_tile("floor1", x, y, _floor);
 
-  create_door("door1", _x, _y + _h / 2, floor_);
-  set_main_tile("", _x, _y + _h / 2, floor_, 0, false);
-  set_floor_tile("floor1", _x, _y + _h / 2, floor_);
+  create_door("door1", _x, _y + _h / 2, _floor);
+  set_main_tile("", _x, _y + _h / 2, _floor, 0, false);
+  set_floor_tile("floor1", _x, _y + _h / 2, _floor);
 
-  set_main_tile("stairs1-up", _x + _w / 2 + 1, _y + _h / 2 + 1, floor_);
-  set_main_tile("stairs1-down", _x + _w / 2, _y + _h / 2 + 1, floor_);
+  set_main_tile("stairs1-up", _x + _w / 2 + 1, _y + _h / 2 + 1, _floor);
+  set_main_tile("stairs1-down", _x + _w / 2, _y + _h / 2 + 1, _floor);
 }
 
 

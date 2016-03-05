@@ -37,10 +37,17 @@ static std::unordered_map<std::string, TileInfo>
 TILE_INFO(
 {
   {
-    "wall1",
+    "black",
     {
       "tileset1",
       {0 * PIXELS_PER_UNIT, 0 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
+    }
+  },
+  {
+    "wall1",
+    {
+      "tileset1",
+      {1 * PIXELS_PER_UNIT, 0 * PIXELS_PER_UNIT, PIXELS_PER_UNIT, PIXELS_PER_UNIT}
     }
   },
   {
