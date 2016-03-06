@@ -3,25 +3,11 @@
 
 #include <unordered_map>
 
+#include "../components/AnimationData.h"
 #include "RenderConstants.h"
 
 namespace ld
 {
-
-
-struct AnimationData
-{
-  AnimationData() = default;
-
-  AnimationData(unsigned _clip_x, unsigned _clip_y, unsigned _num_frames)
-    : clip_x(_clip_x),
-      clip_y(_clip_y),
-      num_frames(_num_frames)
-    {}
-
-  unsigned clip_x, clip_y;
-  unsigned num_frames;
-};
 
 
 struct UserInfo

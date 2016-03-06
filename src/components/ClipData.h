@@ -8,12 +8,7 @@ namespace ld
 
 struct ClipData
 {
-  ClipData()
-    : x(0),
-      y(0),
-      w(PIXELS_PER_UNIT),
-      h(PIXELS_PER_UNIT)
-  {}
+  ClipData() = default;
 
   ClipData(int _x, int _y, int _w, int _h)
     : x(_x),
