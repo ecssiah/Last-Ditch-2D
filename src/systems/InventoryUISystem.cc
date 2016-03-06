@@ -1,10 +1,13 @@
 #include "InventoryUISystem.h"
 
+#include <algorithm>
+#include <eigen3/Eigen/Geometry>
 #include <iostream>
 
 #include "../components/Item.h"
 #include "../constants/UIConstants.h"
 
+using namespace Eigen;
 using namespace ld;
 using namespace std;
 
@@ -27,6 +30,14 @@ InventoryUISystem::InventoryUISystem(
 
 void InventoryUISystem::update()
 {
+  if (input.mouse_dragged)
+  {
+    auto element(find_scrollable_element_at(input.left_mouse_pressed_pos));
+
+    element->scrolled_offset += input.mouse_drag_vector.y();
+    element->scrolled_offset = std::max(-200, std::min((int)element->scrolled_offset, 200));
+  }
+
   if (active_user->inventory.modified)
   {
     update_inventory_list(active_user->inventory);
@@ -102,4 +113,21 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
     sdl_interface.create_texture_from_text(string, texture, "jura-small", color);
     inventory_list->list_elements.push_back({string, texture});
   }
+}
+
+
+ScrollableElement* InventoryUISystem::find_scrollable_element_at(Vector2i& screen_pos)
+{
+  for (auto& element : scrollable_elements)
+  {
+    auto hit(
+      screen_pos.x() > element.pos.x() &&
+      screen_pos.x() < element.pos.x() + element.size.x() &&
+      screen_pos.y() > element.pos.y() &&
+      screen_pos.y() < element.pos.y() + element.size.y());
+
+    if (hit) return &element;
+  }
+
+  return nullptr;
 }

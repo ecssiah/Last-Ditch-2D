@@ -54,13 +54,6 @@ void EntitySystem::setup_users()
   kadijah.arm_clip_rect.x = USER_INFO[kadijah.type].anim_data[kadijah.arm_animation].clip_x;
   kadijah.arm_clip_rect.y = USER_INFO[kadijah.type].anim_data[kadijah.arm_animation].clip_y;
 
-  Item test_item;
-  test_item.type = "scrub1";
-  test_item.name = ITEM_INFO[test_item.type].name;
-  test_item.texture = ITEM_INFO[test_item.type].texture;
-
-  kadijah.inventory.items.push_back(test_item);
-
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
 }
@@ -203,7 +196,8 @@ void EntitySystem::apply_user_inputs()
 
 void EntitySystem::handle_activation()
 {
-  Vector2f selection_point(camera_system.to_world_coordinates(input.mouse_pos));
+  Vector2f selection_point(
+    camera_system.to_world_coordinates(input.left_mouse_released_pos));
 
   auto out_of_bounds(
     selection_point.x() < 0 || selection_point.x() >= MAP_SIZE_X ||

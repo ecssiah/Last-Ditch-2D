@@ -19,6 +19,7 @@ class InventoryUISystem
 {
   void setup();
   void update_inventory_list(Inventory& inventory);
+  ScrollableElement* find_scrollable_element_at(Eigen::Vector2i& screen_pos);
 
   SDL_Interface& sdl_interface;
   Input& input;

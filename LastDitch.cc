@@ -38,6 +38,13 @@ LastDitch::LastDitch()
     }
 
     ui_system.update();
+
+    if (input.activate)
+    {
+      input.activate = false;
+      cout << "unused activation" << endl;
+    }
+
     render_system.update(input.pause ? 0 : dt);
 
     dt = time_system.update();

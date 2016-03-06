@@ -29,8 +29,11 @@ class UISystem
   void update_base();
   void update_main();
 
+  void render_base();
+  void render_main();
+
   void handle_menu_activation();
-  ScalableElement* find_scalable_element_at(Eigen::Vector2i& mouse_pos);
+  ScalableElement* find_scalable_element_at(Eigen::Vector2i& screen_pos);
 
   Input& input;
   SDL_Interface& sdl_interface;

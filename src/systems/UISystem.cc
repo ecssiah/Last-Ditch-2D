@@ -39,50 +39,50 @@ UISystem::UISystem(
 
 void UISystem::update()
 {
+  if (input.menu) handle_menu_activation();
+
   if (base_active) update_base();
   if (main_active) update_main();
-
-  if (input.menu) handle_menu_activation();
 
   inventory_ui_system.update();
   production_ui_system.update();
   management_ui_system.update();
   status_ui_system.update();
 
-  if (input.activate)
-  {
-    cout << "activation not used during update" << endl;
-    input.activate = false;
-  }
 }
 
 
 void UISystem::render()
 {
-  if (base_active)
-  {
-    sdl_interface.render_element(date_and_time);
-
-    for (auto& element : base_ui_elements)
-      sdl_interface.render_element(element);
-
-    for (auto& element : base_scalable_elements)
-      sdl_interface.render_scalable_element(element);
-  }
-
-  if (main_active)
-  {
-    for (auto& element : main_ui_elements)
-      sdl_interface.render_element(element);
-
-    for (auto& element : main_scalable_elements)
-      sdl_interface.render_scalable_element(element);
-  }
+  if (base_active) render_base();
+  if (main_active) render_main();
 
   if (inventory_ui_system.is_active()) inventory_ui_system.render();
   if (production_ui_system.is_active()) production_ui_system.render();
   if (management_ui_system.is_active()) management_ui_system.render();
   if (status_ui_system.is_active()) status_ui_system.render();
+}
+
+
+void UISystem::render_base()
+{
+  sdl_interface.render_element(date_and_time);
+
+  for (auto& element : base_ui_elements)
+    sdl_interface.render_element(element);
+
+  for (auto& element : base_scalable_elements)
+    sdl_interface.render_scalable_element(element);
+}
+
+
+void UISystem::render_main()
+{
+  for (auto& element : main_ui_elements)
+    sdl_interface.render_element(element);
+
+  for (auto& element : main_scalable_elements)
+    sdl_interface.render_scalable_element(element);
 }
 
 
@@ -199,7 +199,7 @@ void UISystem::update_main()
   }
   else if (input.activate)
   {
-    auto element(find_scalable_element_at(input.mouse_pos));
+    auto element(find_scalable_element_at(input.left_mouse_released_pos));
 
     if (element)
     {
@@ -267,15 +267,15 @@ void UISystem::handle_menu_activation()
 }
 
 
-ScalableElement* UISystem::find_scalable_element_at(Vector2i& mouse_pos)
+ScalableElement* UISystem::find_scalable_element_at(Vector2i& screen_pos)
 {
   for (auto& element : main_scalable_elements)
   {
     auto hit(
-      mouse_pos.x() > element.pos.x() &&
-      mouse_pos.x() < element.pos.x() + element.size.x() &&
-      mouse_pos.y() > element.pos.y() &&
-      mouse_pos.y() < element.pos.y() + element.size.y());
+      screen_pos.x() > element.pos.x() &&
+      screen_pos.x() < element.pos.x() + element.size.x() &&
+      screen_pos.y() > element.pos.y() &&
+      screen_pos.y() < element.pos.y() + element.size.y());
 
     if (hit) return &element;
   }
