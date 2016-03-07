@@ -17,6 +17,11 @@ struct Item : public Entity
       contained(false)
   {}
 
+  bool operator<(const Item& rhs) const
+  {
+    return name < rhs.name;
+  }
+
   std::string name;
   float weight;
   float radius;

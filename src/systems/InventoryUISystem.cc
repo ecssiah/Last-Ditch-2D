@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
+#include <set>
 
 #include "../components/Item.h"
 #include "../constants/UIConstants.h"
@@ -105,19 +106,31 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 {
   inventory_list->list_elements.clear();
 
+  vector<SDL_Surface*> list_surfaces;
+  unordered_map<string, int> item_counts;
+  set<Item> unique_items;
+
   for (auto i(0); i < inventory.items.size(); ++i)
   {
-    auto string(inventory.items[i].name);
-    auto texture("inventory-list-" + to_string(i) + "-text");
+    ++item_counts[inventory.items[i].type];
+    unique_items.insert(inventory.items[i]);
+  }
+
+  for (auto item : unique_items)
+  {
+    auto string(item.name);
+    auto item_count(item_counts[item.type]);
+
+    if (item_count != 1)
+      string += " (" + to_string(item_counts[item.type]) + ")";
+
+    cout << string << endl;
 
     SDL_Color color;
-    if (i == inventory_list->current_index)
-      color = {255, 255, 255};
-    else
-      color = {200, 210, 210};
+    color = {255, 255, 255};
 
-    sdl_interface.create_texture_from_text(string, texture, "jura-small", color);
-    inventory_list->list_elements.push_back({string, texture});
+    list_surfaces.push_back(
+      sdl_interface.create_surface_from_text(string, "jura-small", color));
   }
 }
 

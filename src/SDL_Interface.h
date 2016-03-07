@@ -30,6 +30,8 @@ public:
     std::string text, std::string texture_name,
     std::string font_name = "jura-small",
     SDL_Color color = {220, 255, 255});
+  SDL_Surface* create_surface_from_text(
+    std::string text, std::string font_name, SDL_Color color);
 
   void render_element(UIElement& element);
   void render_scalable_element(ScalableElement& element);

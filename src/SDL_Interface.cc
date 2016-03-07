@@ -81,6 +81,13 @@ void SDL_Interface::create_texture_from_text(
 }
 
 
+SDL_Surface* SDL_Interface::create_surface_from_text(
+  string text, string font_name, SDL_Color color)
+{
+  return TTF_RenderText_Blended(fonts[font_name], text.c_str(), color);
+}
+
+
 void SDL_Interface::render_element(UIElement& element)
 {
   if (element.texture != "")
