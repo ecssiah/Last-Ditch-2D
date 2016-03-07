@@ -118,19 +118,17 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 
   for (auto item : unique_items)
   {
-    auto string(item.name);
+    auto name(item.name);
     auto item_count(item_counts[item.type]);
 
-    if (item_count != 1)
-      string += " (" + to_string(item_counts[item.type]) + ")";
-
-    cout << string << endl;
+    if (item_count != 1) name += " (" + to_string(item_count) + ")";
 
     SDL_Color color;
     color = {255, 255, 255};
 
-    list_surfaces.push_back(
-      sdl_interface.create_surface_from_text(string, "jura-small", color));
+    auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
+
+    list_surfaces.push_back(surface);
   }
 }
 
