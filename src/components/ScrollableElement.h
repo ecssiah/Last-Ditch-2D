@@ -14,12 +14,12 @@ struct ScrollableElement : public UIElement
   ScrollableElement()
     : UIElement(),
       current_index(0),
-      scrolled_offset(0.f),
+      scrolled_offset(0),
       list_elements()
   {}
 
   unsigned current_index;
-  float scrolled_offset;
+  int scrolled_offset;
   std::vector<ListElement> list_elements;
 };
 

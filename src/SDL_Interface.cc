@@ -238,7 +238,7 @@ void SDL_Interface::render_scrollable_element(ScrollableElement& element)
     SDL_QueryTexture(textures[list_element.texture], nullptr, nullptr, &w, &h);
 
     dest_rect.x = element.pos.x() + 6;
-    dest_rect.y = element.pos.y() + 6 + i * h + element.scrolled_offset;
+    dest_rect.y = element.pos.y() + 6 + i * 15 + element.scrolled_offset;
     dest_rect.w = w;
     dest_rect.h = h;
 

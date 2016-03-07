@@ -34,8 +34,14 @@ void InventoryUISystem::update()
   {
     auto element(find_scrollable_element_at(input.left_mouse_pressed_pos));
 
-    element->scrolled_offset += input.mouse_drag_vector.y();
-    element->scrolled_offset = std::max(-200, std::min((int)element->scrolled_offset, 200));
+    if (element)
+    {
+      int scroll_limit(15 * (element->list_elements.size() - 1));
+
+      element->scrolled_offset += input.mouse_drag_vector.y();
+      element->scrolled_offset =
+	std::max(-scroll_limit, std::min(element->scrolled_offset, 0));
+    }
   }
 
   if (active_user->inventory.modified)
