@@ -44,11 +44,10 @@ void UISystem::update()
   if (base_active) update_base();
   if (main_active) update_main();
 
-  inventory_ui_system.update();
-  production_ui_system.update();
-  management_ui_system.update();
-  status_ui_system.update();
-
+  if (inventory_ui_system.is_active()) inventory_ui_system.update();
+  if (production_ui_system.is_active()) production_ui_system.update();
+  if (management_ui_system.is_active()) management_ui_system.update();
+  if (status_ui_system.is_active()) status_ui_system.update();
 }
 
 

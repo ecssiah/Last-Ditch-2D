@@ -34,25 +34,25 @@ static std::unordered_map<std::string, ItemInfo>
 ITEM_INFO(
 {
   {
-    "scrub1",
+    "scrub",
     {
-      "Scrub 1",
+      "Scrub",
       "items1",
       {0 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
   {
-    "container1",
+    "case-small",
     {
-      "Container 1",
+      "Case, small",
       "items1",
       {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
   {
-    "scrap1",
+    "scrap",
     {
-      "Scrap 1",
+      "Scrap",
       "items1",
       {2 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }

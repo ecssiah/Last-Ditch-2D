@@ -31,6 +31,8 @@ class InventoryUISystem
   bool active;
 
   ScalableElement menu_base;
+
+  std::vector<ScalableElement> sort_buttons;
   ScrollableElement* inventory_list;
 
   std::vector<UIElement> elements;

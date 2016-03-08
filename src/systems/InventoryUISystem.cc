@@ -21,6 +21,7 @@ InventoryUISystem::InventoryUISystem(
     active_user(_entity_system.get_active_user()),
     active(false),
     menu_base(),
+    sort_buttons(),
     inventory_list(nullptr),
     elements(),
     scalable_elements()
@@ -31,26 +32,24 @@ InventoryUISystem::InventoryUISystem(
 
 void InventoryUISystem::update()
 {
+  if (active_user->inventory.modified)
+  {
+    active_user->inventory.modified = false;
+    update_inventory_list(active_user->inventory);
+  }
+
   if (input.mouse_dragged)
   {
     auto element(find_scrollable_element_at(input.left_mouse_pressed_pos));
 
     if (element)
     {
-      int scroll_limit(100);
-
       element->scrolled_offset += INVENTORY_SCROLL_RATE * input.mouse_drag_vector.y();
       element->scrolled_offset =
-	std::max(-scroll_limit, std::min(element->scrolled_offset, 0));
+	std::max(-100, std::min(element->scrolled_offset, 0));
 
       update_inventory_list(active_user->inventory);
     }
-  }
-
-  if (active_user->inventory.modified)
-  {
-    active_user->inventory.modified = false;
-    update_inventory_list(active_user->inventory);
   }
 }
 
@@ -58,6 +57,9 @@ void InventoryUISystem::update()
 void InventoryUISystem::render()
 {
   sdl_interface.render_scalable_element(menu_base);
+
+  for (auto& element : sort_buttons)
+    sdl_interface.render_scalable_element(element);
 
   for (auto& element : elements)
     sdl_interface.render_element(element);
@@ -91,11 +93,24 @@ void InventoryUISystem::setup()
 
   elements.push_back(title);
 
+  ScalableElement sort_all_button;
+  sort_all_button.type = "button1";
+  sort_all_button.texture = "ui1";
+  sort_all_button.text = "All";
+  sort_all_button.text_texture = "inventory-sort-all-text";
+  sort_all_button.size = {80, 16};
+  sort_all_button.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 20};
+
+  sdl_interface.create_texture_from_text(
+    sort_all_button.text, sort_all_button.text_texture, "jura-small");
+
+  sort_buttons.push_back(sort_all_button);
+
   ScrollableElement _inventory_list;
   _inventory_list.type = "list1";
   _inventory_list.texture = "inventory-list";
   _inventory_list.size = {400, 300};
-  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
+  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 50};
 
   scrollable_elements.push_back(_inventory_list);
   inventory_list = &scrollable_elements.back();
@@ -146,11 +161,8 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
   for (auto i(0); i < element_surfaces.size(); ++i)
   {
     SDL_Rect dst_rect;
-    dst_rect.x = inventory_list->pos.x() + 10;
-    dst_rect.y =
-      inventory_list->pos.y() + element_surfaces[i]->h * i + inventory_list->scrolled_offset;
-    dst_rect.w = element_surfaces[i]->w;
-    dst_rect.h = element_surfaces[i]->h;
+    dst_rect.x = 10;
+    dst_rect.y = element_surfaces[i]->h * i + inventory_list->scrolled_offset;
 
     SDL_BlitSurface(element_surfaces[i], nullptr, inventory_list_surface, &dst_rect);
   }

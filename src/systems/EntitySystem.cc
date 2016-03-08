@@ -56,6 +56,19 @@ void EntitySystem::setup_users()
 
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
+
+  for (auto i(0); i < 10; ++i) give_random_item(active_user);
+}
+
+
+void EntitySystem::give_random_item(User* user)
+{
+  Item item;
+  item.type = get_random_type();
+  item.name = ITEM_INFO[item.type].name;
+  item.texture = ITEM_INFO[item.type].texture;
+
+  user->inventory.items.push_back(item);
 }
 
 

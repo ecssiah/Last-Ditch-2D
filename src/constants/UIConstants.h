@@ -37,6 +37,7 @@ struct ElementInfo
 static std::unordered_map<std::string, ElementInfo>
 ELEMENT_INFO(
 {
+  // backdrop1
   {"backdrop1-ct",
     {
       "ui1",
@@ -89,6 +90,61 @@ ELEMENT_INFO(
     {
       "ui1",
       {0, 4, 3, 16}
+    }
+  },
+  // button1
+  {"button1-ct",
+    {
+      "ui1",
+      {5, 30, 20, 11}
+    }
+  },
+  {"button1-tl",
+    {
+      "ui1",
+      {0, 25, 4, 4}
+    }
+  },
+  {"button1-tt",
+    {
+      "ui1",
+      {5, 25, 20, 4}
+    }
+  },
+  {"button1-tr",
+    {
+      "ui1",
+      {26, 25, 4, 4}
+    }
+  },
+  {"button1-rr",
+    {
+      "ui1",
+      {26, 30, 4, 11}
+    }
+  },
+  {"button1-br",
+    {
+      "ui1",
+      {26, 42, 4, 4}
+    }
+  },
+  {"button1-bb",
+    {
+      "ui1",
+      {5, 42, 20, 4}
+    }
+  },
+  {"button1-bl",
+    {
+      "ui1",
+      {0, 42, 4, 4}
+    }
+  },
+  {"button1-ll",
+    {
+      "ui1",
+      {0, 30, 4, 11}
     }
   },
 });

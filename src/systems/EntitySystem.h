@@ -19,6 +19,7 @@ constexpr int NUM_ITEMS(100);
 class EntitySystem
 {
   std::string get_random_type();
+  void give_random_item(User* user);
 
   void setup_users();
   void setup_items();
