@@ -37,9 +37,9 @@ void InventoryUISystem::update()
 
     if (element)
     {
-      int scroll_limit(LIST_ELEMENT_HEIGHT * inventory_list->size.y());
+      int scroll_limit(100);
 
-      element->scrolled_offset += input.mouse_drag_vector.y();
+      element->scrolled_offset += INVENTORY_SCROLL_RATE * input.mouse_drag_vector.y();
       element->scrolled_offset =
 	std::max(-scroll_limit, std::min(element->scrolled_offset, 0));
 
@@ -49,8 +49,8 @@ void InventoryUISystem::update()
 
   if (active_user->inventory.modified)
   {
-    update_inventory_list(active_user->inventory);
     active_user->inventory.modified = false;
+    update_inventory_list(active_user->inventory);
   }
 }
 
@@ -104,13 +104,11 @@ void InventoryUISystem::setup()
 }
 
 
-void InventoryUISystem::update_inventory_list(Inventory& inventory)
+void InventoryUISystem::generate_list_surfaces(
+  Inventory& inventory, vector<SDL_Surface*>& element_surfaces)
 {
-  inventory_list->list_elements.clear();
-
   set<Item> unique_items;
   unordered_map<string, int> item_counts;
-  vector<SDL_Surface*> list_element_surfaces;
 
   for (auto item : inventory.items)
   {
@@ -130,22 +128,31 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 
     auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
 
-    list_element_surfaces.push_back(surface);
+    element_surfaces.push_back(surface);
   }
+}
+
+
+void InventoryUISystem::update_inventory_list(Inventory& inventory)
+{
+  inventory_list->list_elements.clear();
+
+  vector<SDL_Surface*> element_surfaces;
+  generate_list_surfaces(inventory, element_surfaces);
 
   SDL_Surface* inventory_list_surface(
     sdl_interface.generate_surface(inventory_list->size.x(), inventory_list->size.y()));
 
-  for (auto i(0); i < list_element_surfaces.size(); ++i)
+  for (auto i(0); i < element_surfaces.size(); ++i)
   {
     SDL_Rect dst_rect;
     dst_rect.x = inventory_list->pos.x() + 10;
     dst_rect.y =
-      inventory_list->pos.y() + LIST_ELEMENT_HEIGHT * i + inventory_list->scrolled_offset;
-    dst_rect.w = inventory_list->size.x();
-    dst_rect.h = LIST_ELEMENT_HEIGHT;
+      inventory_list->pos.y() + element_surfaces[i]->h * i + inventory_list->scrolled_offset;
+    dst_rect.w = element_surfaces[i]->w;
+    dst_rect.h = element_surfaces[i]->h;
 
-    SDL_BlitSurface(list_element_surfaces[i], nullptr, inventory_list_surface, &dst_rect);
+    SDL_BlitSurface(element_surfaces[i], nullptr, inventory_list_surface, &dst_rect);
   }
 
   if (sdl_interface.textures[inventory_list->texture] != nullptr)
@@ -154,7 +161,7 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
   sdl_interface.textures[inventory_list->texture] =
     SDL_CreateTextureFromSurface(sdl_interface.renderer, inventory_list_surface);
 
-  for (auto surface : list_element_surfaces)
+  for (auto surface : element_surfaces)
     SDL_FreeSurface(surface);
 }
 

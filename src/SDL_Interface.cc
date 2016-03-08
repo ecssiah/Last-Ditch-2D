@@ -70,6 +70,22 @@ void SDL_Interface::setup_textures()
 }
 
 
+SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
+{
+  SDL_Surface* surface;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+#else
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+#endif
+
+  return surface;
+}
+
+
 void SDL_Interface::create_texture_from_text(
   string text, string texture_name, string font_name, SDL_Color color)
 {
@@ -242,20 +258,4 @@ void SDL_Interface::render_scrollable_element(ScrollableElement& element)
   dst_rect.h = element.size.y();
 
   SDL_RenderCopy(renderer, textures[element.texture], nullptr, &dst_rect);
-}
-
-
-SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
-{
-  SDL_Surface* surface;
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-  surface = SDL_CreateRGBSurface(
-    0, size_x, size_y, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-#else
-  surface = SDL_CreateRGBSurface(
-    0, size_x, size_y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-#endif
-
-  return surface;
 }

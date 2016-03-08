@@ -15,7 +15,9 @@ constexpr unsigned MAIN_MENU_BUTTON_SIZE_Y(20);
 constexpr unsigned SUB_MENU_BASE_SIZE_X(600);
 constexpr unsigned SUB_MENU_BASE_SIZE_Y(400);
 
-constexpr unsigned LIST_ELEMENT_HEIGHT(15);
+constexpr unsigned LIST_ELEMENT_HEIGHT(24);
+
+constexpr float INVENTORY_SCROLL_RATE(2.f);
 
 
 struct ElementInfo

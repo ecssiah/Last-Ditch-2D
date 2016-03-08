@@ -18,6 +18,7 @@ namespace ld
 class InventoryUISystem
 {
   void setup();
+  void generate_list_surfaces(Inventory& inventory, std::vector<SDL_Surface*>& list_surfaces);
   void update_inventory_list(Inventory& inventory);
   ScrollableElement* find_scrollable_element_at(Eigen::Vector2i& screen_pos);
 
