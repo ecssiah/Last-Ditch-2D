@@ -235,20 +235,27 @@ void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string
 
 void SDL_Interface::render_scrollable_element(ScrollableElement& element)
 {
-  SDL_Rect dest_rect;
+  SDL_Rect dst_rect;
+  dst_rect.x = element.pos.x();
+  dst_rect.y = element.pos.y();
+  dst_rect.w = element.size.x();
+  dst_rect.h = element.size.y();
 
-  for (auto i(0); i < element.list_elements.size(); ++i)
-  {
-    auto& list_element(element.list_elements[i]);
+  SDL_RenderCopy(renderer, textures[element.texture], nullptr, &dst_rect);
+}
 
-    int w, h;
-    SDL_QueryTexture(textures[list_element.texture], nullptr, nullptr, &w, &h);
 
-    dest_rect.x = element.pos.x() + 6;
-    dest_rect.y = element.pos.y() + 6 + i * 15 + element.scrolled_offset;
-    dest_rect.w = w;
-    dest_rect.h = h;
+SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
+{
+  SDL_Surface* surface;
 
-    SDL_RenderCopy(renderer, textures[list_element.texture], nullptr, &dest_rect);
-  }
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+#else
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+#endif
+
+  return surface;
 }

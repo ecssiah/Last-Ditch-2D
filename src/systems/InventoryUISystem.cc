@@ -37,7 +37,7 @@ void InventoryUISystem::update()
 
     if (element)
     {
-      int scroll_limit(15 * (element->list_elements.size() - 1));
+      int scroll_limit(LIST_ELEMENT_HEIGHT * (element->list_elements.size() - 1));
 
       element->scrolled_offset += input.mouse_drag_vector.y();
       element->scrolled_offset =
@@ -91,7 +91,7 @@ void InventoryUISystem::setup()
 
   ScrollableElement _inventory_list;
   _inventory_list.type = "list1";
-  _inventory_list.texture = "ui1";
+  _inventory_list.texture = "inventory-list";
   _inventory_list.size = {400, 600};
   _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
 
@@ -106,14 +106,14 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 {
   inventory_list->list_elements.clear();
 
-  vector<SDL_Surface*> list_surfaces;
-  unordered_map<string, int> item_counts;
   set<Item> unique_items;
+  unordered_map<string, int> item_counts;
+  vector<SDL_Surface*> list_element_surfaces;
 
-  for (auto i(0); i < inventory.items.size(); ++i)
+  for (auto item : inventory.items)
   {
-    ++item_counts[inventory.items[i].type];
-    unique_items.insert(inventory.items[i]);
+    ++item_counts[item.type];
+    unique_items.insert(item);
   }
 
   for (auto item : unique_items)
@@ -128,8 +128,29 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 
     auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
 
-    list_surfaces.push_back(surface);
+    list_element_surfaces.push_back(surface);
   }
+
+  SDL_Surface* inventory_list_surface(
+    sdl_interface.generate_surface(inventory_list->size.x(), inventory_list->size.y()));
+
+  for (auto i(0); i < unique_items.size(); ++i)
+  {
+    SDL_Rect dst_rect;
+    dst_rect.x = inventory_list->pos.x() + 10;
+    dst_rect.y =
+      inventory_list->pos.y() + LIST_ELEMENT_HEIGHT * i + inventory_list->scrolled_offset;
+    dst_rect.w = inventory_list->size.x();
+    dst_rect.h = LIST_ELEMENT_HEIGHT;
+
+    SDL_BlitSurface(list_element_surfaces[i], nullptr, inventory_list_surface, &dst_rect);
+  }
+
+  sdl_interface.textures[inventory_list->texture] =
+    SDL_CreateTextureFromSurface(sdl_interface.renderer, inventory_list_surface);
+
+  for (auto surface : list_element_surfaces)
+    SDL_FreeSurface(surface);
 }
 
 

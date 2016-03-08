@@ -26,6 +26,7 @@ public:
   SDL_Interface();
   ~SDL_Interface();
 
+  SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
   void create_texture_from_text(
     std::string text, std::string texture_name,
     std::string font_name = "jura-small",
