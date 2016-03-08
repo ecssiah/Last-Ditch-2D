@@ -49,6 +49,14 @@ ITEM_INFO(
       {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
+  {
+    "scrap1",
+    {
+      "Scrap 1",
+      "items1",
+      {2 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
+    }
+  },
 });
 
 }

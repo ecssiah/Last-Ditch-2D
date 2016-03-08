@@ -37,11 +37,13 @@ void InventoryUISystem::update()
 
     if (element)
     {
-      int scroll_limit(LIST_ELEMENT_HEIGHT * (element->list_elements.size() - 1));
+      int scroll_limit(LIST_ELEMENT_HEIGHT * inventory_list->size.y());
 
       element->scrolled_offset += input.mouse_drag_vector.y();
       element->scrolled_offset =
 	std::max(-scroll_limit, std::min(element->scrolled_offset, 0));
+
+      update_inventory_list(active_user->inventory);
     }
   }
 
@@ -92,7 +94,7 @@ void InventoryUISystem::setup()
   ScrollableElement _inventory_list;
   _inventory_list.type = "list1";
   _inventory_list.texture = "inventory-list";
-  _inventory_list.size = {400, 600};
+  _inventory_list.size = {400, 300};
   _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 30};
 
   scrollable_elements.push_back(_inventory_list);
@@ -134,7 +136,7 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
   SDL_Surface* inventory_list_surface(
     sdl_interface.generate_surface(inventory_list->size.x(), inventory_list->size.y()));
 
-  for (auto i(0); i < unique_items.size(); ++i)
+  for (auto i(0); i < list_element_surfaces.size(); ++i)
   {
     SDL_Rect dst_rect;
     dst_rect.x = inventory_list->pos.x() + 10;
@@ -145,6 +147,9 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
 
     SDL_BlitSurface(list_element_surfaces[i], nullptr, inventory_list_surface, &dst_rect);
   }
+
+  if (sdl_interface.textures[inventory_list->texture] != nullptr)
+    SDL_DestroyTexture(sdl_interface.textures[inventory_list->texture]);
 
   sdl_interface.textures[inventory_list->texture] =
     SDL_CreateTextureFromSurface(sdl_interface.renderer, inventory_list_surface);
