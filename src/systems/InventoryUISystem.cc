@@ -93,29 +93,104 @@ void InventoryUISystem::setup()
 
   elements.push_back(title);
 
+  setup_sort_buttons();
+
+  ScrollableElement _inventory_list;
+  _inventory_list.type = "list1";
+  _inventory_list.texture = "inventory-list";
+  _inventory_list.size = {400, 300};
+  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 80};
+
+  scrollable_elements.push_back(_inventory_list);
+  inventory_list = &scrollable_elements.back();
+
+  update_inventory_list(active_user->inventory);
+}
+
+
+void InventoryUISystem::setup_sort_buttons()
+{
+  auto y_offset(30);
+  auto x_offset(10);
+  auto button_height(18);
+  auto all_button_width(26);
+  auto weapons_button_width(78);
+  auto clothing_button_width(75);
+  auto utility_button_width(74);
+  auto production_button_width(92);
+
   ScalableElement sort_all_button;
   sort_all_button.type = "button1";
   sort_all_button.texture = "ui1";
   sort_all_button.text = "All";
   sort_all_button.text_texture = "inventory-sort-all-text";
-  sort_all_button.size = {80, 16};
-  sort_all_button.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 20};
+  sort_all_button.size = {all_button_width, button_height};
+  sort_all_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
   sdl_interface.create_texture_from_text(
     sort_all_button.text, sort_all_button.text_texture, "jura-small");
 
   sort_buttons.push_back(sort_all_button);
 
-  ScrollableElement _inventory_list;
-  _inventory_list.type = "list1";
-  _inventory_list.texture = "inventory-list";
-  _inventory_list.size = {400, 300};
-  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 50};
+  x_offset += sort_all_button.size.x() + 10;
 
-  scrollable_elements.push_back(_inventory_list);
-  inventory_list = &scrollable_elements.back();
+  ScalableElement sort_weapons_button;
+  sort_weapons_button.type = "button1";
+  sort_weapons_button.texture = "ui1";
+  sort_weapons_button.text = "Weapons";
+  sort_weapons_button.text_texture = "inventory-sort-weapons-text";
+  sort_weapons_button.size = {weapons_button_width, button_height};
+  sort_weapons_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
-  update_inventory_list(active_user->inventory);
+  sdl_interface.create_texture_from_text(
+    sort_weapons_button.text, sort_weapons_button.text_texture, "jura-small");
+
+  sort_buttons.push_back(sort_weapons_button);
+
+  x_offset += sort_weapons_button.size.x() + 10;
+
+  ScalableElement sort_clothing_button;
+  sort_clothing_button.type = "button1";
+  sort_clothing_button.texture = "ui1";
+  sort_clothing_button.text = "Clothing";
+  sort_clothing_button.text_texture = "inventory-sort-clothing-text";
+  sort_clothing_button.size = {clothing_button_width, button_height};
+  sort_clothing_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
+
+  sdl_interface.create_texture_from_text(
+    sort_clothing_button.text, sort_clothing_button.text_texture, "jura-small");
+
+  sort_buttons.push_back(sort_clothing_button);
+
+  x_offset += sort_clothing_button.size.x() + 10;
+
+  ScalableElement sort_utility_button;
+  sort_utility_button.type = "button1";
+  sort_utility_button.texture = "ui1";
+  sort_utility_button.text = "Utility";
+  sort_utility_button.text_texture = "inventory-sort-utility-text";
+  sort_utility_button.size = {utility_button_width, button_height};
+  sort_utility_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
+
+  sdl_interface.create_texture_from_text(
+    sort_utility_button.text, sort_utility_button.text_texture, "jura-small");
+
+  sort_buttons.push_back(sort_utility_button);
+
+  x_offset += sort_utility_button.size.x() + 10;
+
+  ScalableElement sort_production_button;
+  sort_production_button.type = "button1";
+  sort_production_button.texture = "ui1";
+  sort_production_button.text = "Production";
+  sort_production_button.text_texture = "inventory-sort-production-text";
+  sort_production_button.size = {production_button_width, button_height};
+  sort_production_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
+
+  sdl_interface.create_texture_from_text(
+    sort_production_button.text, sort_production_button.text_texture, "jura-small");
+
+  sort_buttons.push_back(sort_production_button);
 }
 
 
