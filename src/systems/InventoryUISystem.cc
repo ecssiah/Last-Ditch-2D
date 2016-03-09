@@ -99,12 +99,21 @@ void InventoryUISystem::setup()
   _inventory_list.type = "list1";
   _inventory_list.texture = "inventory-list";
   _inventory_list.size = {400, 300};
-  _inventory_list.pos = {menu_base.pos.x() + 10, menu_base.pos.y() + 80};
+  _inventory_list.pos = {menu_base.pos.x() + 8, menu_base.pos.y() + 58};
 
   scrollable_elements.push_back(_inventory_list);
   inventory_list = &scrollable_elements.back();
 
   update_inventory_list(active_user->inventory);
+
+  ScalableElement inventory_preview;
+  inventory_preview.type = "window1";
+  inventory_preview.texture = "ui1";
+  inventory_preview.border = 1;
+  inventory_preview.size = {100, 100};
+  inventory_preview.pos = {menu_base.pos.x() + 440, menu_base.pos.y() + 42};
+
+  scalable_elements.push_back(inventory_preview);
 }
 
 
@@ -113,10 +122,10 @@ void InventoryUISystem::setup_sort_buttons()
   auto y_offset(30);
   auto x_offset(10);
   auto button_height(18);
-  auto all_button_width(26);
+  auto all_button_width(28);
   auto weapons_button_width(78);
-  auto clothing_button_width(75);
-  auto utility_button_width(74);
+  auto clothing_button_width(73);
+  auto utility_button_width(52);
   auto production_button_width(92);
 
   ScalableElement sort_all_button;
@@ -124,6 +133,7 @@ void InventoryUISystem::setup_sort_buttons()
   sort_all_button.texture = "ui1";
   sort_all_button.text = "All";
   sort_all_button.text_texture = "inventory-sort-all-text";
+  sort_all_button.border = 4;
   sort_all_button.size = {all_button_width, button_height};
   sort_all_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
@@ -139,6 +149,7 @@ void InventoryUISystem::setup_sort_buttons()
   sort_weapons_button.texture = "ui1";
   sort_weapons_button.text = "Weapons";
   sort_weapons_button.text_texture = "inventory-sort-weapons-text";
+  sort_weapons_button.border = 4;
   sort_weapons_button.size = {weapons_button_width, button_height};
   sort_weapons_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
@@ -154,6 +165,7 @@ void InventoryUISystem::setup_sort_buttons()
   sort_clothing_button.texture = "ui1";
   sort_clothing_button.text = "Clothing";
   sort_clothing_button.text_texture = "inventory-sort-clothing-text";
+  sort_clothing_button.border = 4;
   sort_clothing_button.size = {clothing_button_width, button_height};
   sort_clothing_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
@@ -169,6 +181,7 @@ void InventoryUISystem::setup_sort_buttons()
   sort_utility_button.texture = "ui1";
   sort_utility_button.text = "Utility";
   sort_utility_button.text_texture = "inventory-sort-utility-text";
+  sort_utility_button.border = 4;
   sort_utility_button.size = {utility_button_width, button_height};
   sort_utility_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
@@ -184,6 +197,7 @@ void InventoryUISystem::setup_sort_buttons()
   sort_production_button.texture = "ui1";
   sort_production_button.text = "Production";
   sort_production_button.text_texture = "inventory-sort-production-text";
+  sort_production_button.border = 4;
   sort_production_button.size = {production_button_width, button_height};
   sort_production_button.pos = {menu_base.pos.x() + x_offset, menu_base.pos.y() + y_offset};
 
