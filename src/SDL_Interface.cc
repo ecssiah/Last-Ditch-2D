@@ -48,7 +48,7 @@ SDL_Interface::~SDL_Interface()
 void SDL_Interface::setup_fonts()
 {
   fonts["jura-small"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
-  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 18);
+  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 20);
 }
 
 

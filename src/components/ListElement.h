@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "Item.h"
+
 using namespace std;
 
 namespace ld
@@ -12,16 +14,16 @@ struct ListElement
 {
   ListElement()
     : string(std::string()),
-      texture(std::string())
+      p_item(nullptr)
   {}
 
-  ListElement(std::string _string, std::string _texture)
+  ListElement(std::string _string, Item* _p_item)
     : string(_string),
-      texture(_texture)
+      p_item(_p_item)
   {}
 
   std::string string;
-  std::string texture;
+  Item* p_item;
 };
 
 }

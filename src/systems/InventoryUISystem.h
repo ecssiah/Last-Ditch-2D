@@ -19,9 +19,11 @@ class InventoryUISystem
 {
   void setup();
   void setup_sort_buttons();
+
   void generate_list_surfaces(Inventory& inventory, std::vector<SDL_Surface*>& list_surfaces);
   void update_inventory_list(Inventory& inventory);
   ScrollableElement* find_scrollable_element_at(Eigen::Vector2i& screen_pos);
+  bool element_hit_at(UIElement& element, Eigen::Vector2i& screen_pos);
 
   SDL_Interface& sdl_interface;
   Input& input;
@@ -32,9 +34,9 @@ class InventoryUISystem
   bool active;
 
   ScalableElement menu_base;
+  ScrollableElement inventory_list;
 
   std::vector<ScalableElement> sort_buttons;
-  ScrollableElement* inventory_list;
 
   std::vector<UIElement> elements;
   std::vector<ScalableElement> scalable_elements;
