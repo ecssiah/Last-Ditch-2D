@@ -102,9 +102,9 @@ void UISystem::setup_main()
   ScalableElement inventory_button;
   inventory_button.type = "backdrop1";
   inventory_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 - vert_offset};
-  inventory_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2,
+     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 - vert_offset};
+  inventory_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   inventory_button.texture = "ui1";
   inventory_button.text = "Inventory";
   inventory_button.text_texture = "inventory_button_text";
@@ -118,9 +118,9 @@ void UISystem::setup_main()
   production_button.type = "backdrop1";
   production_button.texture = "ui1";
   production_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 + horz_offset,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
-  production_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 + horz_offset,
+     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2};
+  production_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   production_button.text = "Production";
   production_button.text_texture = "production_button_text";
 
@@ -133,9 +133,9 @@ void UISystem::setup_main()
   management_button.type = "backdrop1";
   management_button.texture = "ui1";
   management_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2 + vert_offset};
-  management_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2,
+     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 + vert_offset};
+  management_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   management_button.text = "Management";
   management_button.text_texture = "management_button_text";
 
@@ -148,9 +148,9 @@ void UISystem::setup_main()
   status_button.type = "backdrop1";
   status_button.texture = "ui1";
   status_button.pos =
-    {SCREEN_SIZE_X / 2 - MAIN_MENU_BUTTON_SIZE_X / 2 - horz_offset,
-     SCREEN_SIZE_Y / 2 - MAIN_MENU_BUTTON_SIZE_Y / 2};
-  status_button.size = {MAIN_MENU_BUTTON_SIZE_X, MAIN_MENU_BUTTON_SIZE_Y};
+    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 - horz_offset,
+     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2};
+  status_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   status_button.text = "Status";
   status_button.text_texture = "status_button_text";
 

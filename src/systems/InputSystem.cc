@@ -18,6 +18,8 @@ void InputSystem::update()
   input.mouse_motion = false;
   input.mouse_dragged = false;
   input.mouse_drag_vector = {0, 0};
+  input.mouse_wheel = false;
+  input.mouse_wheel_vector = {0, 0};
 
   for (SDL_Event e; SDL_PollEvent(&e); )
   {
@@ -85,13 +87,15 @@ void InputSystem::update()
       input.mouse_motion = true;
       input.mouse_drag_vector = {e.motion.xrel, e.motion.yrel};
       break;
+    case SDL_MOUSEWHEEL:
+      input.mouse_wheel = true;
+      input.mouse_wheel_vector = {e.wheel.x, e.wheel.y};
+      break;
     default:
       break;
     }
   }
 
-  if (input.left_mouse_pressed || input.right_mouse_pressed && input.mouse_motion)
-  {
+  if (input.mouse_motion && input.left_mouse_pressed)
     input.mouse_dragged = true;
-  }
 }

@@ -9,15 +9,13 @@
 namespace ld
 {
 
-constexpr unsigned MAIN_MENU_BUTTON_SIZE_X(120);
-constexpr unsigned MAIN_MENU_BUTTON_SIZE_Y(20);
+constexpr unsigned MENU_BASE_SIZE_X(600);
+constexpr unsigned MENU_BASE_SIZE_Y(400);
+constexpr unsigned MENU_BUTTON_SIZE_X(120);
+constexpr unsigned MENU_BUTTON_SIZE_Y(20);
 
-constexpr unsigned SUB_MENU_BASE_SIZE_X(600);
-constexpr unsigned SUB_MENU_BASE_SIZE_Y(400);
-
-constexpr unsigned LIST_ELEMENT_HEIGHT(24);
-
-constexpr float INVENTORY_SCROLL_RATE(2.f);
+constexpr float INVENTORY_MOUSE_SCROLL_RATE(2.f);
+constexpr float INVENTORY_WHEEL_SCROLL_RATE(10.f);
 
 
 struct ElementInfo

@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <eigen3/Eigen/Geometry>
+#include <functional>
 #include <iostream>
 #include <set>
 
@@ -42,7 +43,7 @@ void InventoryUISystem::update()
   {
     if (element_hit_at(inventory_list, input.left_mouse_pressed_pos))
     {
-      inventory_list.scrolled_offset += INVENTORY_SCROLL_RATE * input.mouse_drag_vector.y();
+      inventory_list.scrolled_offset += INVENTORY_WHEEL_SCROLL_RATE * input.mouse_drag_vector.y();
       inventory_list.scrolled_offset =
 	std::max(-100, std::min(inventory_list.scrolled_offset, 0));
 
@@ -63,6 +64,15 @@ void InventoryUISystem::update()
 
       return;
     }
+  }
+
+  if (input.mouse_wheel)
+  {
+    inventory_list.scrolled_offset += INVENTORY_SCROLL_RATE * input.mouse_wheel_vector.y();
+    inventory_list.scrolled_offset =
+      std::max(-100, std::min(inventory_list.scrolled_offset, 0));
+
+    update_inventory_list(active_user->inventory);
   }
 }
 
@@ -221,19 +231,19 @@ void InventoryUISystem::setup_sort_buttons()
 void InventoryUISystem::generate_list_surfaces(
   Inventory& inventory, vector<SDL_Surface*>& element_surfaces)
 {
-  set<Item*> unique_items;
+  set<Item> unique_items;
   unordered_map<string, int> item_counts;
 
   for (auto item : inventory.items)
   {
     ++item_counts[item.type];
-    unique_items.insert(&item);
+    unique_items.insert(item);
   }
 
   for (auto item : unique_items)
   {
-    auto name(item->name);
-    auto item_count(item_counts[item->type]);
+    auto name(item.name);
+    auto item_count(item_counts[item.type]);
 
     if (item_count != 1) name += " (" + to_string(item_count) + ")";
 
@@ -243,7 +253,6 @@ void InventoryUISystem::generate_list_surfaces(
     auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
 
     element_surfaces.push_back(surface);
-    inventory_list.list_elements.push_back({item->type, item});
   }
 }
 

@@ -1,6 +1,8 @@
 #ifndef ITEM_H
 #define ITEM_H
 
+#include <functional>
+
 #include "../constants/ItemConstants.h"
 #include "Entity.h"
 
@@ -17,7 +19,7 @@ struct Item : public Entity
       contained(false)
   {}
 
-  bool operator<(const Item& rhs) const
+  bool operator <(const Item& rhs) const
   {
     return name < rhs.name;
   }
