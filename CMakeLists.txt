@@ -6,6 +6,7 @@ set(
   HEADERS
   ./LastDitch.h
   ./src/SDL_Interface.h
+  ./src/Utils.h
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
   ./src/systems/EntitySystem.h
@@ -24,6 +25,7 @@ set(
   SOURCES
   ./LastDitch.cc
   ./src/SDL_Interface.cc
+  ./src/Utils.cc
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
   ./src/systems/EntitySystem.cc
