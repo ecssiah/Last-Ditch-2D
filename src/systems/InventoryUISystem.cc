@@ -23,6 +23,7 @@ InventoryUISystem::InventoryUISystem(
     entity_system(_entity_system),
     active_user(_entity_system.get_active_user()),
     active(false),
+    active_category(ALL),
     menu_base(),
     inventory_list(),
     sort_buttons(),
@@ -45,7 +46,8 @@ void InventoryUISystem::update()
   {
     if (element_hit_at(inventory_list, input.left_mouse_pressed_pos))
     {
-      inventory_list.scrolled_offset += INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
+      inventory_list.scrolled_offset +=
+	INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
       inventory_list.scrolled_offset = clamp(inventory_list.scrolled_offset, -100, 0);
 
       update_inventory_list(active_user->inventory);
@@ -57,7 +59,8 @@ void InventoryUISystem::update()
 
     if (element)
     {
-      element->scrolled_offset += INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
+      element->scrolled_offset +=
+	INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
       element->scrolled_offset = clamp(element->scrolled_offset, -100, 0);
 
       update_inventory_list(active_user->inventory);
@@ -68,7 +71,8 @@ void InventoryUISystem::update()
 
   if (input.mouse_wheel)
   {
-    inventory_list.scrolled_offset += INVENTORY_WHEEL_SCROLL_RATE * input.mouse_wheel_vector.y();
+    inventory_list.scrolled_offset +=
+      INVENTORY_WHEEL_SCROLL_RATE * input.mouse_wheel_vector.y();
     inventory_list.scrolled_offset = clamp(inventory_list.scrolled_offset, -100, 0);
 
     update_inventory_list(active_user->inventory);

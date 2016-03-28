@@ -66,6 +66,7 @@ void EntitySystem::give_random_item(User* user)
   Item item;
   item.type = get_random_type();
   item.name = ITEM_INFO[item.type].name;
+  item.category = ITEM_INFO[item.type].category;
   item.texture = ITEM_INFO[item.type].texture;
 
   user->inventory.items.push_back(item);

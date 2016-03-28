@@ -14,6 +14,7 @@ struct Item : public Entity
   Item()
     : Entity(),
       name(std::string()),
+      category(WEAPON),
       weight(1.f),
       radius(.5f),
       contained(false)
@@ -25,6 +26,7 @@ struct Item : public Entity
   }
 
   std::string name;
+  ItemCategory category;
   float weight;
   float radius;
   bool contained;

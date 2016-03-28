@@ -32,6 +32,7 @@ class InventoryUISystem
   User* active_user;
 
   bool active;
+  ItemCategory active_category;
 
   ScalableElement menu_base;
   ScrollableElement inventory_list;
