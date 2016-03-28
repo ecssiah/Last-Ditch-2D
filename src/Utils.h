@@ -1,10 +1,17 @@
-#ifndef STRUTIL_H
-#define STRUTIL_H
+#ifndef UTILS_H
+#define UTILS_H
 
+#include <algorithm>
 #include <string>
 
-namespace StrUtil
+namespace Utils
 {
+
+float clamp(float value, float lower_bound, float upper_bound)
+{
+  return std::max(lower_bound, std::min(value, upper_bound));
+}
+
 
 bool ends_with(const std::string& string, const std::string& suffix)
 {
@@ -21,4 +28,4 @@ bool ends_with(const std::string& string, const std::string& suffix)
 }
 
 
-#endif /* STRUTIL_H */
+#endif /* UTILS_H */

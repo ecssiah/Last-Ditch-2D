@@ -3,7 +3,7 @@
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL_image.h>
 
-#include "../StrUtil.h"
+#include "../Utils.h"
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
@@ -12,7 +12,7 @@
 using namespace ld;
 using namespace Eigen;
 using namespace std;
-using namespace StrUtil;
+using namespace Utils;
 
 RenderSystem::RenderSystem(
   SDL_Interface& _sdl_interface,

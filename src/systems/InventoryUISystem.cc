@@ -8,10 +8,12 @@
 
 #include "../components/Item.h"
 #include "../constants/UIConstants.h"
+#include "../Utils.h"
 
 using namespace Eigen;
 using namespace ld;
 using namespace std;
+using namespace Utils;
 
 InventoryUISystem::InventoryUISystem(
   SDL_Interface& _sdl_interface, Input& _input, EntitySystem& _entity_system
@@ -44,8 +46,7 @@ void InventoryUISystem::update()
     if (element_hit_at(inventory_list, input.left_mouse_pressed_pos))
     {
       inventory_list.scrolled_offset += INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
-      inventory_list.scrolled_offset =
-	std::max(-100, std::min(inventory_list.scrolled_offset, 0));
+      inventory_list.scrolled_offset = clamp(inventory_list.scrolled_offset, -100, 0);
 
       update_inventory_list(active_user->inventory);
 
@@ -57,8 +58,7 @@ void InventoryUISystem::update()
     if (element)
     {
       element->scrolled_offset += INVENTORY_MOUSE_SCROLL_RATE * input.mouse_drag_vector.y();
-      element->scrolled_offset =
-	std::max(-100, std::min(element->scrolled_offset, 0));
+      element->scrolled_offset = clamp(element->scrolled_offset, -100, 0);
 
       update_inventory_list(active_user->inventory);
 
@@ -68,9 +68,8 @@ void InventoryUISystem::update()
 
   if (input.mouse_wheel)
   {
-    inventory_list.scrolled_offset += INVENTORY_MOUSE_SCROLL_RATE * input.mouse_wheel_vector.y();
-    inventory_list.scrolled_offset =
-      std::max(-100, std::min(inventory_list.scrolled_offset, 0));
+    inventory_list.scrolled_offset += INVENTORY_WHEEL_SCROLL_RATE * input.mouse_wheel_vector.y();
+    inventory_list.scrolled_offset = clamp(inventory_list.scrolled_offset, -100, 0);
 
     update_inventory_list(active_user->inventory);
   }
