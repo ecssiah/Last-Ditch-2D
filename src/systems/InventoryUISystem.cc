@@ -24,7 +24,6 @@ InventoryUISystem::InventoryUISystem(
     active_user(_entity_system.get_active_user()),
     active(false),
     active_category(ALL),
-    menu_base(),
     inventory_list(),
     sort_buttons(),
     elements(),
@@ -76,6 +75,37 @@ void InventoryUISystem::update()
     inventory_list.scrolled_offset = clamp(inventory_list.scrolled_offset, -100, 0);
 
     update_inventory_list(active_user->inventory);
+  }
+
+  if (input.activate)
+  {
+    auto element(find_scalable_element_at(input.left_mouse_released_pos));
+
+    if (element)
+    {
+      input.activate = false;
+
+      if (element->text == "All")
+      {
+	printf("all pressed\n");
+      }
+      else if (element->text == "Weapons")
+      {
+	printf("weapons pressed\n");
+      }
+      else if (element->text == "Clothing")
+      {
+	printf("clothing pressed\n");
+      }
+      else if (element->text == "Utility")
+      {
+	printf("utility pressed\n");
+      }
+      else if (element->text == "Production")
+      {
+	printf("production pressed\n");
+      }
+    }
   }
 }
 
@@ -240,7 +270,7 @@ void InventoryUISystem::generate_list_surfaces(
   for (auto item : inventory.items)
   {
     ++item_counts[item.type];
-    unique_items.insert(item);
+    if (item.category == active_category) unique_items.insert(item);
   }
 
   for (auto item : unique_items)
@@ -307,6 +337,23 @@ ScrollableElement* InventoryUISystem::find_scrollable_element_at(Vector2i& scree
 {
   for (auto& element : scrollable_elements)
     if (element_hit_at(element, screen_pos)) return &element;
+
+  return nullptr;
+}
+
+
+ScalableElement* InventoryUISystem::find_scalable_element_at(Vector2i& screen_pos)
+{
+  for (auto& element : sort_buttons)
+  {
+    auto hit(
+      screen_pos.x() > element.pos.x() &&
+      screen_pos.x() < element.pos.x() + element.size.x() &&
+      screen_pos.y() > element.pos.y() &&
+      screen_pos.y() < element.pos.y() + element.size.y());
+
+    if (hit) return &element;
+  }
 
   return nullptr;
 }

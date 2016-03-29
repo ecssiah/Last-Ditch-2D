@@ -172,31 +172,7 @@ void UISystem::update_base()
 
 void UISystem::update_main()
 {
-  if (input.up)
-  {
-    input.up = false;
-    main_active = false;
-    inventory_ui_system.set_active(true);
-  }
-  else if (input.right)
-  {
-    input.right = false;
-    main_active = false;
-    production_ui_system.set_active(true);
-  }
-  else if (input.down)
-  {
-    input.down = false;
-    main_active = false;
-    management_ui_system.set_active(true);
-  }
-  else if (input.left)
-  {
-    input.left = false;
-    main_active = false;
-    status_ui_system.set_active(true);
-  }
-  else if (input.activate)
+  if (input.activate)
   {
     auto element(find_scalable_element_at(input.left_mouse_released_pos));
 

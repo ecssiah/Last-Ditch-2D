@@ -28,26 +28,19 @@ LastDitch::LastDitch()
   for (auto dt(0.0); !input.exit; time_system.tick())
   {
     input_system.update();
-
-    if (!input.pause)
-    {
-      entity_system.update();
-      map_system.update();
-      physics_system.update(dt);
-      camera_system.update();
-    }
-
+    entity_system.update();
+    map_system.update();
+    physics_system.update(dt);
+    camera_system.update();
     ui_system.update();
+    render_system.update(dt);
+    dt = time_system.update();
 
     if (input.activate)
     {
       input.activate = false;
       cout << "unused activation" << endl;
     }
-
-    render_system.update(input.pause ? 0 : dt);
-
-    dt = time_system.update();
   }
 }
 
