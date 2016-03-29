@@ -86,25 +86,17 @@ void InventoryUISystem::update()
       input.activate = false;
 
       if (element->text == "All")
-      {
-	printf("all pressed\n");
-      }
+	active_category = ALL;
       else if (element->text == "Weapons")
-      {
-	printf("weapons pressed\n");
-      }
+	active_category = WEAPONS;
       else if (element->text == "Clothing")
-      {
-	printf("clothing pressed\n");
-      }
+	active_category = CLOTHING;
       else if (element->text == "Utility")
-      {
-	printf("utility pressed\n");
-      }
+	active_category = UTILITY;
       else if (element->text == "Production")
-      {
-	printf("production pressed\n");
-      }
+	active_category = PRODUCTION;
+
+      update_inventory_list(active_user->inventory);
     }
   }
 }
@@ -270,7 +262,9 @@ void InventoryUISystem::generate_list_surfaces(
   for (auto item : inventory.items)
   {
     ++item_counts[item.type];
-    if (item.category == active_category) unique_items.insert(item);
+
+    if (active_category == ALL || item.category == active_category)
+      unique_items.insert(item);
   }
 
   for (auto item : unique_items)

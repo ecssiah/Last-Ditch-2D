@@ -14,7 +14,7 @@ struct Item : public Entity
   Item()
     : Entity(),
       name(std::string()),
-      category(WEAPON),
+      category(WEAPONS),
       weight(1.f),
       radius(.5f),
       contained(false)

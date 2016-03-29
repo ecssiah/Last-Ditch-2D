@@ -14,7 +14,7 @@ namespace ld
 enum ItemCategory
 {
   ALL,
-  WEAPON,
+  WEAPONS,
   CLOTHING,
   UTILITY,
   PRODUCTION
