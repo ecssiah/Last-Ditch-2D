@@ -17,3 +17,18 @@ void InventorySystem::update()
 
 
 }
+
+
+Item* retrieve(std::string type, Inventory* inventory)
+{
+  for (auto item : inventory->items)
+  {
+
+  }
+}
+
+
+void store(Item item, Inventory* inventory)
+{
+
+}

@@ -14,6 +14,9 @@ public:
   InventorySystem(EntitySystem& entity_system);
 
   void update();
+
+  Item* retrieve(std::string type, Inventory* inventory);
+  void store(Item item, Inventory* inventory);
 };
 
 }
