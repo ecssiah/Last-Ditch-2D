@@ -36,6 +36,7 @@ class InventoryUISystem
 
   void generate_list_surfaces(Inventory& inventory, std::vector<SDL_Surface*>& list_surfaces);
   void update_inventory_list(Inventory& inventory);
+  void update_active_slot_preview_image();
   ScalableElement* find_scalable_element_at(Eigen::Vector2i& screen_pos);
   ScrollableElement* find_scrollable_element_at(Eigen::Vector2i& screen_pos);
   bool element_hit_at(UIElement& element, Eigen::Vector2i& screen_pos);

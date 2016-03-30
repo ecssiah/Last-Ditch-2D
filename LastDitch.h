@@ -11,6 +11,7 @@
 #include "src/systems/InputSystem.h"
 #include "src/systems/MapSystem.h"
 #include "src/systems/EntitySystem.h"
+#include "src/systems/InventorySystem.h"
 #include "src/systems/PhysicsSystem.h"
 #include "src/systems/CameraSystem.h"
 #include "src/systems/UISystem.h"
@@ -33,6 +34,7 @@ class LastDitch
   InputSystem input_system;
   MapSystem map_system;
   EntitySystem entity_system;
+  InventorySystem inventory_system;
   PhysicsSystem physics_system;
   CameraSystem camera_system;
   UISystem ui_system;

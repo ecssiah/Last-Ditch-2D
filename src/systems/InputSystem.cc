@@ -15,6 +15,12 @@ InputSystem::InputSystem(Input& input_)
 
 void InputSystem::update()
 {
+  if (input.activate)
+  {
+    input.activate = false;
+    cout << "unused activation" << endl;
+  }
+
   input.mouse_motion = false;
   input.mouse_dragged = false;
   input.mouse_drag_vector = {0, 0};

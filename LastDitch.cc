@@ -15,6 +15,7 @@ LastDitch::LastDitch()
     camera_system(),
     map_system(),
     entity_system(rng, input, camera_system, map_system),
+    inventory_system(entity_system),
     physics_system(sdl_interface.renderer, map_system, entity_system),
     ui_system(sdl_interface, input, time_system, entity_system),
     render_system(
@@ -29,18 +30,15 @@ LastDitch::LastDitch()
   {
     input_system.update();
     entity_system.update();
+    inventory_system.update();
     map_system.update();
     physics_system.update(dt);
     camera_system.update();
     ui_system.update();
     render_system.update(dt);
+
     dt = time_system.update();
 
-    if (input.activate)
-    {
-      input.activate = false;
-      cout << "unused activation" << endl;
-    }
   }
 }
 

@@ -110,7 +110,13 @@ void InventoryUISystem::update()
     {
       input.activate = false;
 
-      auto offset(input.left_mouse_released_pos.y() - p_inventory_list->pos.y());
+      auto offset(
+	input.left_mouse_released_pos.y() - p_inventory_list->pos.y() -
+	p_inventory_list->scrolled_offset);
+
+      active_slot_index = offset / MENU_BUTTON_SIZE_Y;
+
+      update_inventory_list(active_user->inventory);
 
       return;
     }
@@ -297,13 +303,24 @@ void InventoryUISystem::generate_list_surfaces(
     if (item_count != 1) name += " (" + to_string(item_count) + ")";
 
     SDL_Color color;
-    color = {255, 255, 255};
+
+    if (i == active_slot_index)
+      color = {255, 255, 255};
+    else
+      color = {200, 180, 200};
 
     auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
     element_surfaces.push_back(surface);
 
     current_slots.push_back({(unsigned)i, item_count, item.type});
   }
+}
+
+
+void InventoryUISystem::update_active_slot_preview_image()
+{
+
+
 }
 
 
@@ -333,6 +350,8 @@ void InventoryUISystem::update_inventory_list(Inventory& inventory)
     SDL_CreateTextureFromSurface(sdl_interface.renderer, inventory_list_surface);
 
   for (auto surface : element_surfaces) SDL_FreeSurface(surface);
+
+  update_active_slot_preview_image();
 }
 
 
