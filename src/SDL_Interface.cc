@@ -89,7 +89,7 @@ SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
 void SDL_Interface::create_texture_from_text(
   string text, string texture_name, string font_name, SDL_Color color)
 {
-  auto surface = TTF_RenderText_Blended(fonts[font_name], text.c_str(), color);
+  auto surface(TTF_RenderText_Blended(fonts[font_name], text.c_str(), color));
 
   if (textures[texture_name] != nullptr) SDL_DestroyTexture(textures[texture_name]);
 

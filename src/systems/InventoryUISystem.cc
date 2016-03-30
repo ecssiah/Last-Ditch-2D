@@ -24,10 +24,13 @@ InventoryUISystem::InventoryUISystem(
     active_user(_entity_system.get_active_user()),
     active(false),
     active_category(ALL),
+    active_slot_index(0),
+    current_slots(),
     inventory_list(),
     sort_buttons(),
     elements(),
-    scalable_elements()
+    scalable_elements(),
+    p_scrollable_elements()
 {
   setup();
 }
@@ -79,24 +82,37 @@ void InventoryUISystem::update()
 
   if (input.activate)
   {
-    auto element(find_scalable_element_at(input.left_mouse_released_pos));
+    auto p_sort_element(find_scalable_element_at(input.left_mouse_released_pos));
 
-    if (element)
+    if (p_sort_element)
     {
       input.activate = false;
 
-      if (element->text == "All")
+      if (p_sort_element->text == "All")
 	active_category = ALL;
-      else if (element->text == "Weapons")
+      else if (p_sort_element->text == "Weapons")
 	active_category = WEAPONS;
-      else if (element->text == "Clothing")
+      else if (p_sort_element->text == "Clothing")
 	active_category = CLOTHING;
-      else if (element->text == "Utility")
+      else if (p_sort_element->text == "Utility")
 	active_category = UTILITY;
-      else if (element->text == "Production")
+      else if (p_sort_element->text == "Production")
 	active_category = PRODUCTION;
 
       update_inventory_list(active_user->inventory);
+
+      return;
+    }
+
+    auto p_inventory_list(find_scrollable_element_at(input.left_mouse_released_pos));
+
+    if (p_inventory_list)
+    {
+      input.activate = false;
+
+      auto offset(input.left_mouse_released_pos.y() - p_inventory_list->pos.y());
+
+      return;
     }
   }
 }
@@ -116,8 +132,8 @@ void InventoryUISystem::render()
   for (auto& element : scalable_elements)
     sdl_interface.render_scalable_element(element);
 
-  for (auto& element : scrollable_elements)
-    sdl_interface.render_scrollable_element(element);
+  for (auto element : p_scrollable_elements)
+    sdl_interface.render_scrollable_element(*element);
 }
 
 
@@ -150,6 +166,8 @@ void InventoryUISystem::setup()
   inventory_list.pos = {menu_base.pos.x() + 8, menu_base.pos.y() + 58};
 
   update_inventory_list(active_user->inventory);
+
+  p_scrollable_elements.push_back(&inventory_list);
 
   ScalableElement inventory_preview;
   inventory_preview.type = "window1";
@@ -257,9 +275,9 @@ void InventoryUISystem::generate_list_surfaces(
   Inventory& inventory, vector<SDL_Surface*>& element_surfaces)
 {
   set<Item> unique_items;
-  unordered_map<string, int> item_counts;
+  unordered_map<string, unsigned> item_counts;
 
-  for (auto item : inventory.items)
+  for (auto& item : inventory.items)
   {
     ++item_counts[item.type];
 
@@ -267,10 +285,14 @@ void InventoryUISystem::generate_list_surfaces(
       unique_items.insert(item);
   }
 
-  for (auto item : unique_items)
+  current_slots.clear();
+  vector<Item> items(unique_items.begin(), unique_items.end());
+
+  for (auto i(0); i < items.size(); ++i)
   {
-    auto name(item.name);
-    auto item_count(item_counts[item.type]);
+    auto& item(items[i]);
+    auto& name(item.name);
+    auto& item_count(item_counts[item.type]);
 
     if (item_count != 1) name += " (" + to_string(item_count) + ")";
 
@@ -278,8 +300,9 @@ void InventoryUISystem::generate_list_surfaces(
     color = {255, 255, 255};
 
     auto surface(sdl_interface.create_surface_from_text(name, "jura-small", color));
-
     element_surfaces.push_back(surface);
+
+    current_slots.push_back({(unsigned)i, item_count, item.type});
   }
 }
 
@@ -329,8 +352,8 @@ bool InventoryUISystem::element_hit_at(UIElement& element, Vector2i& screen_pos)
 
 ScrollableElement* InventoryUISystem::find_scrollable_element_at(Vector2i& screen_pos)
 {
-  for (auto& element : scrollable_elements)
-    if (element_hit_at(element, screen_pos)) return &element;
+  for (auto element : p_scrollable_elements)
+    if (element_hit_at(*element, screen_pos)) return element;
 
   return nullptr;
 }

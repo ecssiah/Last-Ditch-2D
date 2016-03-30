@@ -1,6 +1,7 @@
 #ifndef INVENTORYUISYSTEM_H
 #define INVENTORYUISYSTEM_H
 
+#include <unordered_map>
 #include <vector>
 
 #include "../components/Input.h"
@@ -14,6 +15,19 @@
 
 namespace ld
 {
+
+struct SlotInfo
+{
+  SlotInfo(unsigned _index, unsigned _count, std::string _type)
+    : index(_index),
+      count(_count),
+      type(_type)
+  {}
+
+  unsigned index;
+  unsigned count;
+  std::string type;
+};
 
 class InventoryUISystem
 {
@@ -35,6 +49,9 @@ class InventoryUISystem
   bool active;
   ItemCategory active_category;
 
+  unsigned active_slot_index;
+  std::vector<SlotInfo> current_slots;
+
   ScalableElement menu_base;
   ScrollableElement inventory_list;
 
@@ -42,7 +59,7 @@ class InventoryUISystem
 
   std::vector<UIElement> elements;
   std::vector<ScalableElement> scalable_elements;
-  std::vector<ScrollableElement> scrollable_elements;
+  std::vector<ScrollableElement*> p_scrollable_elements;
 
 public:
   InventoryUISystem(SDL_Interface& sdl_interface, Input& input, EntitySystem& entity_system);
