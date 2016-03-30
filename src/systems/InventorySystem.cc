@@ -25,6 +25,8 @@ Item* retrieve(std::string type, Inventory* inventory)
   {
 
   }
+
+  return nullptr;
 }
 
 
