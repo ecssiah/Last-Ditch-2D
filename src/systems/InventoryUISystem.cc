@@ -16,11 +16,13 @@ using namespace std;
 using namespace Utils;
 
 InventoryUISystem::InventoryUISystem(
-  SDL_Interface& _sdl_interface, Input& _input, EntitySystem& _entity_system
+  SDL_Interface& _sdl_interface, Input& _input,
+  EntitySystem& _entity_system, InventorySystem& _inventory_system
 )
   : sdl_interface(_sdl_interface),
     input(_input),
     entity_system(_entity_system),
+    inventory_system(_inventory_system),
     active_user(_entity_system.get_active_user()),
     active(false),
     active_category(ALL),

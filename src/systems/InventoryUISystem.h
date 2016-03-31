@@ -11,6 +11,7 @@
 #include "../components/UIElement.h"
 #include "../components/User.h"
 #include "../systems/EntitySystem.h"
+#include "../systems/InventorySystem.h"
 #include "../SDL_Interface.h"
 
 namespace ld
@@ -45,6 +46,7 @@ class InventoryUISystem
   Input& input;
 
   EntitySystem& entity_system;
+  InventorySystem& inventory_system;
   User* active_user;
 
   bool active;
@@ -63,7 +65,9 @@ class InventoryUISystem
   std::vector<ScrollableElement*> p_scrollable_elements;
 
 public:
-  InventoryUISystem(SDL_Interface& sdl_interface, Input& input, EntitySystem& entity_system);
+  InventoryUISystem(
+    SDL_Interface& sdl_interface, Input& input,
+    EntitySystem& entity_system, InventorySystem& inventory_system);
 
   void update();
   void render();

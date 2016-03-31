@@ -13,13 +13,15 @@ UISystem::UISystem(
   SDL_Interface& _sdl_interface,
   Input& _input,
   TimeSystem& _time_system,
-  EntitySystem& _entity_system
+  EntitySystem& _entity_system,
+  InventorySystem& _inventory_system
 )
   : sdl_interface(_sdl_interface),
     input(_input),
     time_system(_time_system),
     entity_system(_entity_system),
-    inventory_ui_system(_sdl_interface, _input, _entity_system),
+    inventory_system(_inventory_system),
+    inventory_ui_system(_sdl_interface, _input, _entity_system, _inventory_system),
     production_ui_system(_sdl_interface, _input),
     management_ui_system(_sdl_interface, _input),
     status_ui_system(_sdl_interface, _input),
@@ -209,36 +211,16 @@ void UISystem::handle_menu_activation()
 {
   input.menu = false;
 
-  if (main_active)
-  {
-    input.pause = false;
-    main_active = false;
-  }
-  else if (inventory_ui_system.is_active())
-  {
-    input.pause = false;
+  if (inventory_ui_system.is_active())
     inventory_ui_system.set_active(false);
-  }
   else if (production_ui_system.is_active())
-  {
-    input.pause = false;
     production_ui_system.set_active(false);
-  }
   else if (management_ui_system.is_active())
-  {
-    input.pause = false;
     management_ui_system.set_active(false);
-  }
   else if (status_ui_system.is_active())
-  {
-    input.pause = false;
     status_ui_system.set_active(false);
-  }
   else
-  {
-    input.pause = true;
-    main_active = true;
-  }
+    main_active = !main_active;
 }
 
 

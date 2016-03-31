@@ -19,7 +19,7 @@ void InventorySystem::update()
 }
 
 
-Item* retrieve(std::string type, Inventory* inventory)
+Item* InventorySystem::retrieve(std::string type, Inventory* inventory)
 {
   for (auto item : inventory->items)
   {
@@ -30,7 +30,7 @@ Item* retrieve(std::string type, Inventory* inventory)
 }
 
 
-void store(Item item, Inventory* inventory)
+void InventorySystem::store(Item item, Inventory* inventory)
 {
 
 }

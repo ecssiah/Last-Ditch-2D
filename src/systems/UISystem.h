@@ -39,6 +39,7 @@ class UISystem
   SDL_Interface& sdl_interface;
   TimeSystem& time_system;
   EntitySystem& entity_system;
+  InventorySystem& inventory_system;
 
   InventoryUISystem inventory_ui_system;
   ProductionUISystem production_ui_system;
@@ -61,7 +62,7 @@ class UISystem
 public:
   UISystem(
     SDL_Interface& sdl_interface, Input& input,
-    TimeSystem& time_system, EntitySystem& entity_system);
+    TimeSystem& time_system, EntitySystem& entity_system, InventorySystem& inventory_system);
 
   void update();
   void render();
