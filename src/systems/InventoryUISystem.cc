@@ -142,6 +142,8 @@ void InventoryUISystem::render()
 
   for (auto element : p_scrollable_elements)
     sdl_interface.render_scrollable_element(*element);
+
+  sdl_interface.render_element(active_item_preview_image);
 }
 
 
@@ -185,6 +187,12 @@ void InventoryUISystem::setup()
   inventory_preview.pos = {menu_base.pos.x() + 440, menu_base.pos.y() + 42};
 
   scalable_elements.push_back(inventory_preview);
+
+  active_item_preview_image.type = "image1";
+  active_item_preview_image.texture = "items1";
+  active_item_preview_image.size = {96, 96};
+  active_item_preview_image.pos =
+    {inventory_preview.pos.x() + 4, inventory_preview.pos.y() + 4};
 }
 
 
@@ -321,8 +329,12 @@ void InventoryUISystem::generate_list_surfaces(
 
 void InventoryUISystem::update_active_slot_preview_image()
 {
+  auto& clip_data(ITEM_INFO[current_slots[active_slot_index].type].clip_data);
 
-
+  active_item_preview_image.clip_rect.x = clip_data.x;
+  active_item_preview_image.clip_rect.y = clip_data.y;
+  active_item_preview_image.clip_rect.w = clip_data.w;
+  active_item_preview_image.clip_rect.h = clip_data.h;
 }
 
 

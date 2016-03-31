@@ -56,6 +56,7 @@ class InventoryUISystem
   std::vector<SlotInfo> current_slots;
 
   ScalableElement menu_base;
+  ScalableElement active_item_preview_image;
   ScrollableElement inventory_list;
 
   std::vector<ScalableElement> sort_buttons;

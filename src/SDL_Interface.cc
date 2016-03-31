@@ -119,7 +119,10 @@ void SDL_Interface::render_element(UIElement& element)
     dest_rect.w = element.size.x();
     dest_rect.h = element.size.y();
 
-    SDL_RenderCopy(renderer, texture, nullptr, &dest_rect);
+    if (element.clip_rect.w == 0)
+      SDL_RenderCopy(renderer, texture, nullptr, &dest_rect);
+    else
+      SDL_RenderCopy(renderer, texture, &element.clip_rect, &dest_rect);
   }
 
   if (element.text_texture != "")
@@ -135,7 +138,10 @@ void SDL_Interface::render_element(UIElement& element)
     text_dest_rect.w = tw;
     text_dest_rect.h = th;
 
-    SDL_RenderCopy(renderer, text_texture, nullptr, &text_dest_rect);
+    if (element.text_clip_rect.w == 0)
+      SDL_RenderCopy(renderer, text_texture, nullptr, &text_dest_rect);
+    else
+      SDL_RenderCopy(renderer, text_texture, &element.text_clip_rect, &text_dest_rect);
   }
 }
 
