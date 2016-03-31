@@ -25,17 +25,34 @@ struct ItemInfo
   ItemInfo() = default;
 
   ItemInfo(
-    std::string _name, ItemCategory _category, std::string _texture, ClipData _clip_data
+    std::string _name,
+    std::string _texture,
+    ItemCategory _category,
+    float _value,
+    float _quality,
+    float _weight,
+    float _volume,
+    ClipData _clip_data
   )
     : name(_name),
-      category(_category),
       texture(_texture),
+      category(_category),
+      value(_value),
+      quality(_quality),
+      weight(_weight),
+      volume(_volume),
       clip_data(_clip_data)
   {}
 
   std::string name;
   ItemCategory category;
   std::string texture;
+
+  float value;
+  float quality;
+  float weight;
+  float volume;
+
   ClipData clip_data;
 };
 
@@ -50,8 +67,9 @@ ITEM_INFO(
     "scrub",
     {
       "Scrub",
-      PRODUCTION,
       "items1",
+      PRODUCTION,
+      .02f, .1f, 1.6f, 2.4f,
       {0 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
@@ -59,8 +77,9 @@ ITEM_INFO(
     "scrap",
     {
       "Scrap",
-      PRODUCTION,
       "items1",
+      PRODUCTION,
+      .02f, .1f, 2.7f, 2.4f,
       {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
@@ -68,8 +87,9 @@ ITEM_INFO(
     "case-small",
     {
       "Case, small",
-      UTILITY,
       "items1",
+      UTILITY,
+      .8f, .1f, .6f, .4f,
       {0 * HALF_UNIT, 1 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },

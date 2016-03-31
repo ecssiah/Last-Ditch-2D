@@ -13,13 +13,13 @@ struct Item : public Entity
 {
   Item()
     : Entity(),
-      radius(.5f),
       name(std::string()),
       category(WEAPONS),
       value(0.1f),
       quality(0.1f),
       weight(0.1f),
       volume(0.1f),
+      radius(.5f),
       contained(false)
   {}
 
@@ -29,13 +29,13 @@ struct Item : public Entity
   }
 
   std::string name;
-  float radius;
   ItemCategory category;
 
   float value;
   float quality;
   float weight;
   float volume;
+  float radius;
 
   bool contained;
 };

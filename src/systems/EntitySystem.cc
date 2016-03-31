@@ -65,9 +65,13 @@ void EntitySystem::give_random_item(User* user)
 {
   Item item;
   item.type = get_random_type();
+  item.texture = ITEM_INFO[item.type].texture;
   item.name = ITEM_INFO[item.type].name;
   item.category = ITEM_INFO[item.type].category;
-  item.texture = ITEM_INFO[item.type].texture;
+  item.value = ITEM_INFO[item.type].value;
+  item.quality = ITEM_INFO[item.type].quality;
+  item.weight = ITEM_INFO[item.type].weight;
+  item.volume = ITEM_INFO[item.type].volume;
 
   user->inventory.items.push_back(item);
 }
@@ -94,11 +98,15 @@ void EntitySystem::setup_items()
       uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
 
       Item item;
+      item.floor = floor;
       item.type = get_random_type();
+      item.texture = ITEM_INFO[item.type].texture;
       item.name = ITEM_INFO[item.type].name;
       item.category = ITEM_INFO[item.type].category;
-      item.texture = ITEM_INFO[item.type].texture;
-      item.floor = floor;
+      item.value = ITEM_INFO[item.type].value;
+      item.quality = ITEM_INFO[item.type].quality;
+      item.weight = ITEM_INFO[item.type].weight;
+      item.volume = ITEM_INFO[item.type].volume;
 
       while (1)
       {
