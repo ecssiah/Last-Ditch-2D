@@ -56,21 +56,21 @@ ITEM_INFO(
     }
   },
   {
-    "case-small",
-    {
-      "Case, small",
-      UTILITY,
-      "items1",
-      {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
-    }
-  },
-  {
     "scrap",
     {
       "Scrap",
       PRODUCTION,
       "items1",
-      {2 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
+      {1 * HALF_UNIT, 0 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
+    }
+  },
+  {
+    "case-small",
+    {
+      "Case, small",
+      UTILITY,
+      "items1",
+      {0 * HALF_UNIT, 1 * HALF_UNIT, HALF_UNIT, HALF_UNIT}
     }
   },
 });
