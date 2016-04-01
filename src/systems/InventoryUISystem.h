@@ -33,7 +33,11 @@ struct SlotInfo
 class InventoryUISystem
 {
   void setup();
+  void setup_base();
   void setup_sort_buttons();
+  void setup_inventory_list();
+  void setup_inventory_info();
+  void setup_equipment_slots();
 
   void generate_list_surfaces(Inventory& inventory, std::vector<SDL_Surface*>& list_surfaces);
   void update_inventory_list(Inventory& inventory);

@@ -9,8 +9,8 @@
 namespace ld
 {
 
-constexpr unsigned MENU_BASE_SIZE_X(600);
-constexpr unsigned MENU_BASE_SIZE_Y(400);
+constexpr unsigned MENU_BASE_SIZE_X(680);
+constexpr unsigned MENU_BASE_SIZE_Y(520);
 constexpr unsigned MENU_BUTTON_SIZE_X(120);
 constexpr unsigned MENU_BUTTON_SIZE_Y(20);
 
