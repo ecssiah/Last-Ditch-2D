@@ -329,12 +329,22 @@ void InventoryUISystem::generate_list_surfaces(
 
 void InventoryUISystem::update_active_slot_preview_image()
 {
-  auto& clip_data(ITEM_INFO[current_slots[active_slot_index].type].clip_data);
+  if (active_slot_index < current_slots.size())
+  {
+    auto& clip_data(ITEM_INFO[current_slots[active_slot_index].type].clip_data);
 
-  active_item_preview_image.clip_rect.x = clip_data.x;
-  active_item_preview_image.clip_rect.y = clip_data.y;
-  active_item_preview_image.clip_rect.w = clip_data.w;
-  active_item_preview_image.clip_rect.h = clip_data.h;
+    active_item_preview_image.clip_rect.x = clip_data.x;
+    active_item_preview_image.clip_rect.y = clip_data.y;
+    active_item_preview_image.clip_rect.w = clip_data.w;
+    active_item_preview_image.clip_rect.h = clip_data.h;
+  }
+  else
+  {
+    active_item_preview_image.clip_rect.x = 19 * HALF_UNIT;
+    active_item_preview_image.clip_rect.y = 9 * HALF_UNIT;
+    active_item_preview_image.clip_rect.w = HALF_UNIT;
+    active_item_preview_image.clip_rect.h = HALF_UNIT;
+  }
 }
 
 
