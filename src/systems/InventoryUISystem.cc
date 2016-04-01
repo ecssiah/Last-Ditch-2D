@@ -183,16 +183,16 @@ void InventoryUISystem::setup()
   inventory_preview.type = "window1";
   inventory_preview.texture = "ui1";
   inventory_preview.border = 1;
-  inventory_preview.size = {100, 100};
-  inventory_preview.pos = {menu_base.pos.x() + 440, menu_base.pos.y() + 42};
+  inventory_preview.size = {HALF_UNIT + 10, HALF_UNIT + 10};
+  inventory_preview.pos = {menu_base.pos.x() + 520, menu_base.pos.y() + 30};
 
   scalable_elements.push_back(inventory_preview);
 
   active_item_preview_image.type = "image1";
   active_item_preview_image.texture = "items1";
-  active_item_preview_image.size = {96, 96};
+  active_item_preview_image.size = {HALF_UNIT, HALF_UNIT};
   active_item_preview_image.pos =
-    {inventory_preview.pos.x() + 4, inventory_preview.pos.y() + 4};
+    {inventory_preview.pos.x() + 5, inventory_preview.pos.y() + 5};
 }
 
 
