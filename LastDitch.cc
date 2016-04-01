@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <Python.h>
 
 using namespace ld;
 using namespace std;
@@ -22,6 +23,8 @@ LastDitch::LastDitch()
       sdl_interface, map_system, entity_system, camera_system,
       ui_system, physics_system)
 {
+  Py_Initialize();
+
   camera_system.set_target(entity_system.get_active_user());
 
   cout << endl << "Starting Last Ditch..." << endl << endl;
