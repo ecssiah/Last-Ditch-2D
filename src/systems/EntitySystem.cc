@@ -39,20 +39,16 @@ void EntitySystem::setup_users()
   User kadijah;
   kadijah.name = "Kadijah";
   kadijah.type = "kadijah";
-  kadijah.pos = {3, 9};
-  kadijah.floor = 0;
-  kadijah.radius = .48f;
-  kadijah.speed = 50.f;
-
-  kadijah.texture = UserData[kadijah.type].texture;
+  kadijah.texture = "kadijah";
+  kadijah.arm_texture = "kadijah";
   kadijah.animation = "body-idle-front";
-  kadijah.clip_rect.x = UserData[kadijah.type].animations[kadijah.animation][0];
-  kadijah.clip_rect.y = UserData[kadijah.type].animations[kadijah.animation][1];
-
-  kadijah.arm_texture = UserData[kadijah.type].texture;
   kadijah.arm_animation = "arm-idle-nequip-front";
-  kadijah.arm_clip_rect.x = UserData[kadijah.type].anim_data[kadijah.arm_animation].clip_x;
-  kadijah.arm_clip_rect.y = UserData[kadijah.type].anim_data[kadijah.arm_animation].clip_y;
+  kadijah.pos = {3, 9};
+  kadijah.size = {.48f, .48f};
+  kadijah.floor = 0;
+  kadijah.speed = 50.f;
+  kadijah.clip_rect = User_Data[kadijah.type].animations[kadijah.animation].clip_rect;
+  kadijah.arm_clip_rect = User_Data[kadijah.type].animations[kadijah.arm_animation].clip_rect;
 
   users[kadijah.floor].push_back(kadijah);
   active_user = &users[kadijah.floor].back();
@@ -61,27 +57,29 @@ void EntitySystem::setup_users()
 }
 
 
-void EntitySystem::give_random_item(User* user)
+void EntitySystem::give_random_item(User& user)
 {
   Item item;
   item.type = get_random_type();
-  item.texture = ItemInfo[item.type].texture;
-  item.name = ItemInfo[item.type].name;
-  item.category = ItemInfo[item.type].category;
-  item.value = ItemInfo[item.type].value;
-  item.quality = ItemInfo[item.type].quality;
-  item.weight = ItemInfo[item.type].weight;
-  item.volume = ItemInfo[item.type].volume;
 
-  user->inventory.items.push_back(item);
+  item.texture = Item_Data[item.type].texture;
+  item.name = Item_Data[item.type].name;
+  item.category = Item_Data[item.type].category;
+
+  item.value = Item_Data[item.type].value;
+  item.quality = Item_Data[item.type].quality;
+  item.weight = Item_Data[item.type].weight;
+  item.volume = Item_Data[item.type].volume;
+
+  user.inventory.items.push_back(item);
 }
 
 
 std::string EntitySystem::get_random_type()
 {
-  uniform_int_distribution<> type_dist(0, ItemInfo.size() - 1);
+  uniform_int_distribution<> type_dist(0, Num_Items - 1);
 
-  auto it(std::next(std::begin(ItemInfo), type_dist(rng)));
+  auto it(std::next(std::begin(Item_Data), type_dist(rng)));
   auto random_type((*it).first);
 
   return random_type;
@@ -100,13 +98,13 @@ void EntitySystem::setup_items()
       Item item;
       item.floor = floor;
       item.type = get_random_type();
-      item.texture = ItemInfo[item.type].texture;
-      item.name = ItemInfo[item.type].name;
-      item.category = ItemInfo[item.type].category;
-      item.value = ItemInfo[item.type].value;
-      item.quality = ItemInfo[item.type].quality;
-      item.weight = ItemInfo[item.type].weight;
-      item.volume = ItemInfo[item.type].volume;
+      item.texture = Item_Data[item.type].texture;
+      item.name = Item_Data[item.type].name;
+      item.category = Item_Data[item.type].category;
+      item.value = Item_Data[item.type].value;
+      item.quality = Item_Data[item.type].quality;
+      item.weight = Item_Data[item.type].weight;
+      item.volume = Item_Data[item.type].volume;
 
       while (1)
       {
@@ -136,7 +134,17 @@ void EntitySystem::setup_items()
 void EntitySystem::update()
 {
   apply_user_inputs();
+
+  update_users();
+
   if (input.activate) handle_activation();
+}
+
+
+void EntitySystem::update_users()
+{
+
+
 }
 
 

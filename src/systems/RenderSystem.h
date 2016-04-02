@@ -19,18 +19,15 @@ namespace ld
 class RenderSystem
 {
   void setup_textures();
-  SDL_Texture* load_texture(std::string name);
 
+  void update_textures();
   void update_animations(const double& dt);
 
   void render();
   void render_chunks(int floor);
   void render_tiles(int floor);
-  void render_tile(Tile& tile);
   void render_items(int floor);
-  void render_item(Item& item);
   void render_doors(int floor);
-  void render_door(Door& door);
   void render_users(int floor);
 
   bool debug;
@@ -45,8 +42,6 @@ class RenderSystem
   PhysicsSystem& physics_system;
 
   User* active_user;
-
-  std::unordered_map<std::string, SDL_Texture*> textures;
 
 public:
   RenderSystem(

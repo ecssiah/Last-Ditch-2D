@@ -4,31 +4,18 @@
 #include <unordered_map>
 #include <vector>
 
+#include "../components/ButtonElement.h"
 #include "../components/Input.h"
 #include "../components/Inventory.h"
-#include "../components/ScalableElement.h"
-#include "../components/ScrollableElement.h"
 #include "../components/UIElement.h"
 #include "../components/User.h"
+#include "../components/WindowElement.h"
+#include "../SDL_Interface.h"
 #include "../systems/EntitySystem.h"
 #include "../systems/InventorySystem.h"
-#include "../SDL_Interface.h"
 
 namespace ld
 {
-
-struct SlotInfo
-{
-  SlotInfo(unsigned _index, unsigned _count, std::string _type)
-    : index(_index),
-      count(_count),
-      type(_type)
-  {}
-
-  unsigned index;
-  unsigned count;
-  std::string type;
-};
 
 class InventoryUISystem
 {
@@ -39,35 +26,33 @@ class InventoryUISystem
   void setup_inventory_info();
   void setup_equipment_slots();
 
-  void generate_list_surfaces(Inventory& inventory, std::vector<SDL_Surface*>& list_surfaces);
-  void update_inventory_list(Inventory& inventory);
-  void update_active_slot_preview_image();
-  ScalableElement* find_scalable_element_at(Eigen::Vector2i& screen_pos);
-  ScrollableElement* find_scrollable_element_at(Eigen::Vector2i& screen_pos);
-  bool element_hit_at(UIElement& element, Eigen::Vector2i& screen_pos);
+  void handle_dragged_event();
+  void handle_wheel_event();
+  void handle_activation_event();
 
-  SDL_Interface& sdl_interface;
+  void update_preview_texture();
+  void update_inventory_list(Inventory& inventory);
+
   Input& input;
+  SDL_Interface& sdl_interface;
 
   EntitySystem& entity_system;
   InventorySystem& inventory_system;
+
   User* active_user;
 
   bool active;
+  unsigned active_slot_index;
   std::string active_category;
 
-  unsigned active_slot_index;
   std::vector<SlotInfo> current_slots;
 
-  ScalableElement menu_base;
-  ScalableElement active_item_preview_image;
-  ScrollableElement inventory_list;
-
-  std::vector<ScalableElement> sort_buttons;
+  WindowElement menu_base;
+  UIElement preview_image;
+  ListElement inventory_list;
 
   std::vector<UIElement> elements;
-  std::vector<ScalableElement> scalable_elements;
-  std::vector<ScrollableElement*> p_scrollable_elements;
+  std::vector<ButtonElement> sort_buttons;
 
 public:
   InventoryUISystem(

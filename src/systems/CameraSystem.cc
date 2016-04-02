@@ -11,9 +11,10 @@ using namespace ld;
 using namespace Eigen;
 using namespace std;
 
-CameraSystem::CameraSystem()
+CameraSystem::CameraSystem(SDL_Interface& _sdl_interface)
   : pos(0, 0),
-    target(nullptr)
+    target(nullptr),
+    sdl_interface(_sdl_interface)
 {
   cout << "CameraSystem ready" << endl;
 }
@@ -22,4 +23,6 @@ CameraSystem::CameraSystem()
 void CameraSystem::update()
 {
   pos = target->pos + Vector2f(.5, .5);
+
+  sdl_interface.set_camera_pos(pos);
 }

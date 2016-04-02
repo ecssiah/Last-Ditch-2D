@@ -3,17 +3,20 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
-#include "../constants/ItemConstants.cc"
+#include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
+#include "../constants/UserConstants.h"
+#include "../constants/UIConstants.h"
 
 using namespace ld;
 
 ConfigurationSystem::ConfigurationSystem()
 {
   load_item_data();
-  load_map_data();
+  load_tile_data();
   load_user_data();
+
   load_ui_element_data();
 }
 
@@ -25,8 +28,6 @@ void ConfigurationSystem::load_item_data()
   for (auto kv : item_info)
   {
     YAML::Node item_data_map(kv.second);
-
-    auto type(kv.first.as<std::string>());
 
     ItemInfo item_info_entry;
     item_info_entry.name = item_data_map["name"].as<std::string>();
@@ -45,33 +46,36 @@ void ConfigurationSystem::load_item_data()
 
     item_info_entry.clip_rect = clip_rect;
 
-    ItemData[type] = item_info_entry;
+    auto type(kv.first.as<std::string>());
+    Item_Types.push_back(type);
+
+    Item_Data[type] = item_info_entry;
   }
 }
 
 
-void ConfigurationSystem::load_map_data()
+void ConfigurationSystem::load_tile_data()
 {
-  const auto map_info(YAML::LoadFile("scripts/map.yml"));
+  const auto tile_info(YAML::LoadFile("scripts/tiles.yml"));
 
-  for (auto kv : map_info)
+  for (auto kv : tile_info)
   {
-    YAML::Node map_data_map(kv.second);
+    YAML::Node tile_data_map(kv.second);
 
     auto type(kv.first.as<std::string>());
 
     TileInfo tile_info_entry;
-    tile_info_entry.texture = map_data_map["texture"].as<std::string>();
+    tile_info_entry.texture = tile_data_map["texture"].as<std::string>();
 
     SDL_Rect clip_rect;
-    clip_rect.x = map_data_map["uv"][0].as<int>() * PIXELS_PER_UNIT;
-    clip_rect.x = map_data_map["uv"][1].as<int>() * PIXELS_PER_UNIT;
+    clip_rect.x = tile_data_map["uv"][0].as<int>() * PIXELS_PER_UNIT;
+    clip_rect.x = tile_data_map["uv"][1].as<int>() * PIXELS_PER_UNIT;
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
 
     tile_info_entry.clip_rect = clip_rect;
 
-    TileData[type] = tile_info_entry;
+    Tile_Data[type] = tile_info_entry;
   }
 }
 
@@ -90,7 +94,7 @@ void ConfigurationSystem::load_user_data()
     user_info_entry.name = user_data_map["name"].as<std::string>();
     user_info_entry.texture = user_data_map["texture"].as<std::string>();
 
-    for (auto anim_kv : ui_element_data_map["animations"])
+    for (auto anim_kv : user_data_map["animations"])
     {
       YAML::Node user_animation_map(anim_kv.second);
 
@@ -110,7 +114,7 @@ void ConfigurationSystem::load_user_data()
       user_info_entry.animations[anim_type] = animation_info_entry;
     }
 
-    UserData[type] = ui_element_info_entry;
+    User_Data[type] = user_info_entry;
   }
 }
 
@@ -134,7 +138,7 @@ void ConfigurationSystem::load_ui_element_data()
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
 
-    ui_element_info.clip_rect = clip_rect;
+    ui_element_info_entry.clip_rect = clip_rect;
 
     UIElementData[type] = ui_element_info_entry;
   }

@@ -10,12 +10,15 @@ namespace ld
 
 struct TextElement : public UIElement
 {
-  TextElement()
-    : UIElement(),
-      text(std::string())
-  {}
+  TextElement() = default;
 
   std::string text;
+  std::string text_texture;
+
+  SDL_Color text_color;
+
+  SDL_Rect text_clip_rect;
+  SDL_Rect text_dest_rect;
 };
 
 }

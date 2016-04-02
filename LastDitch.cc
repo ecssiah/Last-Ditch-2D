@@ -12,7 +12,7 @@ LastDitch::LastDitch()
     configuration_system(),
     time_system(input),
     input_system(input),
-    camera_system(),
+    camera_system(sdl_interface),
     map_system(),
     entity_system(rng, input, camera_system, map_system),
     inventory_system(entity_system),

@@ -63,7 +63,7 @@ void UISystem::render()
 
 void UISystem::render_base()
 {
-  sdl_interface.render_element(date_and_time);
+  sdl_interface.render_ui_element(date_and_time);
 }
 
 

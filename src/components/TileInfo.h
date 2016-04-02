@@ -2,6 +2,7 @@
 #define TILEINFO_H
 
 #include <eigen3/Eigen/Geometry>
+#include <SDL2/SDL.h>
 #include <string>
 
 namespace ld

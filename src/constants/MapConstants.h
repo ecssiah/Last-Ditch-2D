@@ -18,7 +18,7 @@ constexpr int MAP_SIZE_X(NUM_CHUNKS_X * TILES_PER_CHUNK_X);
 constexpr int MAP_SIZE_Y(NUM_CHUNKS_Y * TILES_PER_CHUNK_Y);
 constexpr int NUM_FLOORS(2);
 
-static std::unordered_map<std::string, TileInfo> TileInfo;
+static std::unordered_map<std::string, TileInfo> Tile_Data;
 
 }
 

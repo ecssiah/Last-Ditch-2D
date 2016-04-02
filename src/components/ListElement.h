@@ -3,27 +3,19 @@
 
 #include <string>
 
-#include "Item.h"
+#include "ScrollableElement.h"
+#include "TextElement.h"
 
 using namespace std;
 
 namespace ld
 {
 
-struct ListElement
+struct ListElement : public ScrollableElement
 {
-  ListElement()
-    : string(std::string()),
-      p_item(nullptr)
-  {}
+  ListElement() = default;
 
-  ListElement(std::string _string, Item* _p_item)
-    : string(_string),
-      p_item(_p_item)
-  {}
-
-  std::string string;
-  Item* p_item;
+  std::vector<TextElement> text_elements;
 };
 
 }

@@ -9,21 +9,13 @@ namespace ld
 
 struct UIElement
 {
-  UIElement()
-    : type(std::string()),
-      texture(std::string()),
-      pos(0, 0),
-      size(60, 20),
-      clip_rect()
-  {}
+  UIElement() = default;
 
   std::string type;
   std::string texture;
 
-  Eigen::Vector2i pos;
-  Eigen::Vector2i size;
-
   SDL_Rect clip_rect;
+  SDL_Rect dest_rect;
 };
 
 }

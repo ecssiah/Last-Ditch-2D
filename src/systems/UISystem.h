@@ -52,11 +52,11 @@ class UISystem
 
   User* active_user;
 
-  UIElement date_and_time;
-  TextElement inventory_button;
-  TextElement production_button;
-  TextElement utility_button;
-  TextElement status_button;
+  TextElement date_and_time;
+  ScalableElement inventory_button;
+  ScalableElement production_button;
+  ScalableElement utility_button;
+  ScalableElement status_button;
 
 public:
   UISystem(

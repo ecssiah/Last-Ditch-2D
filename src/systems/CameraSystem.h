@@ -4,6 +4,7 @@
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
 
+#include "../SDL_Interface.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 #include "../components/Entity.h"
@@ -17,8 +18,10 @@ class CameraSystem
 
   Entity* target;
 
+  SDL_Interface& sdl_interface;
+
 public:
-  CameraSystem();
+  CameraSystem(SDL_Interface& sdl_interface);
 
   void update();
 

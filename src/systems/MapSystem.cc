@@ -114,7 +114,7 @@ void MapSystem::set_main_tile(
   auto& tile(get_main_tile(x, y, floor));
 
   tile.type = type;
-  tile.texture = TILE_INFO[type].texture;
+  tile.texture = Tile_Data[type].texture;
   tile.pos = {x, y};
   tile.floor = floor;
   tile.solid = solid;
@@ -145,7 +145,7 @@ void MapSystem::set_floor_tile(
   auto& tile(get_floor_tile(x, y, floor));
 
   tile.type = type;
-  tile.texture = TILE_INFO[type].texture;
+  tile.texture = Tile_Data[type].texture;
   tile.pos = {x, y};
   tile.rotation = rotation;
   tile.floor = floor;
@@ -156,7 +156,7 @@ void MapSystem::create_door(string type, int x, int y, int floor, float rotation
 {
   Door door;
   door.type = type;
-  door.texture = TILE_INFO[type + "-closed"].texture;
+  door.texture = Tile_Data[type + "-closed"].texture;
   door.pos = {x, y};
   door.floor = floor;
   door.rotation = rotation;

@@ -35,6 +35,8 @@ RenderSystem::RenderSystem(
 {
   physics_system.set_debug_draw(debug_draw);
 
+  setup_textures();
+
   cout << "RenderSystem ready" << endl;
 }
 
@@ -50,16 +52,16 @@ SDL_Texture* RenderSystem::load_texture(std::string name)
 void RenderSystem::update(const double& dt)
 {
   update_animations(dt);
+  update_textures();
 
-  SDL_SetRenderDrawColor(sdl_interface.renderer, 0, 0, 0, 0);
-  SDL_RenderClear(sdl_interface.renderer);
+  sdl_interface.pre_render();
 
   render();
   ui_system.render();
 
   if (debug) physics_system.render_debug();
 
-  SDL_RenderPresent(sdl_interface.renderer);
+  sdl_interface.post_render();
 }
 
 
@@ -73,18 +75,15 @@ void RenderSystem::update_animations(const double& dt)
     {
       user.frame_time = 0.f;
 
-      const auto& anim_data(USER_INFO[user.type].anim_data[user.animation]);
+      auto& anim_data(User_Data[user.type].animations[user.animation]);
 
-      if (user.frame < anim_data.num_frames - 1)
+      if (user.frame < anim_data.frames - 1)
 	++user.frame;
       else
 	user.frame = 0;
 
-      auto x(anim_data.clip_x + PIXELS_PER_UNIT * user.frame);
-      auto y(anim_data.clip_y);
-
-      user.clip_rect.x = x;
-      user.clip_rect.y = y;
+      user.clip_rect.x = anim_data.clip_rect.x + PIXELS_PER_UNIT * user.frame;
+      user.clip_rect.y = anim_data.clip_rect.y;
     }
 
     user.arm_frame_time += dt;
@@ -93,20 +92,23 @@ void RenderSystem::update_animations(const double& dt)
     {
       user.arm_frame_time = 0.f;
 
-      const auto& arm_anim_data(USER_INFO[user.type].anim_data[user.arm_animation]);
+      auto& arm_anim_data(User_Data[user.type].animations[user.arm_animation]);
 
-      if (user.arm_frame < arm_anim_data.num_frames - 1)
+      if (user.arm_frame < arm_anim_data.frames - 1)
 	++user.arm_frame;
       else
 	user.arm_frame = 0;
 
-      auto arm_x(arm_anim_data.clip_x + PIXELS_PER_UNIT * user.arm_frame);
-      auto arm_y(arm_anim_data.clip_y);
-
-      user.arm_clip_rect.x = arm_x;
-      user.arm_clip_rect.y = arm_y;
+      user.arm_clip_rect.x = anim_data.clip_rect.x + PIXELS_PER_UNIT * user.arm_frame;
+      user.arm_clip_rect.y = anim_data.clip_rect.y;
     }
   }
+}
+
+
+void RenderSystem::update_textures()
+{
+
 }
 
 
