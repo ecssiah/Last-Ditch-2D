@@ -1,10 +1,12 @@
 #include "InventoryUISystem.h"
 
 #include <algorithm>
+#include <cassert>
 #include <eigen3/Eigen/Geometry>
 #include <functional>
 #include <iostream>
 #include <set>
+#include <yaml-cpp/yaml.h>
 
 #include "../components/Item.h"
 #include "../constants/UIConstants.h"
@@ -580,12 +582,14 @@ void InventoryUISystem::update_active_slot_preview_image()
 {
   if (active_slot_index < current_slots.size())
   {
-    auto& clip_data(ITEM_INFO[current_slots[active_slot_index].type].clip_data);
+    const auto item_info(YAML::LoadFile("scripts/items.yml"));
+    const auto& item_type(current_slots[active_slot_index].type);
+    auto uv(item_info[item_type]["uv"]);
 
-    active_item_preview_image.clip_rect.x = clip_data.x;
-    active_item_preview_image.clip_rect.y = clip_data.y;
-    active_item_preview_image.clip_rect.w = clip_data.w;
-    active_item_preview_image.clip_rect.h = clip_data.h;
+    active_item_preview_image.clip_rect.x = uv[0].as<int>() * HALF_UNIT;
+    active_item_preview_image.clip_rect.y = uv[1].as<int>() * HALF_UNIT;
+    active_item_preview_image.clip_rect.w = HALF_UNIT;
+    active_item_preview_image.clip_rect.h = HALF_UNIT;
   }
   else
   {

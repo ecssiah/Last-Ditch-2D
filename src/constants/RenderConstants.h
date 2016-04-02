@@ -5,6 +5,7 @@ namespace ld
 {
 
 constexpr unsigned PIXELS_PER_UNIT(48);
+constexpr unsigned HALF_UNIT(PIXELS_PER_UNIT / 2);
 constexpr unsigned SCREEN_SIZE_X(800);
 constexpr unsigned SCREEN_SIZE_Y(600);
 constexpr unsigned HALF_SCREEN_SIZE_X(SCREEN_SIZE_X / 2);

@@ -7,6 +7,7 @@ set(
   ./LastDitch.h
   ./src/SDL_Interface.h
   ./src/Utils.h
+  ./src/systems/ConfigurationSystem.h
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
   ./src/systems/EntitySystem.h
@@ -26,6 +27,7 @@ set(
   ./LastDitch.cc
   ./src/SDL_Interface.cc
   ./src/Utils.cc
+  ./src/systems/ConfigurationSystem.cc
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
   ./src/systems/EntitySystem.cc
@@ -55,7 +57,7 @@ find_package(Eigen3 REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(Box2D REQUIRED)
-find_package(PythonLibs REQUIRED)
+find_package(YamlCpp REQUIRED)
 
 include_directories(
   ${EIGEN_INCLUDE_DIR}
@@ -63,7 +65,7 @@ include_directories(
   ${SDL2_IMAGE_INCLUDE_DIR}
   ${SDL2_TTF_INCLUDE_DIR}
   ${BOX2D_INCLUDE_DIR}
-  ${PYTHON_INCLUDE_DIR})
+  ${YAMLCPP_INCLUDE_DIR})
 
 set(SDL2_COMPILE_FLAGS "-I/usr/include/SDL2")
 set(SDL2_LINK_FLAGS "-lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf")
@@ -74,7 +76,7 @@ target_link_libraries(
   ${SDL2_IMAGE_LIBRARY}
   ${SDL2_TTF_LIBRARY}
   ${BOX2D_LIBRARY}
-  ${PYTHON_LIBRARIES})
+  ${YAMLCPP_LIBRARY})
 
 set(COMPILE_FLAGS "-g")
 
@@ -86,9 +88,14 @@ set(
   "${CMAKE_EXE_LINKER_FLAGS} ${SDL2_LINK_FLAGS}")
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/media)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/dist/scripts)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/dist)
 
 install(
   DIRECTORY ${CMAKE_SOURCE_DIR}/dist/media
+  DESTINATION .)
+
+install(
+  DIRECTORY ${CMAKE_SOURCE_DIR}/dist/scripts
   DESTINATION .)

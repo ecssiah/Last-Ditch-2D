@@ -54,7 +54,7 @@ class InventoryUISystem
   User* active_user;
 
   bool active;
-  ItemCategory active_category;
+  std::string active_category;
 
   unsigned active_slot_index;
   std::vector<SlotInfo> current_slots;

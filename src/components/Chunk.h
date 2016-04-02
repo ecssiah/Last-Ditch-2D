@@ -8,6 +8,7 @@
 #include "Door.h"
 #include "Item.h"
 #include "Tile.h"
+#include "../constants/MapConstants.h"
 
 namespace ld
 {

@@ -7,6 +7,7 @@
 
 #include "src/SDL_Interface.h"
 #include "src/components/Input.h"
+#include "src/systems/ConfigurationSystem.h"
 #include "src/systems/TimeSystem.h"
 #include "src/systems/InputSystem.h"
 #include "src/systems/MapSystem.h"
@@ -30,6 +31,7 @@ class LastDitch
 
   std::mt19937 rng;
 
+  ConfigurationSystem configuration_system;
   TimeSystem time_system;
   InputSystem input_system;
   MapSystem map_system;

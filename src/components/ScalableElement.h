@@ -1,7 +1,7 @@
 #ifndef SCALABLEELEMENT_H
 #define SCALABLEELEMENT_H
 
-#include <eigen3/Eigen/Geometry>
+#include <vector>
 
 #include "UIElement.h"
 
@@ -12,10 +12,13 @@ struct ScalableElement : public UIElement
 {
   ScalableElement()
     : UIElement(),
-      border(3)
+      border(3),
+      sub_elements()
   {}
 
   int border;
+
+  std::vector<UIElement> sub_elements;
 };
 
 }

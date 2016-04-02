@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "ListElement.h"
+#include "Item.h"
 #include "UIElement.h"
 
 namespace ld
@@ -13,16 +13,18 @@ struct ScrollableElement : public UIElement
 {
   ScrollableElement()
     : UIElement(),
-      current_index(0),
-      scrolled_offset(0),
       texture(std::string()),
-      list_elements()
+      scrolled_offset(0),
+      current_index(0),
+      list_items()
   {}
 
-  unsigned current_index;
-  int scrolled_offset;
   std::string texture;
-  std::vector<ListElement> list_elements;
+
+  int scrolled_offset;
+  unsigned current_index;
+
+  std::vector<Item*> list_items;
 };
 
 }

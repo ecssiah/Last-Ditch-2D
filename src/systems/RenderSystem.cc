@@ -127,22 +127,7 @@ void RenderSystem::render_chunks(int floor)
   for (int x(0); x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
   {
     for (int y(0); y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
-    {
-      auto& chunk(map_system.get_chunk(x, y, floor));
-
-      SDL_Rect dest_rect;
-      dest_rect.x =
-	PIXELS_PER_UNIT * (chunk.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-      dest_rect.y =
-	PIXELS_PER_UNIT * (chunk.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-      dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
-      dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
-
-      SDL_RenderCopy(
-	sdl_interface.renderer,
-	sdl_interface.textures[chunk.texture],
-	nullptr, &dest_rect);
-    }
+      sdl_interface.render_chunk(map_system.get_chunk(x, y, floor));
   }
 }
 
@@ -158,41 +143,13 @@ void RenderSystem::render_tiles(int floor)
 
       for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
 	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	  render_tile(chunk.floor_tiles[x][y]);
+	  sdl_interface.render_tile(chunk.floor_tiles[x][y]);
 
       for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
 	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	  render_tile(chunk.main_tiles[x][y]);
+	  sdl_interface.render_tile(chunk.main_tiles[x][y]);
     }
   }
-}
-
-
-void RenderSystem::render_tile(Tile& tile)
-{
-  auto& clip_data(TILE_INFO[tile.type].clip_data);
-
-  SDL_Rect clip_rect;
-  clip_rect.x = clip_data.x;
-  clip_rect.y = clip_data.y;
-  clip_rect.w = clip_data.w;
-  clip_rect.h = clip_data.h;
-
-  SDL_Rect dest_rect;
-  dest_rect.x =
-    PIXELS_PER_UNIT * (tile.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-  dest_rect.y =
-    PIXELS_PER_UNIT * (tile.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-  dest_rect.w = PIXELS_PER_UNIT;
-  dest_rect.h = PIXELS_PER_UNIT;
-
-  SDL_RenderCopyEx(
-    sdl_interface.renderer,
-    sdl_interface.textures[tile.texture],
-    &clip_rect, &dest_rect,
-    tile.rotation,
-    nullptr,
-    SDL_FLIP_NONE);
 }
 
 
@@ -211,31 +168,6 @@ void RenderSystem::render_items(int floor)
 }
 
 
-void RenderSystem::render_item(Item& item)
-{
-  auto& clip_data(ITEM_INFO[item.type].clip_data);
-
-  SDL_Rect clip_rect;
-  clip_rect.x = clip_data.x;
-  clip_rect.y = clip_data.y;
-  clip_rect.w = clip_data.w;
-  clip_rect.h = clip_data.h;
-
-  SDL_Rect dest_rect;
-  dest_rect.x =
-    PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-  dest_rect.y =
-    PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-  dest_rect.w = PIXELS_PER_UNIT / 2;
-  dest_rect.h = PIXELS_PER_UNIT / 2;
-
-  SDL_RenderCopy(
-    sdl_interface.renderer,
-    sdl_interface.textures[item.texture],
-    &clip_rect, &dest_rect);
-}
-
-
 void RenderSystem::render_doors(int floor)
 {
   for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
@@ -246,71 +178,14 @@ void RenderSystem::render_doors(int floor)
 	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
 
       for (auto& door : chunk.doors)
-	render_door(door);
+	sdl_interface.render_door(door);
     }
   }
-}
-
-
-void RenderSystem::render_door(Door& door)
-{
-  auto& clip_data(TILE_INFO[door.type + (door.open ? "-open" : "-closed")].clip_data);
-
-  SDL_Rect clip_rect;
-  clip_rect.x = clip_data.x;
-  clip_rect.y = clip_data.y;
-  clip_rect.w = clip_data.w;
-  clip_rect.h = clip_data.h;
-
-  SDL_Rect dest_rect;
-  dest_rect.x =
-    PIXELS_PER_UNIT * (door.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-  dest_rect.y =
-    PIXELS_PER_UNIT * (door.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-  dest_rect.w = PIXELS_PER_UNIT;
-  dest_rect.h = PIXELS_PER_UNIT;
-
-  SDL_RenderCopy(
-    sdl_interface.renderer,
-    sdl_interface.textures[door.texture],
-    &clip_rect, &dest_rect);
 }
 
 
 void RenderSystem::render_users(int floor)
 {
   for (auto& user : entity_system.get_users(floor))
-  {
-    SDL_Rect dest_rect;
-    dest_rect.x =
-      PIXELS_PER_UNIT * (user.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
-    dest_rect.y =
-      PIXELS_PER_UNIT * (user.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
-    dest_rect.w = PIXELS_PER_UNIT;
-    dest_rect.h = PIXELS_PER_UNIT;
-
-    SDL_RendererFlip flip(
-      ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderCopyEx(
-      sdl_interface.renderer,
-      sdl_interface.textures[user.texture],
-      &user.clip_rect, &dest_rect,
-      0,
-      nullptr,
-      flip);
-
-    SDL_RendererFlip arm_flip(
-      ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
-
-    if (user.frame % 2 == 0) ++dest_rect.y;
-
-    SDL_RenderCopyEx(
-      sdl_interface.renderer,
-      sdl_interface.textures[user.arm_texture],
-      &user.arm_clip_rect, &dest_rect,
-      0,
-      nullptr,
-      arm_flip);
-  }
+    sdl_interface.render_user(user);
 }

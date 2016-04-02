@@ -3,7 +3,6 @@
 
 #include <functional>
 
-#include "../constants/ItemConstants.h"
 #include "Entity.h"
 
 namespace ld
@@ -14,7 +13,7 @@ struct Item : public Entity
   Item()
     : Entity(),
       name(std::string()),
-      category(WEAPONS),
+      category(std::string()),
       value(0.1f),
       quality(0.1f),
       weight(0.1f),
@@ -29,7 +28,7 @@ struct Item : public Entity
   }
 
   std::string name;
-  ItemCategory category;
+  std::string category;
 
   float value;
   float quality;

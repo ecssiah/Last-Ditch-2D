@@ -28,11 +28,7 @@ UISystem::UISystem(
     base_active(true),
     main_active(false),
     active_user(_entity_system.get_active_user()),
-    date_and_time(),
-    base_ui_elements(),
-    base_scalable_elements(),
-    main_ui_elements(),
-    main_scalable_elements()
+    date_and_time()
 {
   setup_base();
   setup_main();
@@ -68,22 +64,11 @@ void UISystem::render()
 void UISystem::render_base()
 {
   sdl_interface.render_element(date_and_time);
-
-  for (auto& element : base_ui_elements)
-    sdl_interface.render_element(element);
-
-  for (auto& element : base_scalable_elements)
-    sdl_interface.render_scalable_element(element);
 }
 
 
 void UISystem::render_main()
 {
-  for (auto& element : main_ui_elements)
-    sdl_interface.render_element(element);
-
-  for (auto& element : main_scalable_elements)
-    sdl_interface.render_scalable_element(element);
 }
 
 
@@ -101,7 +86,6 @@ void UISystem::setup_main()
   auto vert_offset(100);
   auto horz_offset(160);
 
-  ScalableElement inventory_button;
   inventory_button.type = "backdrop1";
   inventory_button.pos =
     {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2,
@@ -114,9 +98,6 @@ void UISystem::setup_main()
   sdl_interface.create_texture_from_text(
     inventory_button.text, inventory_button.text_texture);
 
-  main_scalable_elements.push_back(inventory_button);
-
-  ScalableElement production_button;
   production_button.type = "backdrop1";
   production_button.texture = "ui1";
   production_button.pos =
@@ -129,9 +110,6 @@ void UISystem::setup_main()
   sdl_interface.create_texture_from_text(
     production_button.text, production_button.text_texture);
 
-  main_scalable_elements.push_back(production_button);
-
-  ScalableElement management_button;
   management_button.type = "backdrop1";
   management_button.texture = "ui1";
   management_button.pos =
@@ -144,9 +122,6 @@ void UISystem::setup_main()
   sdl_interface.create_texture_from_text(
     management_button.text, management_button.text_texture);
 
-  main_scalable_elements.push_back(management_button);
-
-  ScalableElement status_button;
   status_button.type = "backdrop1";
   status_button.texture = "ui1";
   status_button.pos =
@@ -158,9 +133,6 @@ void UISystem::setup_main()
 
   sdl_interface.create_texture_from_text(
     status_button.text, status_button.text_texture);
-
-  main_scalable_elements.push_back(status_button);
-
 }
 
 
@@ -168,7 +140,7 @@ void UISystem::update_base()
 {
   date_and_time.text = time_system.get_string();
 
-  sdl_interface.create_texture_from_text(date_and_time.text, date_and_time.text_texture);
+  sdl_interface.create_texture_from_text(date_and_time.text, date_and_time.texture);
 }
 
 

@@ -104,49 +104,152 @@ SDL_Surface* SDL_Interface::create_surface_from_text(
 }
 
 
-void SDL_Interface::render_element(UIElement& element)
+void SDL_Interface::render_chunk(Chunk& chunk)
 {
-  if (element.texture != "")
-  {
-    auto& texture(textures[element.texture]);
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (chunk.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (chunk.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
+  dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
 
-    int w, h;
-    SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-
-    SDL_Rect dest_rect;
-    dest_rect.x = element.pos.x();
-    dest_rect.y = element.pos.y();
-    dest_rect.w = element.size.x();
-    dest_rect.h = element.size.y();
-
-    if (element.clip_rect.w == 0)
-      SDL_RenderCopy(renderer, texture, nullptr, &dest_rect);
-    else
-      SDL_RenderCopy(renderer, texture, &element.clip_rect, &dest_rect);
-  }
-
-  if (element.text_texture != "")
-  {
-    auto& text_texture(textures[element.text_texture]);
-
-    int tw, th;
-    SDL_QueryTexture(text_texture, nullptr, nullptr, &tw, &th);
-
-    SDL_Rect text_dest_rect;
-    text_dest_rect.x = element.pos.x() + (element.size.x() - tw) / 2;
-    text_dest_rect.y = element.pos.y() + (element.size.y() - th) / 2;
-    text_dest_rect.w = tw;
-    text_dest_rect.h = th;
-
-    if (element.text_clip_rect.w == 0)
-      SDL_RenderCopy(renderer, text_texture, nullptr, &text_dest_rect);
-    else
-      SDL_RenderCopy(renderer, text_texture, &element.text_clip_rect, &text_dest_rect);
-  }
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    sdl_interface.textures[chunk.texture],
+    nullptr, &dest_rect);
 }
 
 
-void SDL_Interface::render_scalable_element(ScalableElement& element)
+void SDL_Interface::render_item(Item& item)
+{
+  auto& clip_data(ITEM_INFO[item.type].clip_data);
+
+  SDL_Rect clip_rect;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
+
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (item.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (item.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT / 2;
+  dest_rect.h = PIXELS_PER_UNIT / 2;
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    sdl_interface.textures[item.texture],
+    &clip_rect, &dest_rect);
+}
+
+
+void SDL_Interface::render_tile(Tile& tile)
+{
+  auto& clip_data(TILE_INFO[tile.type].clip_data);
+
+  SDL_Rect clip_rect;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
+
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (tile.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (tile.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
+
+  SDL_RenderCopyEx(
+    sdl_interface.renderer,
+    sdl_interface.textures[tile.texture],
+    &clip_rect, &dest_rect,
+    tile.rotation,
+    nullptr,
+    SDL_FLIP_NONE);
+}
+
+
+void SDL_Interface::render_door(Door& door)
+{
+  auto& clip_data(TILE_INFO[door.type + (door.open ? "-open" : "-closed")].clip_data);
+
+  SDL_Rect clip_rect;
+  clip_rect.x = clip_data.x;
+  clip_rect.y = clip_data.y;
+  clip_rect.w = clip_data.w;
+  clip_rect.h = clip_data.h;
+
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (door.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (door.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
+
+  SDL_RenderCopy(
+    sdl_interface.renderer,
+    sdl_interface.textures[door.texture],
+    &clip_rect, &dest_rect);
+}
+
+
+void SDL_Interface::render_user(User& user)
+{
+  SDL_Rect dest_rect;
+  dest_rect.x =
+    PIXELS_PER_UNIT * (user.pos.x() - camera_system.get_pos().x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y =
+    PIXELS_PER_UNIT * (user.pos.y() - camera_system.get_pos().y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
+
+  SDL_RendererFlip flip(
+    ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+
+  SDL_RenderCopyEx(
+    sdl_interface.renderer,
+    sdl_interface.textures[user.texture],
+    &user.clip_rect, &dest_rect,
+    0,
+    nullptr,
+    flip);
+
+  SDL_RendererFlip arm_flip(
+    ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+
+  if (user.frame % 2 == 0) ++dest_rect.y;
+
+  SDL_RenderCopyEx(
+    sdl_interface.renderer,
+    sdl_interface.textures[user.arm_texture],
+    &user.arm_clip_rect, &dest_rect,
+    0,
+    nullptr,
+    arm_flip);
+}
+
+
+void SDL_Interface::render_ui_element(UIElement& ui_element)
+{
+  auto& texture(textures[ui_element.texture]);
+
+  SDL_Rect dest_rect;
+  dest_rect.x = ui_element.pos.x();
+  dest_rect.y = ui_element.pos.y();
+  dest_rect.w = ui_element.size.x();
+  dest_rect.h = ui_element.size.y();
+
+  SDL_RenderCopy(renderer, texture, &ui_element.clip_rect, &dest_rect);
+}
+
+
+void SDL_Interface::render_scalable_element(ScalableElement& scalable_element)
 {
   render_scalable_sub_element(element, "ct");
   render_scalable_sub_element(element, "tl");
@@ -173,12 +276,15 @@ void SDL_Interface::render_scalable_element(ScalableElement& element)
 
     SDL_RenderCopy(renderer, text_texture, nullptr, &text_dest_rect);
   }
+
 }
 
 
-void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string sub_element)
+void SDL_Interface::render_scalable_element(ScalableElement& scalable_element)
 {
   auto& clip_data(ELEMENT_INFO[element.type + "-" + sub_element].clip_data);
+
+  ElementInfoData[element
 
   SDL_Rect clip_rect;
   clip_rect.x = clip_data.x;
@@ -252,16 +358,25 @@ void SDL_Interface::render_scalable_sub_element(ScalableElement& element, string
   }
 
   SDL_RenderCopy(renderer, textures[element.texture], &clip_rect, &dest_rect);
+
+
 }
 
 
 void SDL_Interface::render_scrollable_element(ScrollableElement& element)
 {
-  SDL_Rect dst_rect;
-  dst_rect.x = element.pos.x();
-  dst_rect.y = element.pos.y();
-  dst_rect.w = element.size.x();
-  dst_rect.h = element.size.y();
+  SDL_Rect dest_rect;
+  dest_rect.x = element.pos.x();
+  dest_rect.y = element.pos.y();
+  dest_rect.w = element.size.x();
+  dest_rect.h = element.size.y();
 
-  SDL_RenderCopy(renderer, textures[element.texture], nullptr, &dst_rect);
+  SDL_RenderCopy(renderer, textures[element.texture], nullptr, &dest_rect);
+}
+
+
+void SDL_Interface::render_button(ButtonElement& button_element)
+{
+
+
 }

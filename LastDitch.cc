@@ -1,8 +1,6 @@
 #include "LastDitch.h"
 
 #include <chrono>
-#include <iostream>
-#include <Python.h>
 
 using namespace ld;
 using namespace std;
@@ -11,6 +9,7 @@ LastDitch::LastDitch()
   : sdl_interface(),
     input(),
     rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
+    configuration_system(),
     time_system(input),
     input_system(input),
     camera_system(),
@@ -23,11 +22,9 @@ LastDitch::LastDitch()
       sdl_interface, map_system, entity_system, camera_system,
       ui_system, physics_system)
 {
-  Py_Initialize();
-
   camera_system.set_target(entity_system.get_active_user());
 
-  cout << endl << "Starting Last Ditch..." << endl << endl;
+  printf("\nLoading configuration data\n\n");
 
   for (auto dt(0.0); !input.exit; time_system.tick())
   {
@@ -41,7 +38,6 @@ LastDitch::LastDitch()
     render_system.update(dt);
 
     dt = time_system.update();
-
   }
 }
 

@@ -7,16 +7,17 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../SDL_Interface.h"
-#include "../components/UIElement.h"
 #include "../components/ScalableElement.h"
+#include "../components/TextElement.h"
+#include "../components/UIElement.h"
 #include "../components/User.h"
-#include "TimeSystem.h"
+#include "../SDL_Interface.h"
 #include "EntitySystem.h"
 #include "InventoryUISystem.h"
-#include "ProductionUISystem.h"
 #include "ManagementUISystem.h"
+#include "ProductionUISystem.h"
 #include "StatusUISystem.h"
+#include "TimeSystem.h"
 
 namespace ld
 {
@@ -52,12 +53,10 @@ class UISystem
   User* active_user;
 
   UIElement date_and_time;
-
-  std::vector<UIElement> base_ui_elements;
-  std::vector<ScalableElement> base_scalable_elements;
-
-  std::vector<UIElement> main_ui_elements;
-  std::vector<ScalableElement> main_scalable_elements;
+  TextElement inventory_button;
+  TextElement production_button;
+  TextElement utility_button;
+  TextElement status_button;
 
 public:
   UISystem(
