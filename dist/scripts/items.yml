@@ -1,0 +1,74 @@
+# Resources
+scrub:
+  name: Scrub
+  texture: items1
+  category: resource
+  uv: [0, 0]
+  value: .02
+  quality: .1
+  weight: 1.6
+  volume: 2.4
+
+scrap:
+  name: Scrap
+  texture: items1
+  category: resource
+  uv: [1, 0]
+  value: .02
+  quality: .1
+  weight: 2.7
+  volume: 2.4
+
+case-small:
+  name: Case, small
+  texture: items1
+  category: resource
+  uv: [0, 1]
+  value: .8
+  quality: .1
+  weight: .6
+  volume: .4
+
+# Utilities
+rations-basic:
+  name: Rations, basic
+  texture: items1
+  category: utility
+  uv: [0, 3]
+  value: 1.2
+  weight: 1.6
+  volume: .6
+  effects:
+    hunger: [4, 12.8]
+    fatigue: [12, 4.0]
+    sanity: [1, .02]
+
+# Weapons
+handgun:
+  name: Handgun
+  texture: items1
+  category: weapon
+  uv: [0, 0]
+  value: 8.2
+  weight: 4.6
+  volume: .4
+  damage:
+    physical: [0, 12.8]
+    energy: [0, 0]
+    heat: [0, 0]
+    cold: [0, 0]
+
+# Apparel
+tunic:
+  name: Tunic
+  texture: items1
+  category: apparel
+  uv: [0, 0]
+  value: 3.4
+  weight: 1.6
+  volume: 2.4
+  defense:
+    physical: 3.4
+    energy: 1.2
+    heat: 2.2
+    cold: 8.3
