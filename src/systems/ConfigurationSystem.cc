@@ -50,6 +50,9 @@ void ConfigurationSystem::load_resource_data()
 
     Resource_Types.push_back(type);
     Resource_Data[type] = resource_info_entry;
+
+    Item_Types.push_back(type);
+    Item_Data["resource"][type] = resource_info_entry;
   }
 }
 

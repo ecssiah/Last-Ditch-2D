@@ -49,6 +49,8 @@ public:
     CameraSystem& camera_system, MapSystem& map_system);
 
   void update();
+
+  inline User& get_user(unsigned index) { return users[index]; }
 };
 
 }

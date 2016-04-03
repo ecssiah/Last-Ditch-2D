@@ -15,11 +15,11 @@ set(
   ./src/systems/PhysicsSystem.h
   ./src/systems/MapSystem.h
   ./src/systems/CameraSystem.h
-  ./src/systems/UISystem.h
-  ./src/systems/InventoryUISystem.h
-  ./src/systems/ProductionUISystem.h
-  ./src/systems/ManagementUISystem.h
-  ./src/systems/StatusUISystem.h
+  ./src/systems/ui/UISystem.h
+  ./src/systems/ui/InventoryUISystem.h
+  ./src/systems/ui/ProductionUISystem.h
+  ./src/systems/ui/ManagementUISystem.h
+  ./src/systems/ui/StatusUISystem.h
   ./src/systems/RenderSystem.h)
 
 set(
@@ -35,11 +35,11 @@ set(
   ./src/systems/PhysicsSystem.cc
   ./src/systems/MapSystem.cc
   ./src/systems/CameraSystem.cc
-  ./src/systems/UISystem.cc
-  ./src/systems/InventoryUISystem.cc
-  ./src/systems/ProductionUISystem.cc
-  ./src/systems/ManagementUISystem.cc
-  ./src/systems/StatusUISystem.cc
+  ./src/systems/ui/UISystem.cc
+  ./src/systems/ui/InventoryUISystem.cc
+  ./src/systems/ui/ProductionUISystem.cc
+  ./src/systems/ui/ManagementUISystem.cc
+  ./src/systems/ui/StatusUISystem.cc
   ./src/systems/RenderSystem.cc)
 
 add_executable(LastDitch ${HEADERS} ${SOURCES})

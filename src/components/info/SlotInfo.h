@@ -11,6 +11,7 @@ struct SlotInfo
   SlotInfo() = default;
 
   std::string type;
+  std::string category;
   unsigned count;
 };
 

@@ -29,23 +29,13 @@ RenderSystem::RenderSystem(
     camera_system(_camera_system),
     ui_system(_ui_system),
     physics_system(_physics_system),
-    active_user(_entity_system.get_active_user()),
-    debug_draw(_sdl_interface.renderer, _camera_system),
-    textures()
+    debug_draw(_sdl_interface.renderer, _camera_system)
 {
   physics_system.set_debug_draw(debug_draw);
 
   setup_textures();
 
   cout << "RenderSystem ready" << endl;
-}
-
-
-SDL_Texture* RenderSystem::load_texture(std::string name)
-{
-  auto path("media/textures/" + name + ".png");
-
-  return IMG_LoadTexture(sdl_interface.renderer, path.c_str());
 }
 
 
@@ -67,6 +57,8 @@ void RenderSystem::update(const double& dt)
 
 void RenderSystem::update_animations(const double& dt)
 {
+  auto& user(entity_system.get_user(0));
+
   user.frame_time += dt;
 
   if (user.frame_time >= user.frame_length)
@@ -94,7 +86,7 @@ void RenderSystem::update_textures()
 
 void RenderSystem::render()
 {
-  auto floor(active_user->floor);
+  auto floor(entity_system.get_user(0).floor);
 
   render_chunks(floor);
   render_tiles(floor);
@@ -144,7 +136,7 @@ void RenderSystem::render_items(int floor)
       auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
 
       for (auto& item : chunk.items)
-	if (!item.contained) render_item(item);
+	if (!item.contained) sdl_interface.render_item(item);
     }
   }
 }
@@ -168,6 +160,5 @@ void RenderSystem::render_doors(int floor)
 
 void RenderSystem::render_users(int floor)
 {
-  for (auto& user : entity_system.get_users(floor))
-    sdl_interface.render_user(user);
+  sdl_interface.render_user(entity_system.get_user(0));
 }

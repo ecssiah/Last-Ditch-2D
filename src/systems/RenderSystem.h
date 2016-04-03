@@ -7,11 +7,11 @@
 
 #include "../DebugDraw.h"
 #include "../SDL_Interface.h"
-#include "MapSystem.h"
-#include "EntitySystem.h"
 #include "CameraSystem.h"
-#include "UISystem.h"
+#include "EntitySystem.h"
+#include "MapSystem.h"
 #include "PhysicsSystem.h"
+#include "ui/UISystem.h"
 
 namespace ld
 {
@@ -40,8 +40,6 @@ class RenderSystem
   CameraSystem& camera_system;
   UISystem& ui_system;
   PhysicsSystem& physics_system;
-
-  User* active_user;
 
 public:
   RenderSystem(
