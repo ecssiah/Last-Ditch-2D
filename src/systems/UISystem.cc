@@ -26,9 +26,7 @@ UISystem::UISystem(
     management_ui_system(_sdl_interface, _input),
     status_ui_system(_sdl_interface, _input),
     base_active(true),
-    main_active(false),
-    active_user(_entity_system.get_active_user()),
-    date_and_time()
+    main_active(false)
 {
   setup_base();
   setup_main();
@@ -37,7 +35,8 @@ UISystem::UISystem(
 
 void UISystem::update()
 {
-  if (input.menu) handle_menu_activation();
+  if (input.menu) handle_menu_event();
+  if (input.activate) handle_activate_event();
 
   if (base_active) update_base();
   if (main_active) update_main();
@@ -74,10 +73,15 @@ void UISystem::render_main()
 
 void UISystem::setup_base()
 {
-  date_and_time.pos = {2, 2};
-  date_and_time.size = {130, 20};
   date_and_time.text = time_system.get_string();
-  date_and_time.text_texture = "date_and_time_text";
+  date_and_time.text_texture = "date_and_time";
+  date_and_time.dest_rect.x = 2;
+  date_and_time.dest_rect.y = 2;
+  date_and_time.dest_rect.w = 130;
+  date_and_time.dest_rect.h = 20;
+
+  sdl_interface.generate_texture_from_text(
+    date_and_time.text, date_and_time.text_texture, date_and_time.font, date_and_time.color);
 }
 
 
@@ -86,53 +90,53 @@ void UISystem::setup_main()
   auto vert_offset(100);
   auto horz_offset(160);
 
-  inventory_button.type = "backdrop1";
-  inventory_button.pos =
-    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 - vert_offset};
-  inventory_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
+  inventory_button.type = "button1";
   inventory_button.texture = "ui1";
   inventory_button.text = "Inventory";
-  inventory_button.text_texture = "inventory_button_text";
+  inventory_button.text_texture = "inventory_button";
 
-  sdl_interface.create_texture_from_text(
-    inventory_button.text, inventory_button.text_texture);
+  inventory_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2;
+  inventory_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 - vert_offset;
+  inventory_button.dest_rect.w = MENU_BUTTON_SIZE_X;
+  inventory_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  production_button.type = "backdrop1";
+  sdl_interface.generate_text_element(inventory_button);
+
+  production_button.type = "button1";
   production_button.texture = "ui1";
-  production_button.pos =
-    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 + horz_offset,
-     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2};
-  production_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   production_button.text = "Production";
-  production_button.text_texture = "production_button_text";
+  production_button.text_texture = "production_button";
 
-  sdl_interface.create_texture_from_text(
-    production_button.text, production_button.text_texture);
+  production_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 + horz_offset;
+  production_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2;
+  production_button.dest_rect.w = MENU_BUTTON_SIZE_X;
+  production_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  management_button.type = "backdrop1";
+  sdl_interface.generate_text_element(production_button);
+
+  management_button.type = "button1";
   management_button.texture = "ui1";
-  management_button.pos =
-    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2,
-     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 + vert_offset};
-  management_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   management_button.text = "Management";
-  management_button.text_texture = "management_button_text";
+  management_button.text_texture = "management_button";
 
-  sdl_interface.create_texture_from_text(
-    management_button.text, management_button.text_texture);
+  management_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2;
+  management_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 + vert_offset;
+  management_button.dest_rect.w = MENU_BUTTON_SIZE_X;
+  management_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  status_button.type = "backdrop1";
+  sdl_interface.generate_text_element(management_button);
+
+  status_button.type = "button1";
   status_button.texture = "ui1";
-  status_button.pos =
-    {SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 - horz_offset,
-     SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2};
-  status_button.size = {MENU_BUTTON_SIZE_X, MENU_BUTTON_SIZE_Y};
   status_button.text = "Status";
-  status_button.text_texture = "status_button_text";
+  status_button.text_texture = "status_button";
 
-  sdl_interface.create_texture_from_text(
-    status_button.text, status_button.text_texture);
+  status_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 - horz_offset;
+  status_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2;
+  status_button.dest_rect.w = MENU_BUTTON_SIZE_X;
+  status_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
+
+  sdl_interface.generate_text_element(status_button);
 }
 
 
@@ -140,7 +144,7 @@ void UISystem::update_base()
 {
   date_and_time.text = time_system.get_string();
 
-  sdl_interface.create_texture_from_text(date_and_time.text, date_and_time.texture);
+  sdl_interface.generate_texture_from_text(date_and_time.text, date_and_time.text_texture);
 }
 
 

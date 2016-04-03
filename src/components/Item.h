@@ -10,33 +10,18 @@ namespace ld
 
 struct Item : public Entity
 {
-  Item()
-    : Entity(),
-      name(std::string()),
-      category(std::string()),
-      value(0.1f),
-      quality(0.1f),
-      weight(0.1f),
-      volume(0.1f),
-      radius(.5f),
-      contained(false)
-  {}
-
-  bool operator <(const Item& rhs) const
-  {
-    return name < rhs.name;
-  }
+  Item() = default;
 
   std::string name;
   std::string category;
 
+  bool contained;
+
   float value;
   float quality;
+  float durability;
   float weight;
   float volume;
-  float radius;
-
-  bool contained;
 };
 
 }

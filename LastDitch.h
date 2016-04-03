@@ -29,6 +29,8 @@ class LastDitch
 
   Input input;
 
+  std::vector<User> users;
+
   std::mt19937 rng;
 
   ConfigurationSystem configuration_system;

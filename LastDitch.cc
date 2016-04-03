@@ -6,26 +6,18 @@ using namespace ld;
 using namespace std;
 
 LastDitch::LastDitch()
-  : sdl_interface(),
-    input(),
-    rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
-    configuration_system(),
+  : rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
     time_system(input),
     input_system(input),
-    camera_system(sdl_interface),
-    map_system(),
-    entity_system(rng, input, camera_system, map_system),
+    camera_system(sdl_interface, users),
+    entity_system(rng, input, users, camera_system, map_system),
     inventory_system(entity_system),
-    physics_system(sdl_interface.renderer, map_system, entity_system),
+    physics_system(users, map_system, entity_system),
     ui_system(sdl_interface, input, time_system, entity_system, inventory_system),
     render_system(
       sdl_interface, map_system, entity_system, camera_system,
       ui_system, physics_system)
 {
-  camera_system.set_target(entity_system.get_active_user());
-
-  printf("\nLoading configuration data\n\n");
-
   for (auto dt(0.0); !input.exit; time_system.tick())
   {
     input_system.update();

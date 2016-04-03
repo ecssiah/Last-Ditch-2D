@@ -5,17 +5,10 @@
 #include <string>
 #include <unordered_map>
 
+#include "AnimationInfo.h"
+
 namespace ld
 {
-
-struct AnimationInfo
-{
-  AnimationInfo() = default;
-
-  unsigned frames;
-  SDL_Rect clip_rect;
-};
-
 
 struct UserInfo
 {
@@ -23,7 +16,8 @@ struct UserInfo
 
   std::string name;
   std::string texture;
-  std::unordered_map<std::string, AnimationInfo> animations;
+
+  std::unordered_map<std::string, AnimationInfo> animation_data;
 };
 
 }

@@ -4,7 +4,9 @@
 #include <Box2D/Box2D.h>
 #include <eigen3/Eigen/Geometry>
 #include <SDL2/SDL.h>
+#include <vector>
 
+#include "../components/User.h"
 #include "../DebugDraw.h"
 #include "EntitySystem.h"
 #include "MapSystem.h"
@@ -24,13 +26,16 @@ class PhysicsSystem
 
   b2Body* create_body(float x, float y, float hw, float hh);
 
+  std::vector<User>& users;
+
   MapSystem& map_system;
   EntitySystem& entity_system;
 
   b2World* world;
 
 public:
-  PhysicsSystem(SDL_Renderer* renderer, MapSystem& map_system, EntitySystem& entity_system);
+  PhysicsSystem(
+    std::vector<User>& users, MapSystem& map_system, EntitySystem& entity_system);
   ~PhysicsSystem();
 
   void update(const double& dt);

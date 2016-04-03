@@ -1,0 +1,12 @@
+kadijah:
+  name: Kadijah
+  texture: kadijah
+  animation_data:
+    idle-front: {frames: 1, uv: [0, 0]}
+    idle-back:  {frames: 1, uv: [0, 1]}
+    idle-left:  {frames: 1, uv: [0, 2]}
+    idle-right: {frames: 1, uv: [0, 2]}
+    walk-front: {frames: 4, uv: [0, 0]}
+    walk-front: {frames: 4, uv: [0, 1]}
+    walk-front: {frames: 4, uv: [0, 2]}
+    walk-front: {frames: 4, uv: [0, 2]}

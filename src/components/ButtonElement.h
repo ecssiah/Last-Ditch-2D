@@ -2,21 +2,15 @@
 #define BUTTONELEMENT_H
 
 #include "TextElement.h"
-#include "UIElement.h"
 
 namespace ld
 {
 
-struct ButtonElement : public UIElement
+struct ButtonElement : public TextElement
 {
-  ButtonElement()
-    : UIElement(),
-      clicked(false),
-      text_element()
-  {}
+  ButtonElement() = default;
 
   bool clicked;
-  TextElement text_element;
 };
 
 }

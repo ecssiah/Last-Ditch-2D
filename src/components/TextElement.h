@@ -10,13 +10,20 @@ namespace ld
 
 struct TextElement : public UIElement
 {
-  TextElement() = default;
+  TextElement()
+    : font("jura-small")
+  {
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+    color.a = 255;
+  }
 
   std::string text;
   std::string text_texture;
+  std::string font;
 
-  SDL_Color text_color;
-
+  SDL_Color color;
   SDL_Rect text_clip_rect;
   SDL_Rect text_dest_rect;
 };

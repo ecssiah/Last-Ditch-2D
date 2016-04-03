@@ -11,20 +11,9 @@ namespace ld
 
 struct ScrollableElement : public UIElement
 {
-  ScrollableElement()
-    : UIElement(),
-      texture(std::string()),
-      scrolled_offset(0),
-      current_index(0),
-      list_items()
-  {}
+  ScrollableElement() = default;
 
-  std::string texture;
-
-  int scrolled_offset;
-  unsigned current_index;
-
-  std::vector<Item*> list_items;
+  int offset;
 };
 
 }

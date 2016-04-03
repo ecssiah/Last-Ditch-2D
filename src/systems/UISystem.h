@@ -33,11 +33,12 @@ class UISystem
   void render_base();
   void render_main();
 
-  void handle_menu_activation();
-  ScalableElement* find_scalable_element_at(Eigen::Vector2i& screen_pos);
+  void handle_menu_event();
+  void handle_activate_event();
 
   Input& input;
   SDL_Interface& sdl_interface;
+
   TimeSystem& time_system;
   EntitySystem& entity_system;
   InventorySystem& inventory_system;
@@ -50,13 +51,11 @@ class UISystem
   bool base_active;
   bool main_active;
 
-  User* active_user;
-
   TextElement date_and_time;
-  ScalableElement inventory_button;
-  ScalableElement production_button;
-  ScalableElement utility_button;
-  ScalableElement status_button;
+  ButtonElement inventory_button;
+  ButtonElement production_button;
+  ButtonElement management_button;
+  ButtonElement status_button;
 
 public:
   UISystem(

@@ -19,6 +19,11 @@ struct Entity
     clip_rect.h = dest_rect.h = PIXELS_PER_UNIT;
   }
 
+  bool operator <(const Entity& rhs) const
+  {
+    return type < rhs.type;
+  }
+
   std::string type;
   std::string texture;
 

@@ -105,97 +105,78 @@ void SDL_Interface::load_textures()
 
 void SDL_Interface::generate_text_element(TextElement& element)
 {
-  create_texture_from_text(
-    element.text, element.text_texture, element.text_font, element.text_color);
+  generate_texture_from_text(
+    element.text, element.text_texture, element.font, element.color);
+}
+
+
+void SDL_Interface::generate_window_element(WindowElement& element)
+{
+
 }
 
 
 void SDL_Interface::generate_list_element(ListElement& element)
 {
+  SDL_Surface* list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
 
-}
-
-
-void SDL_Interface::generate_list_texture()
-{
-  set<Item> unique_items;
-  unordered_map<string, unsigned> item_counts;
-
-  for (auto& item : inventory.items)
+  for (auto i(0); i < element.entries.size(); ++i)
   {
-    ++item_counts[item.type];
-
-    if (active_category == ALL || item.category == active_category)
-      unique_items.insert(item);
-  }
-
-  current_slots.clear();
-  vector<Item> items(unique_items.begin(), unique_items.end());
-
-  for (auto i(0); i < items.size(); ++i)
-  {
-    auto& item(items[i]);
-    auto& name(item.name);
-    auto& item_count(item_counts[item.type]);
-
-    if (item_count != 1) name += " (" + to_string(item_count) + ")";
-
     SDL_Color color;
-
-    if (i == active_slot_index)
-      color = {255, 255, 255};
+    if (i == element.index)
+      color = element.selected_entry_color;
     else
-      color = {200, 180, 200};
+      color = element.entry_color;
 
-    auto surface(create_surface_from_text(name, "jura-small", color));
-    element_surfaces.push_back(surface);
+    SDL_Surface* entry_surface(
+      TTF_RenderText_Blended(fonts[element.font], element.entries[i].c_str(), color));
 
-    current_slots.push_back({(unsigned)i, item_count, item.type});
+    SDL_Rect dest_rect;
+    dest_rect.x = element.dest_rect.x;
+    dest_rect.y = element.dest_rect.y + i * 20 + element.offset;
+
+    SDL_BlitSurface(entry_surface, nullptr, list_surface, &dest_rect);
+    SDL_FreeSurface(entry_surface);
   }
+
+  if (textures[element.texture]) SDL_DestroyTexture(textures[element.texture]);
+  textures[element.texture] = SDL_CreateTextureFromSurface(renderer, list_surface);
+
+  SDL_FreeSurface(list_surface);
 }
 
 
-void SDL_Interface::create_texture_from_text(
-  string text, string texture_name, string font_name, SDL_Color color)
+void SDL_Interface::generate_texture_from_text(
+  string text, string texture, string font, SDL_Color color)
 {
-  auto surface(TTF_RenderText_Blended(fonts[font_name], text.c_str(), color));
+  auto surface(generate_surface_from_text(text, font, color));
 
-  if (textures[texture_name] != nullptr) SDL_DestroyTexture(textures[texture_name]);
-
-  textures[texture_name] = SDL_CreateTextureFromSurface(renderer, surface);
+  if (textures[texture]) SDL_DestroyTexture(textures[texture]);
+  textures[texture] = SDL_CreateTextureFromSurface(renderer, surface);
 }
 
 
-SDL_Surface* SDL_Interface::create_surface_from_text(
-  string text, string font_name, SDL_Color color)
+SDL_Surface* SDL_Interface::generate_surface_from_text(
+  string text, string font, SDL_Color color)
 {
-  return TTF_RenderText_Blended(fonts[font_name], text.c_str(), color);
+  return TTF_RenderText_Blended(fonts[font], text.c_str(), color);
 }
 
 
 void SDL_Interface::render_chunk(Chunk& chunk)
 {
-  chunk.dest_rect.x = PIXELS_PER_UNIT * (chunk.pos.x() - cam_pos.x()) + HALF_SCREEN_SIZE_X;
-  chunk.dest_rect.y = PIXELS_PER_UNIT * (chunk.pos.y() - cam_pos.y()) + HALF_SCREEN_SIZE_Y;
-
   SDL_RenderCopy(renderer, textures[chunk.texture], nullptr, &chunk.dest_rect);
 }
 
 
 void SDL_Interface::render_item(Item& item)
 {
-  item.dest_rect.x = PIXELS_PER_UNIT * (item.pos.x() - cam_pos.x()) + HALF_SCREEN_SIZE_X;
-  item.dest_rect.y = PIXELS_PER_UNIT * (item.pos.y() - cam_pos.y()) + HALF_SCREEN_SIZE_Y;
-
   SDL_RenderCopy(renderer, textures[item.texture], &item.clip_rect, &item.dest_rect);
 }
 
 
 void SDL_Interface::render_tile(Tile& tile)
 {
-  tile.dest_rect.x = PIXELS_PER_UNIT * (tile.pos.x() - cam_pos.x()) + HALF_SCREEN_SIZE_X;
-  tile.dest_rect.y = PIXELS_PER_UNIT * (tile.pos.y() - cam_pos.y()) + HALF_SCREEN_SIZE_Y;
-
   SDL_RenderCopyEx(
     renderer, textures[tile.texture],
     &tile.clip_rect, &tile.dest_rect,
@@ -205,82 +186,54 @@ void SDL_Interface::render_tile(Tile& tile)
 
 void SDL_Interface::render_door(Door& door)
 {
-  door.dest_rect.x = PIXELS_PER_UNIT * (door.pos.x() - cam_pos.x()) + HALF_SCREEN_SIZE_X;
-  door.dest_rect.y = PIXELS_PER_UNIT * (door.pos.y() - cam_pos.y()) + HALF_SCREEN_SIZE_Y;
-
   SDL_RenderCopy(renderer, textures[door.texture], &door.clip_rect, &door.dest_rect);
 }
 
 
 void SDL_Interface::render_user(User& user)
 {
-  user.dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - cam_pos.x()) + HALF_SCREEN_SIZE_X;
-  user.dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - cam_pos.y()) + HALF_SCREEN_SIZE_Y;
-
-  if (user.frame % 2 == 0) ++user.dest_rect.y;
-
   SDL_RendererFlip flip(
     ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
-  SDL_RendererFlip arm_flip(
-    ends_with(user.arm_animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
   SDL_RenderCopyEx(
     renderer, textures[user.texture],
     &user.clip_rect, &user.dest_rect,
     0, nullptr, flip);
-
-  SDL_RenderCopyEx(
-    renderer, textures[user.arm_texture],
-    &user.arm_clip_rect, &user.dest_rect,
-    0, nullptr, arm_flip);
 }
 
 
 void SDL_Interface::render_ui_element(UIElement& ui_element)
 {
-  ui_element.dest_rect.x = ui_element.pos.x();
-  ui_element.dest_rect.y = ui_element.pos.y();
-
   SDL_RenderCopy(
     renderer, textures[ui_element.texture],
     &ui_element.clip_rect, &ui_element.dest_rect);
 }
 
 
-void SDL_Interface::render_text_element(TextElement& text_element)
+void SDL_Interface::render_text_element(TextElement& element)
 {
-  if (text_element.texture != "")
-    render_ui_element(text_element);
-
-  text_element.text_dest_rect.x = text_element.pos.x();
-  text_element.text_dest_rect.y = text_element.pos.y();
+  if (element.texture != "") render_ui_element(element);
 
   SDL_RenderCopy(
-    renderer, textures[text_element.text_texture],
-    &text_element.text_clip_rect, &text_element.text_dest_rect);
+    renderer, textures[element.text_texture],
+    &element.text_clip_rect, &element.text_dest_rect);
 }
 
 
-void SDL_Interface::render_scalable_element(ScalableElement& scalable_element)
+void SDL_Interface::render_scalable_element(ScalableElement& element)
 {
-  scalable_element.dest_rect.x = scalable_element.pos.x();
-  scalable_element.dest_rect.y = scalable_element.pos.y();
-
   SDL_RenderCopy(
-    renderer, textures[scalable_element.texture], nullptr, &scalable_element.dest_rect);
+    renderer, textures[element.texture], nullptr, &element.dest_rect);
 }
 
 
 void SDL_Interface::render_scrollable_element(ScrollableElement& element)
 {
-  element.dest_rect.x = element.pos.x();
-  element.dest_rect.y = element.pos.y();
-
   SDL_RenderCopy(renderer, textures[element.texture], nullptr, &element.dest_rect);
 }
 
 
-void SDL_Interface::render_button(ButtonElement& button_element)
+void SDL_Interface::render_button_element(ButtonElement& element)
 {
 
 

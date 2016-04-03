@@ -88,17 +88,15 @@ void ConfigurationSystem::load_user_data()
   {
     YAML::Node user_data_map(kv.second);
 
-    auto type(kv.first.as<std::string>());
-
     UserInfo user_info_entry;
     user_info_entry.name = user_data_map["name"].as<std::string>();
     user_info_entry.texture = user_data_map["texture"].as<std::string>();
 
-    for (auto anim_kv : user_data_map["animations"])
+    for (auto animation_kv : user_data_map["animation_data"])
     {
-      YAML::Node user_animation_map(anim_kv.second);
+      YAML::Node user_animation_map(animation_kv.second);
 
-      auto anim_type(kv.first.as<std::string>());
+      auto animation_type(kv.first.as<std::string>());
 
       AnimationInfo animation_info_entry;
       animation_info_entry.frames = user_animation_map["frames"].as<unsigned>();
@@ -111,8 +109,10 @@ void ConfigurationSystem::load_user_data()
 
       animation_info_entry.clip_rect = clip_rect;
 
-      user_info_entry.animations[anim_type] = animation_info_entry;
+      user_info_entry.animation_data[animation_type] = animation_info_entry;
     }
+
+    auto type(kv.first.as<std::string>());
 
     User_Data[type] = user_info_entry;
   }

@@ -10,9 +10,10 @@ using namespace Eigen;
 using namespace std;
 
 PhysicsSystem::PhysicsSystem(
-  SDL_Renderer* _renderer, MapSystem& _map_system, EntitySystem& _entity_system
+  vector<User>& _users, MapSystem& _map_system, EntitySystem& _entity_system
 )
-  : map_system(_map_system),
+  : users(_users),
+    map_system(_map_system),
     entity_system(_entity_system),
     world(new b2World({0, 0}))
 {
@@ -94,28 +95,17 @@ void PhysicsSystem::update(const double& dt)
     }
   }
 
-  for (auto floor(0); floor < NUM_FLOORS; ++floor)
+  for (auto& user : users)
   {
-    auto& users(entity_system.get_users(floor));
-
-    for (auto& user : users)
-    {
-      b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
-      user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
-    }
-
+    b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
+    user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
   }
 
   world->Step(B2D_TIMESTEP, B2D_VELOCITY_ITERATIONS, B2D_POSITION_ITERATIONS);
   world->ClearForces();
 
-  for (auto floor(0); floor < NUM_FLOORS; ++floor)
-  {
-    auto& users(entity_system.get_users(floor));
-
-    for (auto& user : users)
-      user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
-  }
+  for (auto& user : users)
+    user.pos = {user.body->GetPosition().x, user.body->GetPosition().y};
 }
 
 
@@ -133,31 +123,28 @@ void PhysicsSystem::render_debug()
 
 void PhysicsSystem::setup_user_bodies()
 {
-  for (auto floor(0); floor < NUM_FLOORS; ++floor)
+  for (auto& user : users)
   {
-    for (auto& user : entity_system.get_users(floor))
-    {
-      b2BodyDef body_def;
-      body_def.type = b2_dynamicBody;
-      body_def.position.Set(user.pos.x(), user.pos.y());
-      body_def.linearDamping = 8;
-      body_def.allowSleep = true;
-      body_def.fixedRotation = true;
-      body_def.active = true;
+    b2BodyDef body_def;
+    body_def.type = b2_dynamicBody;
+    body_def.position.Set(user.pos.x(), user.pos.y());
+    body_def.linearDamping = 8;
+    body_def.allowSleep = true;
+    body_def.fixedRotation = true;
+    body_def.active = true;
 
-      auto body(world->CreateBody(&body_def));
+    auto body(world->CreateBody(&body_def));
 
-      b2CircleShape circle_shape;
-      circle_shape.m_radius = user.radius;
+    b2CircleShape circle_shape;
+    circle_shape.m_radius = user.radius;
 
-      b2FixtureDef fixture_def;
-      fixture_def.shape = &circle_shape;
-      fixture_def.friction = 0;
+    b2FixtureDef fixture_def;
+    fixture_def.shape = &circle_shape;
+    fixture_def.friction = 0;
 
-      body->CreateFixture(&fixture_def);
+    body->CreateFixture(&fixture_def);
 
-      user.body = body;
-    }
+    user.body = body;
   }
 }
 

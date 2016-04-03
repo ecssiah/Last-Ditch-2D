@@ -6,7 +6,7 @@
 #include <random>
 
 #include "../components/Door.h"
-#include "../components/Item.h"
+#include "../components/Resource.h"
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
@@ -17,18 +17,20 @@ using namespace Eigen;
 using namespace std;
 
 EntitySystem::EntitySystem(
-  mt19937& _rng, Input& _input, CameraSystem& _camera_system, MapSystem& _map_system
+  mt19937& _rng,
+  Input& _input,
+  vector<User>& _users,
+  CameraSystem& _camera_system, MapSystem& _map_system
 )
   : rng(_rng),
     input(_input),
+    users(_users),
     map_system(_map_system),
-    camera_system(_camera_system),
-    active_user(nullptr),
-    users(NUM_FLOORS),
-    item_types()
+    camera_system(_camera_system)
 {
   setup_users();
-  setup_items();
+
+  setup_resources();
 
   cout << "EntitySystem ready" << endl;
 }
@@ -36,57 +38,49 @@ EntitySystem::EntitySystem(
 
 void EntitySystem::setup_users()
 {
-  User kadijah;
-  kadijah.name = "Kadijah";
-  kadijah.type = "kadijah";
-  kadijah.texture = "kadijah";
-  kadijah.arm_texture = "kadijah";
-  kadijah.animation = "body-idle-front";
-  kadijah.arm_animation = "arm-idle-nequip-front";
-  kadijah.pos = {3, 9};
-  kadijah.size = {.48f, .48f};
-  kadijah.floor = 0;
-  kadijah.speed = 50.f;
-  kadijah.clip_rect = User_Data[kadijah.type].animations[kadijah.animation].clip_rect;
-  kadijah.arm_clip_rect = User_Data[kadijah.type].animations[kadijah.arm_animation].clip_rect;
+  users[0].name = "Kadijah";
+  users[0].type = "kadijah";
+  users[0].texture = "kadijah";
+  users[0].animation = "idle-front";
+  users[0].floor = 0;
+  users[0].speed = 50.f;
+  users[0].pos = {3, 9};
+  users[0].size = {.48f, .48f};
+  users[0].clip_rect = User_Data[users[0].type].animation_data[users[0].animation].clip_rect;
 
-  users[kadijah.floor].push_back(kadijah);
-  active_user = &users[kadijah.floor].back();
-
-  for (auto i(0); i < 10; ++i) give_random_item(active_user);
+  for (auto i(0); i < 10; ++i) give_random_resource(users[0]);
 }
 
 
-void EntitySystem::give_random_item(User& user)
+void EntitySystem::give_random_resource(User& user)
 {
-  Item item;
-  item.type = get_random_type();
+  Resource resource;
+  resource.type = get_random_resource_type();
 
-  item.texture = Item_Data[item.type].texture;
-  item.name = Item_Data[item.type].name;
-  item.category = Item_Data[item.type].category;
+  resource.texture = Resource_Data[resource.type].texture;
+  resource.name = Resource_Data[resource.type].name;
+  resource.category = Resource_Data[resource.type].category;
 
-  item.value = Item_Data[item.type].value;
-  item.quality = Item_Data[item.type].quality;
-  item.weight = Item_Data[item.type].weight;
-  item.volume = Item_Data[item.type].volume;
+  resource.value = Resource_Data[resource.type].value;
+  resource.quality = Resource_Data[resource.type].quality;
+  resource.weight = Resource_Data[resource.type].weight;
+  resource.volume = Resource_Data[resource.type].volume;
 
-  user.inventory.items.push_back(item);
+  user.inventory.resources.push_back(resource);
 }
 
 
-std::string EntitySystem::get_random_type()
+std::string EntitySystem::get_random_resource_type()
 {
-  uniform_int_distribution<> type_dist(0, Num_Items - 1);
+  uniform_int_distribution<> type_dist(0, Resource_Types.size() - 1);
 
-  auto it(std::next(std::begin(Item_Data), type_dist(rng)));
-  auto random_type((*it).first);
+  auto it(std::next(std::begin(Resource_Types), type_dist(rng)));
 
-  return random_type;
+  return *it;
 }
 
 
-void EntitySystem::setup_items()
+void EntitySystem::setup_resources()
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
@@ -95,33 +89,34 @@ void EntitySystem::setup_items()
       uniform_real_distribution<> x_dist(0, MAP_SIZE_X - 1);
       uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
 
-      Item item;
-      item.floor = floor;
-      item.type = get_random_type();
-      item.texture = Item_Data[item.type].texture;
-      item.name = Item_Data[item.type].name;
-      item.category = Item_Data[item.type].category;
-      item.value = Item_Data[item.type].value;
-      item.quality = Item_Data[item.type].quality;
-      item.weight = Item_Data[item.type].weight;
-      item.volume = Item_Data[item.type].volume;
+      Resource resource;
+      resource.floor = floor;
+      resource.type = get_random_resource_type();
+      resource.texture = Resource_Data[resource.type].texture;
+      resource.name = Resource_Data[resource.type].name;
+      resource.category = Resource_Data[resource.type].category;
+      resource.value = Resource_Data[resource.type].value;
+      resource.quality = Resource_Data[resource.type].quality;
+      resource.weight = Resource_Data[resource.type].weight;
+      resource.volume = Resource_Data[item.type].volume;
 
-      while (1)
+      for (auto i(0); i < 1000; ++i)
       {
 	float x(x_dist(rng));
 	float y(y_dist(rng));
-	float size(2.f * item.radius);
+	float size_x(resource.size.x());
+	float size_y(resource.size.y());
 
 	auto clear(
-	  !map_system.get_main_tile(x,        y,        floor).solid &&
-	  !map_system.get_main_tile(x + size, y,        floor).solid &&
-	  !map_system.get_main_tile(x,        y + size, floor).solid &&
-	  !map_system.get_main_tile(x + size, y + size, floor).solid);
+	  !map_system.get_main_tile(x,          y,          floor).solid &&
+	  !map_system.get_main_tile(x + size_x, y,          floor).solid &&
+	  !map_system.get_main_tile(x,          y + size_y, floor).solid &&
+	  !map_system.get_main_tile(x + size_x, y + size_y, floor).solid);
 
 	if (clear)
 	{
-	  item.pos = {x, y};
-	  map_system.get_chunk(x, y, floor).items.push_back(item);
+	  resource.pos = {x, y};
+	  map_system.get_chunk(x, y, floor).resources.push_back(resource);
 
 	  break;
 	}
@@ -141,87 +136,44 @@ void EntitySystem::update()
 }
 
 
-void EntitySystem::update_users()
-{
-
-
-}
-
-
 void EntitySystem::apply_user_inputs()
 {
   Vector2f direction(0, 0);
+  auto& animation(users[0].animation);
 
   if (input.left) direction.x() -= 1;
   if (input.right) direction.x() += 1;
   if (input.up) direction.y() -= 1;
   if (input.down) direction.y() += 1;
 
-  auto& animation(active_user->animation);
-  string new_animation(animation);
-
   if (direction.squaredNorm() == 0)
   {
-    active_user->vel = Vector2f::Zero();
+    users[0].vel = Vector2f::Zero();
 
-    if (animation == "body-walk-front")
-      animation = "body-idle-front";
-    else if (animation == "body-walk-back")
-      animation = "body-idle-back";
-    else if (animation == "body-walk-left")
-      animation = "body-idle-left";
-    else if (animation == "body-walk-right")
-      animation = "body-idle-right";
+    if (animation == "walk-front") animation = "idle-front";
+    else if (animation == "walk-back") animation = "idle-back";
+    else if (animation == "walk-left") animation = "idle-left";
+    else if (animation == "walk-right") animation = "idle-right";
   }
   else
   {
     direction.normalize();
-    auto vel(active_user->speed * direction);
+    auto vel(users[0].speed * direction);
 
-    if (vel.x() > 0)
-      animation = "body-walk-right";
-    else if (vel.x() < 0)
-      animation = "body-walk-left";
-    else if (vel.y() > 0)
-      animation = "body-walk-front";
-    else if (vel.y() < 0)
-      animation = "body-walk-back";
+    if (vel.x() > 0) animation = "walk-right";
+    else if (vel.x() < 0) animation = "walk-left";
+    else if (vel.y() > 0) animation = "walk-front";
+    else if (vel.y() < 0) animation = "walk-back";
 
-    active_user->vel = vel;
+    users[0].vel = vel;
   }
+}
 
-  auto& arm_animation(active_user->arm_animation);
-  string new_arm_animation(arm_animation);
 
-  if (direction.squaredNorm() == 0)
-  {
-    active_user->vel = Vector2f::Zero();
+void EntitySystem::update_users()
+{
 
-    if (arm_animation == "arm-walk-nequip-front")
-      arm_animation = "arm-idle-nequip-front";
-    else if (arm_animation == "arm-walk-nequip-back")
-      arm_animation = "arm-idle-nequip-back";
-    else if (arm_animation == "arm-walk-nequip-left")
-      arm_animation = "arm-idle-nequip-left";
-    else if (arm_animation == "arm-walk-nequip-right")
-      arm_animation = "arm-idle-nequip-right";
-  }
-  else
-  {
-    direction.normalize();
-    auto vel(active_user->speed * direction);
 
-    if (vel.x() > 0)
-      arm_animation = "arm-walk-nequip-right";
-    else if (vel.x() < 0)
-      arm_animation = "arm-walk-nequip-left";
-    else if (vel.y() > 0)
-      arm_animation = "arm-walk-nequip-front";
-    else if (vel.y() < 0)
-      arm_animation = "arm-walk-nequip-back";
-
-    active_user->vel = vel;
-  }
 }
 
 
@@ -237,7 +189,7 @@ void EntitySystem::handle_activation()
   if (out_of_bounds) return;
 
   auto& chunk(
-    map_system.get_chunk(selection_point.x(), selection_point.y(), active_user->floor));
+    map_system.get_chunk(selection_point.x(), selection_point.y(), users[0].floor));
 
   if (find_and_interact_door(selection_point, chunk))
   {
@@ -248,7 +200,7 @@ void EntitySystem::handle_activation()
   if (find_and_interact_item(selection_point, chunk))
   {
     input.activate = false;
-    active_user->inventory.modified = true;
+    users[0].inventory.modified = true;
     return;
   }
 }
@@ -264,7 +216,7 @@ bool EntitySystem::find_and_interact_door(Vector2f& selection_point, Chunk& chun
 
     if (!hit) continue;
 
-    auto user_center(active_user->pos + Vector2f(.5, .5));
+    auto user_center(users[0].pos + Vector2f(.5, .5));
     auto in_range((user_center - selection_point).squaredNorm() < 2.7f);
 
     if (!in_range) continue;
@@ -294,13 +246,13 @@ bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chun
 
     if (!hit) continue;
 
-    auto user_center(active_user->pos + Vector2f(.5, .5));
+    auto user_center(users[0].pos + Vector2f(.5, .5));
     auto in_range((user_center - selection_point).squaredNorm() < 2.7f);
 
     if (!in_range) continue;
 
     item.contained = true;
-    active_user->inventory.items.push_back(item);
+    users[0].inventory.items.push_back(item);
 
     items.erase(it);
 

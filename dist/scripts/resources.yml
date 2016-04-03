@@ -1,7 +1,6 @@
 scrub:
   name: Scrub
   texture: items1
-  category: production
   uv: [0, 0]
   value: .02
   quality: .1
@@ -10,7 +9,6 @@ scrub:
 scrap:
   name: Scrap
   texture: items1
-  category: production
   uv: [1, 0]
   value: .02
   quality: .1
@@ -19,7 +17,6 @@ scrap:
 case-small:
   name: Case, small
   texture: items1
-  category: utility
   uv: [0, 1]
   value: .8
   quality: .1

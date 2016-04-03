@@ -10,9 +10,8 @@ struct SlotInfo
 {
   SlotInfo() = default;
 
-  unsigned index;
-  unsigned count;
   std::string type;
+  unsigned count;
 };
 
 }

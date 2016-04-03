@@ -1,0 +1,11 @@
+rations-basic:
+  name: Rations, basic
+  texture: items1
+  uv: [0, 3]
+  value: 1.2
+  weight: 1.6
+  volume: .6
+  effects:
+    hunger: 12.8
+    fatigue: 4.0
+    sanity: .02

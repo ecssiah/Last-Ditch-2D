@@ -67,41 +67,21 @@ void RenderSystem::update(const double& dt)
 
 void RenderSystem::update_animations(const double& dt)
 {
-  for (auto& user : entity_system.get_users(active_user->floor))
+  user.frame_time += dt;
+
+  if (user.frame_time >= user.frame_length)
   {
-    user.frame_time += dt;
+    user.frame_time = 0;
 
-    if (user.frame_time >= user.frame_length)
-    {
-      user.frame_time = 0.f;
+    auto& anim_data(User_Data[user.type].animation_data[user.animation]);
 
-      auto& anim_data(User_Data[user.type].animations[user.animation]);
+    if (user.frame < anim_data.frames - 1)
+      ++user.frame;
+    else
+      user.frame = 0;
 
-      if (user.frame < anim_data.frames - 1)
-	++user.frame;
-      else
-	user.frame = 0;
-
-      user.clip_rect.x = anim_data.clip_rect.x + PIXELS_PER_UNIT * user.frame;
-      user.clip_rect.y = anim_data.clip_rect.y;
-    }
-
-    user.arm_frame_time += dt;
-
-    if (user.arm_frame_time >= user.arm_frame_length)
-    {
-      user.arm_frame_time = 0.f;
-
-      auto& arm_anim_data(User_Data[user.type].animations[user.arm_animation]);
-
-      if (user.arm_frame < arm_anim_data.frames - 1)
-	++user.arm_frame;
-      else
-	user.arm_frame = 0;
-
-      user.arm_clip_rect.x = anim_data.clip_rect.x + PIXELS_PER_UNIT * user.arm_frame;
-      user.arm_clip_rect.y = anim_data.clip_rect.y;
-    }
+    user.clip_rect.x = anim_data.clip_rect.x + PIXELS_PER_UNIT * user.frame;
+    user.clip_rect.y = anim_data.clip_rect.y;
   }
 }
 
