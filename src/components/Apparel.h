@@ -9,6 +9,11 @@ namespace ld
 struct Apparel : public Item
 {
   Apparel() = default;
+
+  float physical_defense;
+  float energy_defense;
+  float heat_defense;
+  float cold_defense;
 };
 
 }

@@ -8,17 +8,16 @@
 #include <string>
 #include <unordered_map>
 
-#include "components/ButtonElement.h"
 #include "components/Chunk.h"
 #include "components/Door.h"
 #include "components/Item.h"
-#include "components/ListElement.h"
-#include "components/ScalableElement.h"
-#include "components/ScrollableElement.h"
-#include "components/WindowElement.h"
+#include "components/ui/Button.h"
+#include "components/ui/Element.h"
+#include "components/ui/List.h"
+#include "components/ui/Text.h"
+#include "components/ui/Window.h"
 #include "components/Tile.h"
 #include "components/User.h"
-#include "components/UIElement.h"
 
 namespace ld
 {
@@ -26,6 +25,7 @@ namespace ld
 class SDL_Interface
 {
   SDL_Texture* load_texture(std::string name);
+  SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
 
   void load_fonts();
   void load_textures();
@@ -46,10 +46,10 @@ public:
     std::string font = "jura-small",
     SDL_Color color = {220, 255, 255});
 
-  void generate_text_element(TextElement& element);
-  void generate_window_element(WindowElement& element);
-  void generate_list_element(ListElement& element);
-  void generate_button_element(ButtonElement& element);
+  void generate_text_element(Text& element);
+  void generate_window_element(Window& element);
+  void generate_button_element(Button& element);
+  void generate_list_element(List& element);
 
   void render_chunk(Chunk& chunk);
   void render_item(Item& item);
@@ -57,13 +57,11 @@ public:
   void render_door(Door& door);
   void render_user(User& user);
 
-  void render_ui_element(UIElement& element);
-  void render_text_element(TextElement& element);
-  void render_scalable_element(ScalableElement& element);
-  void render_scrollable_element(ScrollableElement& element);
-  void render_window_element(WindowElement& element);
-  void render_list_element(ListElement& element);
-  void render_button_element(ButtonElement& element);
+  void render_element(Element& element);
+  void render_text_element(Text& element);
+  void render_window_element(Window& element);
+  void render_button_element(Button& element);
+  void render_list_element(List& element);
 
   SDL_Window* window;
   SDL_Renderer* renderer;

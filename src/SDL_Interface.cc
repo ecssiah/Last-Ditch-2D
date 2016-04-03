@@ -10,22 +10,6 @@ using namespace std;
 using namespace Utils;
 
 
-SDL_Surface* generate_surface(unsigned size_x, unsigned size_y)
-{
-  SDL_Surface* surface;
-
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-  surface = SDL_CreateRGBSurface(
-    0, size_x, size_y, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
-#else
-  surface = SDL_CreateRGBSurface(
-    0, size_x, size_y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-#endif
-
-  return surface;
-}
-
-
 SDL_Interface::SDL_Interface()
   : window(nullptr),
     renderer(nullptr)
@@ -103,20 +87,36 @@ void SDL_Interface::load_textures()
 }
 
 
-void SDL_Interface::generate_text_element(TextElement& element)
+SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
+{
+  SDL_Surface* surface;
+
+#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0xFF000000, 0x00FF0000, 0x0000FF00, 0x000000FF);
+#else
+  surface = SDL_CreateRGBSurface(
+    0, size_x, size_y, 32, 0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
+#endif
+
+  return surface;
+}
+
+
+void SDL_Interface::generate_text_element(Text& element)
 {
   generate_texture_from_text(
     element.text, element.text_texture, element.font, element.color);
 }
 
 
-void SDL_Interface::generate_window_element(WindowElement& element)
+void SDL_Interface::generate_window_element(Window& element)
 {
 
 }
 
 
-void SDL_Interface::generate_list_element(ListElement& element)
+void SDL_Interface::generate_list_element(List& element)
 {
   SDL_Surface* list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
 
@@ -202,17 +202,17 @@ void SDL_Interface::render_user(User& user)
 }
 
 
-void SDL_Interface::render_ui_element(UIElement& ui_element)
+void SDL_Interface::render_element(Element& element)
 {
   SDL_RenderCopy(
-    renderer, textures[ui_element.texture],
-    &ui_element.clip_rect, &ui_element.dest_rect);
+    renderer, textures[element.texture],
+    &element.clip_rect, &element.dest_rect);
 }
 
 
-void SDL_Interface::render_text_element(TextElement& element)
+void SDL_Interface::render_text_element(Text& element)
 {
-  if (element.texture != "") render_ui_element(element);
+  if (element.texture != "") render_element(element);
 
   SDL_RenderCopy(
     renderer, textures[element.text_texture],
@@ -220,21 +220,14 @@ void SDL_Interface::render_text_element(TextElement& element)
 }
 
 
-void SDL_Interface::render_scalable_element(ScalableElement& element)
+void SDL_Interface::render_button_element(Button& element)
 {
-  SDL_RenderCopy(
-    renderer, textures[element.texture], nullptr, &element.dest_rect);
+
+
 }
 
 
-void SDL_Interface::render_scrollable_element(ScrollableElement& element)
+void SDL_Interface::render_window_element(Window& element)
 {
   SDL_RenderCopy(renderer, textures[element.texture], nullptr, &element.dest_rect);
-}
-
-
-void SDL_Interface::render_button_element(ButtonElement& element)
-{
-
-
 }

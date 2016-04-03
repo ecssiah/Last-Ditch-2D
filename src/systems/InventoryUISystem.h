@@ -4,13 +4,13 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../components/ButtonElement.h"
+#include "../components/info/SlotInfo.h"
 #include "../components/Input.h"
 #include "../components/Inventory.h"
-#include "../components/SlotInfo.h"
-#include "../components/UIElement.h"
 #include "../components/User.h"
-#include "../components/WindowElement.h"
+#include "../components/ui/Button.h"
+#include "../components/ui/Element.h"
+#include "../components/ui/Window.h"
 #include "../SDL_Interface.h"
 #include "../systems/EntitySystem.h"
 #include "../systems/InventorySystem.h"
@@ -39,25 +39,24 @@ class InventoryUISystem
   EntitySystem& entity_system;
   InventorySystem& inventory_system;
 
-  User& user;
-
   bool active;
   std::string active_category;
 
   unsigned active_slot_index;
   std::vector<SlotInfo> current_slots;
 
-  WindowElement base_window;
-  UIElement preview_image;
-  ListElement inventory_list;
+  Window base_window;
 
-  std::vector<TextElement> equipment_slot_labels;
-  std::vector<WindowElement> equipment_slot_windows;
-  std::vector<ButtonElement> sort_buttons;
+  Element preview_image;
+  List inventory_list;
+
+  std::vector<Text> equipment_slot_labels;
+  std::vector<Window> equipment_slot_windows;
+  std::vector<Button> sort_buttons;
 
 public:
   InventoryUISystem(
-    SDL_Interface& sdl_interface, Input& input,
+    Input& input, SDL_Interface& sdl_interface,
     EntitySystem& entity_system, InventorySystem& inventory_system);
 
   void update();

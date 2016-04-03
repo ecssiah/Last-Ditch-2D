@@ -66,7 +66,7 @@ void EntitySystem::give_random_resource(User& user)
   resource.weight = Resource_Data[resource.type].weight;
   resource.volume = Resource_Data[resource.type].volume;
 
-  user.inventory.resources.push_back(resource);
+  user.inventory.items.push_back(resource);
 }
 
 
@@ -98,7 +98,7 @@ void EntitySystem::setup_resources()
       resource.value = Resource_Data[resource.type].value;
       resource.quality = Resource_Data[resource.type].quality;
       resource.weight = Resource_Data[resource.type].weight;
-      resource.volume = Resource_Data[item.type].volume;
+      resource.volume = Resource_Data[resource.type].volume;
 
       for (auto i(0); i < 1000; ++i)
       {
@@ -116,7 +116,7 @@ void EntitySystem::setup_resources()
 	if (clear)
 	{
 	  resource.pos = {x, y};
-	  map_system.get_chunk(x, y, floor).resources.push_back(resource);
+	  map_system.get_chunk(x, y, floor).items.push_back(resource);
 
 	  break;
 	}
@@ -240,9 +240,9 @@ bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chun
 
     auto hit(
       selection_point.x() > item.pos.x() &&
-      selection_point.x() < item.pos.x() + item.radius &&
+      selection_point.x() < item.pos.x() + item.size.x() &&
       selection_point.y() > item.pos.y() &&
-      selection_point.y() < item.pos.y() + item.radius);
+      selection_point.y() < item.pos.y() + item.size.y());
 
     if (!hit) continue;
 

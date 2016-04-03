@@ -4,7 +4,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "../components/TileInfo.h"
+#include "../components/info/TileInfo.h"
 #include "RenderConstants.h"
 
 namespace ld

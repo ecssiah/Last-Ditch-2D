@@ -4,8 +4,7 @@
 #include <vector>
 
 #include "../components/Input.h"
-#include "../components/UIElement.h"
-#include "../components/ScalableElement.h"
+#include "../components/ui/Window.h"
 #include "../SDL_Interface.h"
 
 namespace ld
@@ -15,18 +14,15 @@ class StatusUISystem
 {
   void setup();
 
-  SDL_Interface& sdl_interface;
   Input& input;
+  SDL_Interface& sdl_interface;
 
   bool active;
 
-  ScalableElement menu_base;
-
-  std::vector<UIElement> ui_elements;
-  std::vector<ScalableElement> scalable_elements;
+  Window base_window;
 
 public:
-  StatusUISystem(SDL_Interface& sdl_interface, Input& input);
+  StatusUISystem(Input& input, SDL_Interface& sdl_interface);
 
   void update();
   void render();

@@ -19,7 +19,7 @@ constexpr int NUM_ITEMS(100);
 class EntitySystem
 {
   void setup_users();
-  void setup_resoureces();
+  void setup_resources();
 
   void apply_user_inputs();
   void handle_activation();

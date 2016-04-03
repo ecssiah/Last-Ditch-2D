@@ -21,10 +21,10 @@ UISystem::UISystem(
     time_system(_time_system),
     entity_system(_entity_system),
     inventory_system(_inventory_system),
-    inventory_ui_system(_sdl_interface, _input, _entity_system, _inventory_system),
-    production_ui_system(_sdl_interface, _input),
-    management_ui_system(_sdl_interface, _input),
-    status_ui_system(_sdl_interface, _input),
+    inventory_ui_system(_input, _sdl_interface, _entity_system, _inventory_system),
+    production_ui_system(_input, _sdl_interface),
+    management_ui_system(_input, _sdl_interface),
+    status_ui_system(_input, _sdl_interface),
     base_active(true),
     main_active(false)
 {
@@ -62,7 +62,7 @@ void UISystem::render()
 
 void UISystem::render_base()
 {
-  sdl_interface.render_ui_element(date_and_time);
+  sdl_interface.render_element(date_and_time);
 }
 
 
@@ -90,6 +90,7 @@ void UISystem::setup_main()
   auto vert_offset(100);
   auto horz_offset(160);
 
+  Button inventory_button;
   inventory_button.type = "button1";
   inventory_button.texture = "ui1";
   inventory_button.text = "Inventory";
@@ -101,7 +102,9 @@ void UISystem::setup_main()
   inventory_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
   sdl_interface.generate_text_element(inventory_button);
+  main_buttons.push_back(inventory_button);
 
+  Button production_button;
   production_button.type = "button1";
   production_button.texture = "ui1";
   production_button.text = "Production";
@@ -113,7 +116,9 @@ void UISystem::setup_main()
   production_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
   sdl_interface.generate_text_element(production_button);
+  main_buttons.push_back(production_button);
 
+  Button management_button;
   management_button.type = "button1";
   management_button.texture = "ui1";
   management_button.text = "Management";
@@ -125,7 +130,9 @@ void UISystem::setup_main()
   management_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
   sdl_interface.generate_text_element(management_button);
+  main_buttons.push_back(management_button);
 
+  Button status_button;
   status_button.type = "button1";
   status_button.texture = "ui1";
   status_button.text = "Status";
@@ -137,6 +144,7 @@ void UISystem::setup_main()
   status_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
   sdl_interface.generate_text_element(status_button);
+  main_buttons.push_back(status_button);
 }
 
 
@@ -148,42 +156,37 @@ void UISystem::update_base()
 }
 
 
-void UISystem::update_main()
+void UISystem::handle_activate_event()
 {
-  if (input.activate)
+  for (auto& button : main_buttons)
   {
-    auto element(find_scalable_element_at(input.left_mouse_released_pos));
+    input.activate = false;
 
-    if (element)
+    if (button.text == "Inventory")
     {
-      input.activate = false;
-
-      if (element->text == "Inventory")
-      {
-	main_active = false;
-	inventory_ui_system.set_active(true);
-      }
-      else if (element->text == "Production")
-      {
-	main_active = false;
-	production_ui_system.set_active(true);
-      }
-      else if (element->text == "Management")
-      {
-	main_active = false;
-	management_ui_system.set_active(true);
-      }
-      else if (element->text == "Status")
-      {
-	main_active = false;
-	status_ui_system.set_active(true);
-      }
+      main_active = false;
+      inventory_ui_system.set_active(true);
+    }
+    else if (button.text == "Production")
+    {
+      main_active = false;
+      production_ui_system.set_active(true);
+    }
+    else if (button.text == "Management")
+    {
+      main_active = false;
+      management_ui_system.set_active(true);
+    }
+    else if (button.text == "Status")
+    {
+      main_active = false;
+      status_ui_system.set_active(true);
     }
   }
 }
 
 
-void UISystem::handle_menu_activation()
+void UISystem::handle_menu_event()
 {
   input.menu = false;
 
@@ -197,21 +200,4 @@ void UISystem::handle_menu_activation()
     status_ui_system.set_active(false);
   else
     main_active = !main_active;
-}
-
-
-ScalableElement* UISystem::find_scalable_element_at(Vector2i& screen_pos)
-{
-  for (auto& element : main_scalable_elements)
-  {
-    auto hit(
-      screen_pos.x() > element.pos.x() &&
-      screen_pos.x() < element.pos.x() + element.size.x() &&
-      screen_pos.y() > element.pos.y() &&
-      screen_pos.y() < element.pos.y() + element.size.y());
-
-    if (hit) return &element;
-  }
-
-  return nullptr;
 }

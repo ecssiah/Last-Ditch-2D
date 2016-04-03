@@ -9,6 +9,10 @@ namespace ld
 struct Weapon : public Item
 {
   Weapon() = default;
+
+  float physical_damage;
+  float energy_damage;
+  float burning_damage;
 };
 
 }

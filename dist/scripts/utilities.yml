@@ -6,6 +6,6 @@ rations-basic:
   weight: 1.6
   volume: .6
   effects:
-    hunger: 12.8
-    fatigue: 4.0
-    sanity: .02
+    hunger: [12.8, 4]
+    fatigue: [4.0, 12]
+    sanity: [.02, 1]

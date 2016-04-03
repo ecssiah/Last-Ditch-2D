@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 
-#include "../components/UserInfo.h"
+#include "../components/info/UserInfo.h"
 
 namespace ld
 {

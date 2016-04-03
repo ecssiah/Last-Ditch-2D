@@ -7,9 +7,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../components/ScalableElement.h"
-#include "../components/TextElement.h"
-#include "../components/UIElement.h"
+#include "../components/ui/Element.h"
+#include "../components/ui/Text.h"
+#include "../components/ui/Window.h"
 #include "../components/User.h"
 #include "../SDL_Interface.h"
 #include "EntitySystem.h"
@@ -51,11 +51,9 @@ class UISystem
   bool base_active;
   bool main_active;
 
-  TextElement date_and_time;
-  ButtonElement inventory_button;
-  ButtonElement production_button;
-  ButtonElement management_button;
-  ButtonElement status_button;
+  Text date_and_time;
+
+  std::vector<Button> main_buttons;
 
 public:
   UISystem(
