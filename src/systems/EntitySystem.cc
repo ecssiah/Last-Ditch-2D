@@ -31,7 +31,7 @@ EntitySystem::EntitySystem(
   setup_items();
   setup_users();
 
-  cout << "EntitySystem ready" << endl;
+  printf("EntitySystem ready\n");
 }
 
 

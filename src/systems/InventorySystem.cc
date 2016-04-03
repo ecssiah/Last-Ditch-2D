@@ -8,7 +8,7 @@ using namespace std;
 InventorySystem::InventorySystem(EntitySystem& _entity_system)
   : entity_system(_entity_system)
 {
-  cout << "InventorySystem ready" << endl;
+  printf("InventorySystem ready\n");
 }
 
 

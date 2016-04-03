@@ -25,7 +25,7 @@ TimeSystem::TimeSystem(Input& _input)
     hour * MINUTES_PER_HOUR +
     minute;
 
-  cout << endl << "TimeSystem ready" << endl;
+  printf("TimeSystem ready\n");
 }
 
 

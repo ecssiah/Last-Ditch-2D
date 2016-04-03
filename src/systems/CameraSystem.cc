@@ -12,7 +12,7 @@ CameraSystem::CameraSystem(SDL_Interface& _sdl_interface, vector<User>& _users)
   : sdl_interface(_sdl_interface),
     users(_users)
 {
-  cout << "CameraSystem ready" << endl;
+  printf("CameraSystem ready\n");
 }
 
 

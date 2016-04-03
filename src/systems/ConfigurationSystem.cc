@@ -16,6 +16,8 @@ ConfigurationSystem::ConfigurationSystem()
   load_item_data();
   load_tile_data();
   load_user_data();
+
+  printf("\nConfigurationSystem ready\n");
 }
 
 
@@ -75,6 +77,32 @@ void ConfigurationSystem::load_tile_data()
 }
 
 
+void ConfigurationSystem::load_animation_data(
+  UserInfo& user_info_entry, YAML::Node& user_data_map)
+{
+  YAML::Node animation_data_map(user_data_map["animation_data"]);
+
+  for (auto kv : animation_data_map)
+  {
+    YAML::Node animation_info_map(kv.second);
+
+    SDL_Rect clip_rect;
+    clip_rect.x = animation_info_map["uv"][0].as<unsigned>() * PIXELS_PER_UNIT;
+    clip_rect.y = animation_info_map["uv"][1].as<unsigned>() * PIXELS_PER_UNIT;
+    clip_rect.w = PIXELS_PER_UNIT;
+    clip_rect.h = PIXELS_PER_UNIT;
+
+    AnimationInfo animation_info_entry;
+    animation_info_entry.frames = animation_info_map["frames"].as<unsigned>();
+    animation_info_entry.clip_rect = clip_rect;
+
+    auto type(kv.first.as<std::string>());
+
+    user_info_entry.animation_data[type] = animation_info_entry;
+  }
+}
+
+
 void ConfigurationSystem::load_user_data()
 {
   const auto user_data(YAML::LoadFile("scripts/users.yml"));
@@ -87,24 +115,7 @@ void ConfigurationSystem::load_user_data()
     user_info_entry.name = user_data_map["name"].as<std::string>();
     user_info_entry.texture = user_data_map["texture"].as<std::string>();
 
-    for (auto animation_kv : user_data_map["animation_data"])
-    {
-      YAML::Node user_animation_map(animation_kv.second);
-
-      SDL_Rect clip_rect;
-      clip_rect.x = user_animation_map["uv"][0].as<unsigned>() * PIXELS_PER_UNIT;
-      clip_rect.y = user_animation_map["uv"][1].as<unsigned>() * PIXELS_PER_UNIT;
-      clip_rect.w = PIXELS_PER_UNIT;
-      clip_rect.h = PIXELS_PER_UNIT;
-
-      AnimationInfo animation_info_entry;
-      animation_info_entry.frames = user_animation_map["frames"].as<unsigned>();
-      animation_info_entry.clip_rect = clip_rect;
-
-      auto animation_type(kv.first.as<std::string>());
-
-      user_info_entry.animation_data[animation_type] = animation_info_entry;
-    }
+    load_animation_data(user_info_entry, user_data_map);
 
     auto type(kv.first.as<std::string>());
 

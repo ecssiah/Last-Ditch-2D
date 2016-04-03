@@ -30,6 +30,8 @@ UISystem::UISystem(
 {
   setup_base();
   setup_main();
+
+  printf("UISystem ready\n");
 }
 
 

@@ -9,7 +9,7 @@ using namespace std;
 InputSystem::InputSystem(Input& input_)
   : input(input_)
 {
-  cout << "InputSystem ready" << endl;
+  printf("InputSystem ready\n");
 }
 
 
@@ -18,7 +18,7 @@ void InputSystem::update()
   if (input.activate)
   {
     input.activate = false;
-    cout << "unused activation" << endl;
+    printf("Unused activation event\n");
   }
 
   input.mouse_motion = false;

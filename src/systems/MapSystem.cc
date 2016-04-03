@@ -18,7 +18,7 @@ MapSystem::MapSystem()
 {
   setup_map();
 
-  cout << "MapSystem ready" << endl;
+  printf("MapSystem ready\n");
 }
 
 
