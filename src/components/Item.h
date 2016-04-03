@@ -1,9 +1,12 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include <functional>
+#include <vector>
 
 #include "Entity.h"
+#include "Effect.h"
+#include "Damage.h"
+#include "Defense.h"
 
 namespace ld
 {
@@ -18,10 +21,14 @@ struct Item : public Entity
   bool contained;
 
   float value;
-  float quality;
-  float durability;
   float weight;
   float volume;
+  float quality;
+  float durability;
+
+  std::vector<Effect> effects;
+  std::vector<Damage> damage;
+  std::vector<Defense> defense;
 };
 
 }

@@ -11,6 +11,7 @@ struct Effect
   Effect() = default;
 
   std::string type;
+
   float value;
   unsigned duration;
 };

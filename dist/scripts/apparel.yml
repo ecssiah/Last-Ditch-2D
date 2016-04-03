@@ -1,8 +1,0 @@
-tunic:
-  name: Tunic
-  texture: items1
-  uv: [0, 0]
-  value: 3.4
-  weight: 1.6
-  volume: 2.4
-  defense: 1.0

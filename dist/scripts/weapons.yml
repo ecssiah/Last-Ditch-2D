@@ -1,8 +1,0 @@
-handgun:
-  name: Handgun
-  texture: items1
-  uv: [0, 0]
-  value: 8.2
-  weight: 4.6
-  volume: .4
-  damage: 12.8

@@ -523,8 +523,8 @@ void InventoryUISystem::update_preview_image()
   {
     auto& slot_info(current_slots[inventory_list.index]);
 
-    preview_image.clip_rect.x = Item_Data[slot_info.category][slot_info.type].clip_rect.x;
-    preview_image.clip_rect.y = Item_Data[slot_info.category][slot_info.type].clip_rect.y;
+    preview_image.clip_rect.x = Item_Data[slot_info.type].clip_rect.x;
+    preview_image.clip_rect.y = Item_Data[slot_info.type].clip_rect.y;
   }
   else
   {

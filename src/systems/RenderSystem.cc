@@ -33,8 +33,6 @@ RenderSystem::RenderSystem(
 {
   physics_system.set_debug_draw(debug_draw);
 
-  setup_textures();
-
   cout << "RenderSystem ready" << endl;
 }
 

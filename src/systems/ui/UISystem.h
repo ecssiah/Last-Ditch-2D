@@ -28,7 +28,6 @@ class UISystem
   void setup_main();
 
   void update_base();
-  void update_main();
 
   void render_base();
   void render_main();

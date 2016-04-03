@@ -18,16 +18,16 @@ constexpr int NUM_ITEMS(100);
 
 class EntitySystem
 {
+  void setup_items();
   void setup_users();
-  void setup_resources();
 
   void apply_user_inputs();
   void handle_activation();
 
   void update_users();
 
-  std::string get_random_resource_type();
-  void give_random_resource(User& user);
+  std::string get_random_item_type();
+  void give_random_item(User& user);
 
   bool find_and_interact_door(Eigen::Vector2f& selection_point, Chunk& chunk);
   bool find_and_interact_item(Eigen::Vector2f& selection_point, Chunk& chunk);
@@ -36,10 +36,10 @@ class EntitySystem
 
   Input& input;
 
-  std::vector<User>& users;
-
   CameraSystem& camera_system;
   MapSystem& map_system;
+
+  std::vector<User>& users;
 
 public:
   EntitySystem(

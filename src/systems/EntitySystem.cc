@@ -6,7 +6,7 @@
 #include <random>
 
 #include "../components/Door.h"
-#include "../components/Resource.h"
+#include "../components/Item.h"
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
@@ -28,9 +28,8 @@ EntitySystem::EntitySystem(
     map_system(_map_system),
     camera_system(_camera_system)
 {
+  setup_items();
   setup_users();
-
-  setup_resources();
 
   cout << "EntitySystem ready" << endl;
 }
@@ -48,39 +47,38 @@ void EntitySystem::setup_users()
   users[0].size = {.48f, .48f};
   users[0].clip_rect = User_Data[users[0].type].animation_data[users[0].animation].clip_rect;
 
-  for (auto i(0); i < 10; ++i) give_random_resource(users[0]);
+  for (auto i(0); i < 10; ++i) give_random_item(users[0]);
 }
 
 
-void EntitySystem::give_random_resource(User& user)
+void EntitySystem::give_random_item(User& user)
 {
-  Resource resource;
-  resource.type = get_random_resource_type();
+  Item item;
+  item.type = get_random_item_type();
 
-  resource.texture = Resource_Data[resource.type].texture;
-  resource.name = Resource_Data[resource.type].name;
-  resource.category = Resource_Data[resource.type].category;
+  item.texture = Item_Data[item.type].texture;
+  item.name = Item_Data[item.type].name;
+  item.category = Item_Data[item.type].category;
+  item.value = Item_Data[item.type].value;
+  item.quality = Item_Data[item.type].quality;
+  item.weight = Item_Data[item.type].weight;
+  item.volume = Item_Data[item.type].volume;
 
-  resource.value = Resource_Data[resource.type].value;
-  resource.quality = Resource_Data[resource.type].quality;
-  resource.weight = Resource_Data[resource.type].weight;
-  resource.volume = Resource_Data[resource.type].volume;
-
-  user.inventory.items.push_back(resource);
+  user.inventory.items.push_back(item);
 }
 
 
-std::string EntitySystem::get_random_resource_type()
+std::string EntitySystem::get_random_item_type()
 {
-  uniform_int_distribution<> type_dist(0, Resource_Types.size() - 1);
+  uniform_int_distribution<> type_dist(0, Item_Types.size() - 1);
 
-  auto it(std::next(std::begin(Resource_Types), type_dist(rng)));
+  auto it(std::next(std::begin(Item_Types), type_dist(rng)));
 
   return *it;
 }
 
 
-void EntitySystem::setup_resources()
+void EntitySystem::setup_items()
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
@@ -89,23 +87,23 @@ void EntitySystem::setup_resources()
       uniform_real_distribution<> x_dist(0, MAP_SIZE_X - 1);
       uniform_real_distribution<> y_dist(0, MAP_SIZE_Y - 1);
 
-      Resource resource;
-      resource.floor = floor;
-      resource.type = get_random_resource_type();
-      resource.texture = Resource_Data[resource.type].texture;
-      resource.name = Resource_Data[resource.type].name;
-      resource.category = Resource_Data[resource.type].category;
-      resource.value = Resource_Data[resource.type].value;
-      resource.quality = Resource_Data[resource.type].quality;
-      resource.weight = Resource_Data[resource.type].weight;
-      resource.volume = Resource_Data[resource.type].volume;
+      Item item;
+      item.floor = floor;
+      item.type = get_random_item_type();
+      item.texture = Item_Data[item.type].texture;
+      item.name = Item_Data[item.type].name;
+      item.category = Item_Data[item.type].category;
+      item.value = Item_Data[item.type].value;
+      item.quality = Item_Data[item.type].quality;
+      item.weight = Item_Data[item.type].weight;
+      item.volume = Item_Data[item.type].volume;
 
       for (auto i(0); i < 1000; ++i)
       {
 	float x(x_dist(rng));
 	float y(y_dist(rng));
-	float size_x(resource.size.x());
-	float size_y(resource.size.y());
+	float size_x(item.size.x());
+	float size_y(item.size.y());
 
 	auto clear(
 	  !map_system.get_main_tile(x,          y,          floor).solid &&
@@ -115,8 +113,8 @@ void EntitySystem::setup_resources()
 
 	if (clear)
 	{
-	  resource.pos = {x, y};
-	  map_system.get_chunk(x, y, floor).items.push_back(resource);
+	  item.pos = {x, y};
+	  map_system.get_chunk(x, y, floor).items.push_back(item);
 
 	  break;
 	}

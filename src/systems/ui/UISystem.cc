@@ -39,7 +39,6 @@ void UISystem::update()
   if (input.activate) handle_activate_event();
 
   if (base_active) update_base();
-  if (main_active) update_main();
 
   if (inventory_ui_system.is_active()) inventory_ui_system.update();
   if (production_ui_system.is_active()) production_ui_system.update();

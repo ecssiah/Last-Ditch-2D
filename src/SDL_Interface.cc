@@ -116,6 +116,12 @@ void SDL_Interface::generate_window_element(Window& element)
 }
 
 
+void SDL_Interface::generate_button_element(Button& element)
+{
+
+}
+
+
 void SDL_Interface::generate_list_element(List& element)
 {
   SDL_Surface* list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
@@ -230,4 +236,10 @@ void SDL_Interface::render_button_element(Button& element)
 void SDL_Interface::render_window_element(Window& element)
 {
   SDL_RenderCopy(renderer, textures[element.texture], nullptr, &element.dest_rect);
+}
+
+
+void SDL_Interface::render_list_element(List& element)
+{
+
 }
