@@ -1,10 +1,11 @@
 #include "EntitySystem.h"
 
-#include <cassert>
+#include <algorithm>
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 #include <random>
 
+#include "../Utils.h"
 #include "../components/Door.h"
 #include "../components/Item.h"
 #include "../constants/ItemConstants.h"
@@ -12,9 +13,12 @@
 #include "../constants/RenderConstants.h"
 #include "../constants/UserConstants.h"
 
-using namespace ld;
 using namespace Eigen;
 using namespace std;
+using namespace Utils;
+
+namespace ld
+{
 
 EntitySystem::EntitySystem(
   mt19937& _rng,
@@ -32,49 +36,6 @@ EntitySystem::EntitySystem(
   setup_users();
 
   printf("EntitySystem ready\n");
-}
-
-
-void EntitySystem::setup_users()
-{
-  users[0].name = "Kadijah";
-  users[0].type = "kadijah";
-  users[0].texture = "kadijah";
-  users[0].animation = "idle-front";
-  users[0].floor = 0;
-  users[0].speed = 50.f;
-  users[0].pos = {3, 9};
-  users[0].size = {.48f, .48f};
-  users[0].clip_rect = User_Data[users[0].type].animation_data[users[0].animation].clip_rect;
-
-  for (auto i(0); i < 10; ++i) give_random_item(users[0]);
-}
-
-
-void EntitySystem::give_random_item(User& user)
-{
-  Item item;
-  item.type = get_random_item_type();
-
-  item.texture = Item_Data[item.type].texture;
-  item.name = Item_Data[item.type].name;
-  item.category = Item_Data[item.type].category;
-  item.value = Item_Data[item.type].value;
-  item.quality = Item_Data[item.type].quality;
-  item.weight = Item_Data[item.type].weight;
-  item.volume = Item_Data[item.type].volume;
-
-  user.inventory.items.push_back(item);
-}
-
-
-std::string EntitySystem::get_random_item_type()
-{
-  uniform_int_distribution<> type_dist(0, Item_Types.size() - 1);
-
-  auto it(std::next(std::begin(Item_Types), type_dist(rng)));
-
-  return *it;
 }
 
 
@@ -121,6 +82,25 @@ void EntitySystem::setup_items()
       }
     }
   }
+}
+
+
+void EntitySystem::setup_users()
+{
+  User user;
+  user.name = "Kadijah";
+  user.type = "kadijah";
+  user.texture = "kadijah";
+  user.animation = "idle-front";
+  user.floor = 0;
+  user.speed = 50.f;
+  user.pos = {3.f, 9.f};
+  user.size = {.48f, .48f};
+  user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
+
+  for (auto i(0); i < 10; ++i) give_random_item(user);
+
+  users.push_back(user);
 }
 
 
@@ -204,6 +184,31 @@ void EntitySystem::handle_activation()
 }
 
 
+void EntitySystem::give_random_item(User& user)
+{
+  Item item;
+  item.type = get_random_item_type();
+  item.texture = Item_Data[item.type].texture;
+  item.name = Item_Data[item.type].name;
+  item.category = Item_Data[item.type].category;
+  item.value = Item_Data[item.type].value;
+  item.quality = Item_Data[item.type].quality;
+  item.weight = Item_Data[item.type].weight;
+  item.volume = Item_Data[item.type].volume;
+
+  user.inventory.items.push_back(item);
+}
+
+
+std::string EntitySystem::get_random_item_type()
+{
+  auto item_types(Item_Types);
+  std::random_shuffle(item_types.begin(), item_types.end());
+
+  return item_types[0];
+}
+
+
 bool EntitySystem::find_and_interact_door(Vector2f& selection_point, Chunk& chunk)
 {
   for (auto& door : chunk.doors)
@@ -258,4 +263,6 @@ bool EntitySystem::find_and_interact_item(Vector2f& selection_point, Chunk& chun
   }
 
   return false;
+}
+
 }

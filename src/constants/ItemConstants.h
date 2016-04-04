@@ -1,6 +1,7 @@
 #ifndef ITEMCONSTANTS_H
 #define ITEMCONSTANTS_H
 
+#include <string>
 #include <vector>
 #include <unordered_map>
 
@@ -9,9 +10,9 @@
 namespace ld
 {
 
-static std::vector<std::string> Item_Types;
+extern std::vector<std::string> Item_Types;
 
-static std::unordered_map<std::string, ItemInfo> Item_Data;
+extern std::unordered_map<std::string, ItemInfo> Item_Data;
 
 }
 

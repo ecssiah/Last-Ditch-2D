@@ -8,13 +8,16 @@
 using namespace Eigen;
 using namespace ld;
 
-float Utils::clamp(float value, float lower_bound, float upper_bound)
+namespace Utils
+{
+
+float clamp(float value, float lower_bound, float upper_bound)
 {
   return std::max(lower_bound, std::min(value, upper_bound));
 }
 
 
-bool Utils::ends_with(const std::string& string, const std::string& suffix)
+bool ends_with(const std::string& string, const std::string& suffix)
 {
   if (string.length() >= suffix.length())
   {
@@ -27,7 +30,7 @@ bool Utils::ends_with(const std::string& string, const std::string& suffix)
 }
 
 
-bool Utils::point_intersects_element(Vector2i point, Element& element)
+bool point_intersects_element(Vector2i point, Element& element)
 {
   auto hit(
     point.x() >= element.dest_rect.x &&
@@ -36,4 +39,12 @@ bool Utils::point_intersects_element(Vector2i point, Element& element)
     point.y() < element.dest_rect.y + element.dest_rect.h);
 
   return hit;
+}
+
+
+void print_rect(SDL_Rect& rect)
+{
+  printf("%d %d %d %d\n", rect.x, rect.y, rect.w, rect.h);
+}
+
 }

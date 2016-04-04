@@ -7,6 +7,7 @@ set(
   ./LastDitch.h
   ./src/SDL_Interface.h
   ./src/Utils.h
+  ./src/constants/ItemConstants.h
   ./src/systems/ConfigurationSystem.h
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
@@ -27,6 +28,7 @@ set(
   ./LastDitch.cc
   ./src/SDL_Interface.cc
   ./src/Utils.cc
+  ./src/constants/ItemConstants.cc
   ./src/systems/ConfigurationSystem.cc
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc

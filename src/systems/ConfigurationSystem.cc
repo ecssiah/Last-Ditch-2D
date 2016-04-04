@@ -23,25 +23,25 @@ ConfigurationSystem::ConfigurationSystem()
 
 void ConfigurationSystem::load_item_data()
 {
-  const auto item_data(YAML::LoadFile("scripts/items.yml"));
+  YAML::Node item_data_node(YAML::LoadFile("scripts/items.yml"));
 
-  for (auto kv : item_data)
+  for (auto kv : item_data_node)
   {
-    YAML::Node item_data_map(kv.second);
+    YAML::Node item_info_node(kv.second);
 
     SDL_Rect clip_rect;
-    clip_rect.x = item_data_map["uv"][0].as<int>() * HALF_UNIT;
-    clip_rect.x = item_data_map["uv"][1].as<int>() * HALF_UNIT;
+    clip_rect.x = item_info_node["uv"][0].as<int>() * HALF_UNIT;
+    clip_rect.x = item_info_node["uv"][1].as<int>() * HALF_UNIT;
     clip_rect.w = HALF_UNIT;
     clip_rect.h = HALF_UNIT;
 
     ItemInfo item_info_entry;
-    item_info_entry.name = item_data_map["name"].as<std::string>();
-    item_info_entry.texture = item_data_map["texture"].as<std::string>();
-    item_info_entry.category = item_data_map["category"].as<std::string>();
-    item_info_entry.value = item_data_map["value"].as<float>();
-    item_info_entry.weight = item_data_map["weight"].as<float>();
-    item_info_entry.volume = item_data_map["volume"].as<float>();
+    item_info_entry.name = item_info_node["name"].as<std::string>();
+    item_info_entry.texture = item_info_node["texture"].as<std::string>();
+    item_info_entry.category = item_info_node["category"].as<std::string>();
+    item_info_entry.value = item_info_node["value"].as<float>();
+    item_info_entry.weight = item_info_node["weight"].as<float>();
+    item_info_entry.volume = item_info_node["volume"].as<float>();
     item_info_entry.clip_rect = clip_rect;
 
     auto type(kv.first.as<std::string>());
@@ -54,20 +54,20 @@ void ConfigurationSystem::load_item_data()
 
 void ConfigurationSystem::load_tile_data()
 {
-  const auto tile_data(YAML::LoadFile("scripts/tiles.yml"));
+  YAML::Node tile_data_node(YAML::LoadFile("scripts/tiles.yml"));
 
-  for (auto kv : tile_data)
+  for (auto kv : tile_data_node)
   {
-    YAML::Node tile_data_map(kv.second);
+    YAML::Node tile_info_node(kv.second);
 
     SDL_Rect clip_rect;
-    clip_rect.x = tile_data_map["uv"][0].as<int>() * PIXELS_PER_UNIT;
-    clip_rect.x = tile_data_map["uv"][1].as<int>() * PIXELS_PER_UNIT;
+    clip_rect.x = tile_info_node["uv"][0].as<int>() * PIXELS_PER_UNIT;
+    clip_rect.x = tile_info_node["uv"][1].as<int>() * PIXELS_PER_UNIT;
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
 
     TileInfo tile_info_entry;
-    tile_info_entry.texture = tile_data_map["texture"].as<std::string>();
+    tile_info_entry.texture = tile_info_node["texture"].as<std::string>();
     tile_info_entry.clip_rect = clip_rect;
 
     auto type(kv.first.as<std::string>());
@@ -78,22 +78,22 @@ void ConfigurationSystem::load_tile_data()
 
 
 void ConfigurationSystem::load_animation_data(
-  UserInfo& user_info_entry, YAML::Node& user_data_map)
+  UserInfo& user_info_entry, YAML::Node& user_info_node)
 {
-  YAML::Node animation_data_map(user_data_map["animation_data"]);
+  YAML::Node animation_data_node(user_info_node["animation_data"]);
 
-  for (auto kv : animation_data_map)
+  for (auto kv : animation_data_node)
   {
-    YAML::Node animation_info_map(kv.second);
+    YAML::Node animation_info_node(kv.second);
 
     SDL_Rect clip_rect;
-    clip_rect.x = animation_info_map["uv"][0].as<unsigned>() * PIXELS_PER_UNIT;
-    clip_rect.y = animation_info_map["uv"][1].as<unsigned>() * PIXELS_PER_UNIT;
+    clip_rect.x = animation_info_node["uv"][0].as<unsigned>() * PIXELS_PER_UNIT;
+    clip_rect.y = animation_info_node["uv"][1].as<unsigned>() * PIXELS_PER_UNIT;
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
 
     AnimationInfo animation_info_entry;
-    animation_info_entry.frames = animation_info_map["frames"].as<unsigned>();
+    animation_info_entry.frames = animation_info_node["frames"].as<unsigned>();
     animation_info_entry.clip_rect = clip_rect;
 
     auto type(kv.first.as<std::string>());
@@ -105,17 +105,17 @@ void ConfigurationSystem::load_animation_data(
 
 void ConfigurationSystem::load_user_data()
 {
-  const auto user_data(YAML::LoadFile("scripts/users.yml"));
+  YAML::Node user_data_node(YAML::LoadFile("scripts/users.yml"));
 
-  for (auto kv : user_data)
+  for (auto kv : user_data_node)
   {
-    YAML::Node user_data_map(kv.second);
+    YAML::Node user_info_node(kv.second);
 
     UserInfo user_info_entry;
-    user_info_entry.name = user_data_map["name"].as<std::string>();
-    user_info_entry.texture = user_data_map["texture"].as<std::string>();
+    user_info_entry.name = user_info_node["name"].as<std::string>();
+    user_info_entry.texture = user_info_node["texture"].as<std::string>();
 
-    load_animation_data(user_info_entry, user_data_map);
+    load_animation_data(user_info_entry, user_info_node);
 
     auto type(kv.first.as<std::string>());
 
@@ -126,7 +126,7 @@ void ConfigurationSystem::load_user_data()
 
 void ConfigurationSystem::load_element_data()
 {
-  const auto element_data(YAML::LoadFile("scripts/ui.yml"));
+  YAML::Node element_data(YAML::LoadFile("scripts/ui.yml"));
 
   for (auto kv : element_data)
   {
