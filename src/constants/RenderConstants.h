@@ -4,14 +4,14 @@
 namespace ld
 {
 
-constexpr unsigned PIXELS_PER_UNIT(48);
-constexpr unsigned HALF_UNIT(PIXELS_PER_UNIT / 2);
-constexpr unsigned SCREEN_SIZE_X(800);
-constexpr unsigned SCREEN_SIZE_Y(600);
-constexpr unsigned HALF_SCREEN_SIZE_X(SCREEN_SIZE_X / 2);
-constexpr unsigned HALF_SCREEN_SIZE_Y(SCREEN_SIZE_Y / 2);
-constexpr float HALF_SCREEN_SIZE_X_WORLD(HALF_SCREEN_SIZE_X / (float)PIXELS_PER_UNIT);
-constexpr float HALF_SCREEN_SIZE_Y_WORLD(HALF_SCREEN_SIZE_Y / (float)PIXELS_PER_UNIT);
+extern const unsigned PIXELS_PER_UNIT;
+extern const unsigned HALF_UNIT;
+extern const unsigned SCREEN_SIZE_X;
+extern const unsigned SCREEN_SIZE_Y;
+extern const unsigned HALF_SCREEN_SIZE_X;
+extern const unsigned HALF_SCREEN_SIZE_Y;
+extern const float HALF_SCREEN_SIZE_X_WORLD;
+extern const float HALF_SCREEN_SIZE_Y_WORLD;
 
 }
 

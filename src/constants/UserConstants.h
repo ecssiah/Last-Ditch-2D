@@ -8,7 +8,7 @@
 namespace ld
 {
 
-static std::unordered_map<std::string, UserInfo> User_Data;
+extern std::unordered_map<std::string, UserInfo> User_Data;
 
 }
 

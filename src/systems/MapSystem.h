@@ -16,8 +16,10 @@ namespace ld
 class MapSystem
 {
   void setup_map();
-  void layout_room(int x, int y, int w, int h, int floor);
-  void create_door(std::string type, int x, int y, int floor, float roation = 0.f);
+  void layout_room(
+    unsigned x, unsigned y, unsigned w, unsigned h, unsigned floor);
+  void create_door(
+    std::string type, unsigned x, unsigned y, unsigned floor, float rotation = 0.f);
 
   bool dirty;
 
@@ -33,21 +35,17 @@ public:
 
   void use_door(Door& door);
 
-  Chunk& get_chunk(int x, int y, int floor);
-  Chunk& get_chunk(float x, float y, int floor);
-
-  Tile& get_main_tile(int x, int y, int floor);
-  Tile& get_main_tile(float x, float y, int floor);
-  Tile& get_floor_tile(int x, int y, int floor);
-  Tile& get_floor_tile(float x, float y, int floor);
+  Chunk& get_chunk(unsigned x, unsigned y, unsigned floor);
+  Tile& get_main_tile(unsigned x, unsigned y, unsigned floor);
+  Tile& get_floor_tile(unsigned x, unsigned y, unsigned floor);
 
   void set_main_tile(
     std::string texture_name,
-    int x, int y, int floor,
+    unsigned x, unsigned y, unsigned floor,
     float rotation = 0.f, bool solid = true);
   void set_floor_tile(
     std::string texture_name,
-    int x, int y, int floor,
+    unsigned x, unsigned y, unsigned floor,
     float rotation = 0.f);
 };
 

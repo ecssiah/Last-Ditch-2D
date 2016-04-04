@@ -39,9 +39,9 @@ void PhysicsSystem::update(const double& dt)
 
     for (auto floor(0); floor < NUM_FLOORS; ++floor)
     {
-      for (auto cx(0); cx < MAP_SIZE_X; ++cx)
+      for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
       {
-	for (auto cy(0); cy < MAP_SIZE_Y; ++cy)
+	for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
 	{
 	  auto& chunk(map_system.get_chunk(cx, cy, floor));
 

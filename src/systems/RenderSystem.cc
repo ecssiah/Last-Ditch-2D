@@ -110,8 +110,7 @@ void RenderSystem::render_tiles(int floor)
   {
     for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
     {
-      auto& chunk(
-	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
+      auto& chunk(map_system.get_chunk(cx, cy, floor));
 
       for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
 	for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)

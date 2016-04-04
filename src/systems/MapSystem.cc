@@ -41,6 +41,8 @@ void MapSystem::setup_map()
 	chunk.type = "chunk1";
 	chunk.texture = "chunk_floor1";
 	chunk.floor = floor;
+
+	printf("%s\n", chunk.type.c_str());
       }
     }
   }
@@ -49,7 +51,8 @@ void MapSystem::setup_map()
 }
 
 
-void MapSystem::layout_room(int _x, int _y, int _w, int _h, int _floor)
+void MapSystem::layout_room(
+  unsigned _x, unsigned _y, unsigned _w, unsigned _h, unsigned _floor)
 {
   for (auto x(_x); x < _x + _w; ++x)
   {
@@ -76,40 +79,25 @@ void MapSystem::layout_room(int _x, int _y, int _w, int _h, int _floor)
 }
 
 
-Chunk& MapSystem::get_chunk(int x, int y, int floor)
+Chunk& MapSystem::get_chunk(unsigned cx, unsigned cy, unsigned floor)
 {
-  return chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor];
+  return chunks[cx][cy][floor];
 }
 
 
-Chunk& MapSystem::get_chunk(float x, float y, int floor)
+Tile& MapSystem::get_main_tile(unsigned tx, unsigned ty, unsigned floor)
 {
-  int ix(std::floor(x / TILES_PER_CHUNK_X));
-  int iy(std::floor(y / TILES_PER_CHUNK_Y));
+  unsigned cx(tx / TILES_PER_CHUNK_X);
+  unsigned cy(ty / TILES_PER_CHUNK_Y);
 
-  return get_chunk(ix, iy, floor);
-}
+  auto& chunk(get_chunk(cx, cy, floor));
 
-
-Tile& MapSystem::get_main_tile(int x, int y, int floor)
-{
-  auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
-
-  return chunk.main_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
-}
-
-
-Tile& MapSystem::get_main_tile(float x, float y, int floor)
-{
-  int ix(std::floor(x));
-  int iy(std::floor(y));
-
-  return get_main_tile(ix, iy, floor);
+  return chunk.main_tiles[tx % TILES_PER_CHUNK_X][ty % TILES_PER_CHUNK_Y];
 }
 
 
 void MapSystem::set_main_tile(
-  string type, int x, int y, int floor, float rotation, bool solid)
+  string type, unsigned x, unsigned y, unsigned floor, float rotation, bool solid)
 {
   auto& tile(get_main_tile(x, y, floor));
 
@@ -122,25 +110,19 @@ void MapSystem::set_main_tile(
 }
 
 
-Tile& MapSystem::get_floor_tile(int x, int y, int floor)
+Tile& MapSystem::get_floor_tile(unsigned tx, unsigned ty, unsigned floor)
 {
-  auto& chunk(chunks[x / TILES_PER_CHUNK_X][y / TILES_PER_CHUNK_Y][floor]);
+  unsigned cx(tx / TILES_PER_CHUNK_X);
+  unsigned cy(ty / TILES_PER_CHUNK_Y);
 
-  return chunk.floor_tiles[x % TILES_PER_CHUNK_X][y % TILES_PER_CHUNK_Y];
-}
+  auto& chunk(get_chunk(cx, cy, floor));
 
-
-Tile& MapSystem::get_floor_tile(float x, float y, int floor)
-{
-  int ix(std::floor(x));
-  int iy(std::floor(y));
-
-  return get_floor_tile(ix, iy, floor);
+  return chunk.floor_tiles[tx % TILES_PER_CHUNK_X][ty % TILES_PER_CHUNK_Y];
 }
 
 
 void MapSystem::set_floor_tile(
-  string type, int x, int y, int floor, float rotation)
+  string type, unsigned x, unsigned y, unsigned floor, float rotation)
 {
   auto& tile(get_floor_tile(x, y, floor));
 
@@ -152,7 +134,8 @@ void MapSystem::set_floor_tile(
 }
 
 
-void MapSystem::create_door(string type, int x, int y, int floor, float rotation)
+void MapSystem::create_door(
+  string type, unsigned x, unsigned y, unsigned floor, float rotation)
 {
   Door door;
   door.type = type;

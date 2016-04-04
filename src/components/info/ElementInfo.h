@@ -1,6 +1,7 @@
 #ifndef ELEMENTINFO_H
 #define ELEMENTINFO_H
 
+#include <SDL2/SDL.h>
 #include <string>
 
 namespace ld

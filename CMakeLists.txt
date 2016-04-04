@@ -8,6 +8,11 @@ set(
   ./src/SDL_Interface.h
   ./src/Utils.h
   ./src/constants/ItemConstants.h
+  ./src/constants/MapConstants.h
+  ./src/constants/RenderConstants.h
+  ./src/constants/SimulationConstants.h
+  ./src/constants/UIConstants.h
+  ./src/constants/UserConstants.h
   ./src/systems/ConfigurationSystem.h
   ./src/systems/TimeSystem.h
   ./src/systems/InputSystem.h
@@ -29,6 +34,11 @@ set(
   ./src/SDL_Interface.cc
   ./src/Utils.cc
   ./src/constants/ItemConstants.cc
+  ./src/constants/MapConstants.cc
+  ./src/constants/RenderConstants.cc
+  ./src/constants/SimulationConstants.cc
+  ./src/constants/UIConstants.cc
+  ./src/constants/UserConstants.cc
   ./src/systems/ConfigurationSystem.cc
   ./src/systems/TimeSystem.cc
   ./src/systems/InputSystem.cc
