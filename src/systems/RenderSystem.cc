@@ -42,6 +42,7 @@ void RenderSystem::update(const double& dt)
   update_animations(dt);
   update_textures();
 
+
   sdl_interface.pre_render();
 
   render();
@@ -96,11 +97,9 @@ void RenderSystem::render()
 
 void RenderSystem::render_chunks(int floor)
 {
-  for (int x(0); x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
-  {
-    for (int y(0); y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
-      sdl_interface.render_chunk(map_system.get_chunk(x, y, floor));
-  }
+  for (int cx(0); cx < NUM_CHUNKS_X; ++cx)
+    for (int cy(0); cy < NUM_CHUNKS_Y; ++cy)
+      sdl_interface.render_chunk(map_system.get_chunk(cx, cy, floor));
 }
 
 
@@ -130,7 +129,7 @@ void RenderSystem::render_items(int floor)
   {
     for (auto y(0); y < NUM_CHUNKS_Y; ++y)
     {
-      auto& chunk(map_system.get_chunk(TILES_PER_CHUNK_X * x, TILES_PER_CHUNK_Y * y, floor));
+      auto& chunk(map_system.get_chunk(x, y, floor));
 
       for (auto& item : chunk.items)
 	if (!item.contained) sdl_interface.render_item(item);
@@ -146,7 +145,7 @@ void RenderSystem::render_doors(int floor)
     for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
     {
       auto& chunk(
-	map_system.get_chunk(TILES_PER_CHUNK_X * cx, TILES_PER_CHUNK_Y * cy, floor));
+	map_system.get_chunk(cx, cy, floor));
 
       for (auto& door : chunk.doors)
 	sdl_interface.render_door(door);

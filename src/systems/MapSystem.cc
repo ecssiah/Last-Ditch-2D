@@ -41,8 +41,6 @@ void MapSystem::setup_map()
 	chunk.type = "chunk1";
 	chunk.texture = "chunk_floor1";
 	chunk.floor = floor;
-
-	printf("%s\n", chunk.type.c_str());
       }
     }
   }
@@ -144,7 +142,7 @@ void MapSystem::create_door(
   door.floor = floor;
   door.rotation = rotation;
 
-  auto& chunk(get_chunk(x, y, floor));
+  auto& chunk(get_chunk(x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y, floor));
   chunk.doors.push_back(door);
 }
 
@@ -155,7 +153,11 @@ void MapSystem::use_door(Door& door)
   {
     door.open = !door.open;
 
-    auto& chunk(get_chunk(door.pos.x(), door.pos.y(), door.floor));
+    auto& chunk(
+      get_chunk(
+	door.pos.x() / TILES_PER_CHUNK_X,
+	door.pos.y() / TILES_PER_CHUNK_Y,
+	door.floor));
 
     dirty = true;
     chunk.dirty = true;

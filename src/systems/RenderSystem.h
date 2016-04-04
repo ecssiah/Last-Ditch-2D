@@ -18,8 +18,6 @@ namespace ld
 
 class RenderSystem
 {
-  void setup_textures();
-
   void update_textures();
   void update_animations(const double& dt);
 

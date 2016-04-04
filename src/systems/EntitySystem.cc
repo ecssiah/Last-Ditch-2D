@@ -67,15 +67,16 @@ void EntitySystem::setup_items()
 	float size_y(item.size.y());
 
 	auto clear(
-	  !map_system.get_main_tile(x,          y,          floor).solid &&
-	  !map_system.get_main_tile(x + size_x, y,          floor).solid &&
-	  !map_system.get_main_tile(x,          y + size_y, floor).solid &&
+	  !map_system.get_main_tile(x, y, floor).solid &&
+	  !map_system.get_main_tile(x + size_x, y, floor).solid &&
+	  !map_system.get_main_tile(x, y + size_y, floor).solid &&
 	  !map_system.get_main_tile(x + size_x, y + size_y, floor).solid);
 
 	if (clear)
 	{
 	  item.pos = {x, y};
-	  map_system.get_chunk(x, y, floor).items.push_back(item);
+	  map_system.get_chunk(
+	    x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y, floor).items.push_back(item);
 
 	  break;
 	}

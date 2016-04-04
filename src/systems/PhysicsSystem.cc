@@ -33,68 +33,6 @@ PhysicsSystem::~PhysicsSystem()
 
 void PhysicsSystem::update(const double& dt)
 {
-  if (map_system.is_dirty())
-  {
-    map_system.set_dirty(false);
-
-    for (auto floor(0); floor < NUM_FLOORS; ++floor)
-    {
-      for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
-      {
-	for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
-	{
-	  auto& chunk(map_system.get_chunk(cx, cy, floor));
-
-	  if (chunk.dirty)
-	  {
-	    chunk.dirty = false;
-
-	    for (auto x(0); x < TILES_PER_CHUNK_X; ++x)
-	    {
-	      for (auto y(0); y < TILES_PER_CHUNK_Y; ++y)
-	      {
-		auto& tile(chunk.main_tiles[x][y]);
-
-		if (tile.dirty)
-		{
-		  tile.dirty = false;
-
-		  if (tile.solid)
-		  {
-		    tile.body = create_body(tile.pos.x(), tile.pos.y(), .5, .5);
-		  }
-		  else
-		  {
-		    destroy_body(tile.body);
-		    tile.body = nullptr;
-		  }
-		}
-	      }
-	    }
-
-	    for (auto& door : chunk.doors)
-	    {
-	      if (door.dirty)
-	      {
-		door.dirty = false;
-
-		if (door.solid)
-		{
-		  door.body = create_body(door.pos.x(), door.pos.y(), .5, .5);
-		}
-		else
-		{
-		  destroy_body(door.body);
-		  door.body = nullptr;
-		}
-	      }
-	    }
-	  }
-	}
-      }
-    }
-  }
-
   for (auto& user : users)
   {
     b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
@@ -191,13 +129,11 @@ void PhysicsSystem::setup_door_bodies()
 {
   for (auto floor(0); floor < NUM_FLOORS; ++floor)
   {
-    for (auto x(0); x < MAP_SIZE_X; x += TILES_PER_CHUNK_X)
+    for (auto cx(0); cx < NUM_CHUNKS_X; ++cx)
     {
-      for (auto y(0); y < MAP_SIZE_Y; y += TILES_PER_CHUNK_Y)
+      for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
       {
-	auto& chunk(map_system.get_chunk(x, y, floor));
-
-	for (auto& door : chunk.doors)
+	for (auto& door : map_system.get_chunk(cx, cy, floor).doors)
 	{
 	  if (door.solid)
 	  {
