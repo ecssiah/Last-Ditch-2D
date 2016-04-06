@@ -2,8 +2,10 @@
 
 #include <chrono>
 
-using namespace ld;
 using namespace std;
+
+namespace ld
+{
 
 LastDitch::LastDitch()
   : rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
@@ -33,10 +35,11 @@ LastDitch::LastDitch()
   }
 }
 
+}
 
 int main()
 {
-  LastDitch app;
+  ld::LastDitch app;
 
   return 0;
 }

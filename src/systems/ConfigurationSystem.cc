@@ -9,7 +9,8 @@
 #include "../constants/UserConstants.h"
 #include "../constants/UIConstants.h"
 
-using namespace ld;
+namespace ld
+{
 
 ConfigurationSystem::ConfigurationSystem()
 {
@@ -132,18 +133,24 @@ void ConfigurationSystem::load_element_data()
   {
     YAML::Node element_data_map(kv.second);
 
-    SDL_Rect clip_rect;
-    clip_rect.x = element_data_map["uv"][0].as<unsigned>() * PIXELS_PER_UNIT;
-    clip_rect.y = element_data_map["uv"][1].as<unsigned>() * PIXELS_PER_UNIT;
-    clip_rect.w = PIXELS_PER_UNIT;
-    clip_rect.h = PIXELS_PER_UNIT;
+    ScalableInfo scalable_info_entry;
+    scalable_info_entry.texture = element_data_map["texture"].as<std::string>();
 
-    ElementInfo element_info_entry;
-    element_info_entry.texture = element_data_map["texture"].as<std::string>();
-    element_info_entry.clip_rect = clip_rect;
+    for (auto _kv : element_data_map["sub-elements"])
+    {
+      auto _type(_kv.first.as<std::string>());
+
+      auto& clip_rect(scalable_info_entry.clip_rects[_type]);
+      clip_rect.x = _kv.second[0].as<int>();
+      clip_rect.y = _kv.second[1].as<int>();
+      clip_rect.w = _kv.second[2].as<int>();
+      clip_rect.h = _kv.second[3].as<int>();
+    }
 
     auto type(kv.first.as<std::string>());
 
-    Element_Data[type] = element_info_entry;
+    Scalable_Data[type] = scalable_info_entry;
   }
+}
+
 }

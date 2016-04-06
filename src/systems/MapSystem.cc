@@ -8,9 +8,11 @@
 #include "../constants/RenderConstants.h"
 #include "../components/Door.h"
 
-using namespace ld;
 using namespace Eigen;
 using namespace std;
+
+namespace ld
+{
 
 MapSystem::MapSystem()
   : dirty(false),
@@ -37,10 +39,13 @@ void MapSystem::setup_map()
       {
 	auto& chunk(chunks[cx][cy][floor]);
 
-	chunk.pos = {cx * TILES_PER_CHUNK_X, cy * TILES_PER_CHUNK_Y};
+	chunk.floor = floor;
 	chunk.type = "chunk1";
 	chunk.texture = "chunk_floor1";
-	chunk.floor = floor;
+	chunk.pos = {cx * TILES_PER_CHUNK_X, cy * TILES_PER_CHUNK_Y};
+
+	chunk.dest_rect.x = PIXELS_PER_UNIT * chunk.pos.x();
+	chunk.dest_rect.y = PIXELS_PER_UNIT * chunk.pos.y();
       }
     }
   }
@@ -95,16 +100,20 @@ Tile& MapSystem::get_main_tile(unsigned tx, unsigned ty, unsigned floor)
 
 
 void MapSystem::set_main_tile(
-  string type, unsigned x, unsigned y, unsigned floor, float rotation, bool solid)
+  string type, unsigned x, unsigned y, unsigned floor, unsigned direction, bool solid)
 {
   auto& tile(get_main_tile(x, y, floor));
 
   tile.type = type;
   tile.texture = Tile_Data[type].texture;
-  tile.pos = {x, y};
   tile.floor = floor;
   tile.solid = solid;
-  tile.rotation = rotation;
+  tile.direction = direction;
+  tile.pos = {x, y};
+
+  tile.clip_rect = Tile_Data[type].clip_rect;
+  tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
+  tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
 }
 
 
@@ -120,29 +129,39 @@ Tile& MapSystem::get_floor_tile(unsigned tx, unsigned ty, unsigned floor)
 
 
 void MapSystem::set_floor_tile(
-  string type, unsigned x, unsigned y, unsigned floor, float rotation)
+  string type, unsigned x, unsigned y, unsigned floor, unsigned direction)
 {
   auto& tile(get_floor_tile(x, y, floor));
 
   tile.type = type;
   tile.texture = Tile_Data[type].texture;
   tile.pos = {x, y};
-  tile.rotation = rotation;
+  tile.direction = direction;
   tile.floor = floor;
+
+  tile.clip_rect = Tile_Data[type].clip_rect;
+  tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
+  tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
+  tile.dest_rect.w = PIXELS_PER_UNIT;
+  tile.dest_rect.h = PIXELS_PER_UNIT;
 }
 
 
 void MapSystem::create_door(
-  string type, unsigned x, unsigned y, unsigned floor, float rotation)
+  string type, unsigned x, unsigned y, unsigned floor, unsigned direction)
 {
   Door door;
   door.type = type;
   door.texture = Tile_Data[type + "-closed"].texture;
   door.pos = {x, y};
   door.floor = floor;
-  door.rotation = rotation;
+  door.direction = direction;
+
+  door.dest_rect.x = PIXELS_PER_UNIT * door.pos.x();
+  door.dest_rect.y = PIXELS_PER_UNIT * door.pos.y();
 
   auto& chunk(get_chunk(x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y, floor));
+
   chunk.doors.push_back(door);
 }
 
@@ -159,9 +178,8 @@ void MapSystem::use_door(Door& door)
 	door.pos.y() / TILES_PER_CHUNK_Y,
 	door.floor));
 
-    dirty = true;
-    chunk.dirty = true;
-    door.dirty = true;
     door.solid = !door.open;
   }
+}
+
 }

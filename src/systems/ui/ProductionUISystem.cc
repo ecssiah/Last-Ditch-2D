@@ -2,7 +2,8 @@
 
 #include "../../constants/UIConstants.h"
 
-using namespace ld;
+namespace ld
+{
 
 ProductionUISystem::ProductionUISystem(Input& _input, SDL_Interface& _sdl_interface)
   : input(_input),
@@ -21,7 +22,7 @@ void ProductionUISystem::update()
 
 void ProductionUISystem::render()
 {
-  sdl_interface.render_window_element(base_window);
+  sdl_interface.render_element(base_window);
 }
 
 
@@ -35,4 +36,6 @@ void ProductionUISystem::setup()
   base_window.dest_rect.h = BASE_WINDOW_SIZE_Y;
 
   sdl_interface.generate_window_element(base_window);
+}
+
 }

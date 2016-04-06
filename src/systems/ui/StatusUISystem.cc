@@ -2,7 +2,8 @@
 
 #include "../../constants/UIConstants.h"
 
-using namespace ld;
+namespace ld
+{
 
 StatusUISystem::StatusUISystem(Input& _input, SDL_Interface& _sdl_interface)
   : input(_input),
@@ -20,7 +21,7 @@ void StatusUISystem::update()
 
 void StatusUISystem::render()
 {
-  sdl_interface.render_window_element(base_window);
+  sdl_interface.render_element(base_window);
 }
 
 
@@ -34,4 +35,6 @@ void StatusUISystem::setup()
   base_window.dest_rect.h = BASE_WINDOW_SIZE_Y;
 
   sdl_interface.generate_window_element(base_window);
+}
+
 }

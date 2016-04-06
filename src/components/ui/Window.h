@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "Scalable.h"
+#include "Text.h"
 
 namespace ld
 {
@@ -9,6 +10,8 @@ namespace ld
 struct Window : public Scalable
 {
   Window() = default;
+
+  Text title;
 };
 
 }

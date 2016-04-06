@@ -21,47 +21,34 @@ struct Character : public Entity
       name(std::string()),
       texture(std::string()),
       animation(std::string()),
-      arm_texture(std::string()),
-      arm_animation(std::string()),
       frame(0),
-      arm_frame(0),
-      frame_time(0.f),
-      arm_frame_time(0.f),
+      frame_time(0),
       frame_length(.22f),
-      arm_frame_length(.22f),
-      radius(.5f),
-      speed(1.f),
-      vel(0.f, 0.f),
+      base_speed(1.f),
+      direction(0, 0),
       inventory(),
       equipment(),
-      body(nullptr),
-      clip_rect(),
-      arm_clip_rect()
+      body(nullptr)
   {
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
-    arm_clip_rect.w = PIXELS_PER_UNIT;
-    arm_clip_rect.h = PIXELS_PER_UNIT;
   }
 
   std::string name;
-  std::string texture, animation;
-  std::string arm_texture, arm_animation;
+  std::string texture;
+  std::string animation;
 
-  int frame, arm_frame;
+  unsigned frame;
+  float frame_time;
+  float frame_length;
 
-  float frame_time, arm_frame_time;
-  float frame_length, arm_frame_length;
-
-  float radius;
-  float speed;
-  Eigen::Vector2f vel;
+  float base_speed;
+  Eigen::Vector2f direction;
 
   Inventory inventory;
   Equipment equipment;
 
   b2Body* body;
-  SDL_Rect clip_rect, arm_clip_rect;
 };
 
 }

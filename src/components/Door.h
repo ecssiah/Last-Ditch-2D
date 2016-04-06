@@ -13,26 +13,17 @@ struct Door : public Entity
 {
   Door()
     : Entity(),
-      rotation(0.f),
+      direction(0),
       solid(true),
       open(false),
       locked(false),
       body(nullptr)
   {}
 
-  Door(float x, float y)
-    : Entity(),
-      solid(true),
-      open(false),
-      locked(false),
-      body(nullptr)
-  {
-    pos = {x, y};
-  }
-
-  float rotation;
+  unsigned direction;
   bool solid;
-  bool open, locked;
+  bool open;
+  bool locked;
 
   b2Body* body;
 };

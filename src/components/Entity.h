@@ -13,10 +13,18 @@ namespace ld
 struct Entity
 {
   Entity()
-    : size(1.f, 1.f)
+    : type(std::string()),
+      texture(std::string()),
+      floor(0),
+      pos(0, 0),
+      size(0, 0),
+      clip_rect(),
+      dest_rect()
   {
-    clip_rect.w = dest_rect.w = PIXELS_PER_UNIT;
-    clip_rect.h = dest_rect.h = PIXELS_PER_UNIT;
+    dest_rect.w = PIXELS_PER_UNIT;
+    dest_rect.h = PIXELS_PER_UNIT;
+    clip_rect.w = PIXELS_PER_UNIT;
+    clip_rect.h = PIXELS_PER_UNIT;
   }
 
   bool operator <(const Entity& rhs) const
@@ -27,11 +35,10 @@ struct Entity
   std::string type;
   std::string texture;
 
+  int floor;
+
   Eigen::Vector2f pos;
   Eigen::Vector2f size;
-
-  int floor;
-  bool dirty;
 
   SDL_Rect clip_rect;
   SDL_Rect dest_rect;

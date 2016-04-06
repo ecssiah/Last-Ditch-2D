@@ -20,12 +20,8 @@ struct Text : public Element
   }
 
   std::string text;
-  std::string text_texture;
   std::string font;
-
   SDL_Color color;
-  SDL_Rect text_clip_rect;
-  SDL_Rect text_dest_rect;
 };
 
 }

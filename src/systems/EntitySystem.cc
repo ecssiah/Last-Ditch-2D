@@ -94,10 +94,12 @@ void EntitySystem::setup_users()
   user.texture = "kadijah";
   user.animation = "idle-front";
   user.floor = 0;
-  user.speed = 50.f;
+  user.base_speed = 50.f;
   user.pos = {3.f, 9.f};
   user.size = {.48f, .48f};
   user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
+  user.dest_rect.x = PIXELS_PER_UNIT * user.pos.x();
+  user.dest_rect.y = PIXELS_PER_UNIT * user.pos.y();
 
   for (auto i(0); i < 10; ++i) give_random_item(user);
 
@@ -109,9 +111,9 @@ void EntitySystem::update()
 {
   apply_user_inputs();
 
-  update_users();
+  update_animations();
 
-  if (input.activate) handle_activation();
+  if (input.activate) handle_activate_event();
 }
 
 
@@ -127,7 +129,7 @@ void EntitySystem::apply_user_inputs()
 
   if (direction.squaredNorm() == 0)
   {
-    users[0].vel = Vector2f::Zero();
+    users[0].direction = Vector2f::Zero();
 
     if (animation == "walk-front") animation = "idle-front";
     else if (animation == "walk-back") animation = "idle-back";
@@ -137,46 +139,46 @@ void EntitySystem::apply_user_inputs()
   else
   {
     direction.normalize();
-    auto vel(users[0].speed * direction);
+    users[0].direction = direction;
 
-    if (vel.x() > 0) animation = "walk-right";
-    else if (vel.x() < 0) animation = "walk-left";
-    else if (vel.y() > 0) animation = "walk-front";
-    else if (vel.y() < 0) animation = "walk-back";
-
-    users[0].vel = vel;
+    if (direction.x() > 0) animation = "walk-right";
+    else if (direction.x() < 0) animation = "walk-left";
+    else if (direction.y() > 0) animation = "walk-front";
+    else if (direction.y() < 0) animation = "walk-back";
   }
 }
 
 
-void EntitySystem::update_users()
+void EntitySystem::update_animations()
 {
+  auto& user(users[0]);
 
-
+  user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
 }
 
 
-void EntitySystem::handle_activation()
+void EntitySystem::handle_activate_event()
 {
-  Vector2f selection_point(
+  Vector2f selection_point_world(
     camera_system.to_world_coordinates(input.left_mouse_released_pos));
 
   auto out_of_bounds(
-    selection_point.x() < 0 || selection_point.x() >= MAP_SIZE_X ||
-    selection_point.y() < 0 || selection_point.y() >= MAP_SIZE_Y);
+    selection_point_world.x() < 0 || selection_point_world.x() >= MAP_SIZE_X ||
+    selection_point_world.y() < 0 || selection_point_world.y() >= MAP_SIZE_Y);
 
   if (out_of_bounds) return;
 
   auto& chunk(
-    map_system.get_chunk(selection_point.x(), selection_point.y(), users[0].floor));
+    map_system.get_chunk(
+      selection_point_world.x(), selection_point_world.y(), users[0].floor));
 
-  if (find_and_interact_door(selection_point, chunk))
+  if (find_and_interact_door(selection_point_world, chunk))
   {
     input.activate = false;
     return;
   }
 
-  if (find_and_interact_item(selection_point, chunk))
+  if (find_and_interact_item(selection_point_world, chunk))
   {
     input.activate = false;
     users[0].inventory.modified = true;
@@ -189,11 +191,10 @@ void EntitySystem::give_random_item(User& user)
 {
   Item item;
   item.type = get_random_item_type();
-  item.texture = Item_Data[item.type].texture;
   item.name = Item_Data[item.type].name;
   item.category = Item_Data[item.type].category;
+  item.texture = Item_Data[item.type].texture;
   item.value = Item_Data[item.type].value;
-  item.quality = Item_Data[item.type].quality;
   item.weight = Item_Data[item.type].weight;
   item.volume = Item_Data[item.type].volume;
 
@@ -204,6 +205,7 @@ void EntitySystem::give_random_item(User& user)
 std::string EntitySystem::get_random_item_type()
 {
   auto item_types(Item_Types);
+
   std::random_shuffle(item_types.begin(), item_types.end());
 
   return item_types[0];

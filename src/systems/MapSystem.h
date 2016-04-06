@@ -19,7 +19,7 @@ class MapSystem
   void layout_room(
     unsigned x, unsigned y, unsigned w, unsigned h, unsigned floor);
   void create_door(
-    std::string type, unsigned x, unsigned y, unsigned floor, float rotation = 0.f);
+    std::string type, unsigned x, unsigned y, unsigned floor, unsigned direction = 0);
 
   bool dirty;
 
@@ -42,11 +42,11 @@ public:
   void set_main_tile(
     std::string texture_name,
     unsigned x, unsigned y, unsigned floor,
-    float rotation = 0.f, bool solid = true);
+    unsigned rotation = 0, bool solid = true);
   void set_floor_tile(
     std::string texture_name,
     unsigned x, unsigned y, unsigned floor,
-    float rotation = 0.f);
+    unsigned rotation = 0);
 };
 
 }

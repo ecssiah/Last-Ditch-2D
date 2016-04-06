@@ -2,8 +2,10 @@
 
 #include <iostream>
 
-using namespace ld;
 using namespace std;
+
+namespace ld
+{
 
 InventorySystem::InventorySystem(EntitySystem& _entity_system)
   : entity_system(_entity_system)
@@ -32,5 +34,7 @@ Item* InventorySystem::retrieve(std::string type, Inventory* inventory)
 
 void InventorySystem::store(Item item, Inventory* inventory)
 {
+
+}
 
 }

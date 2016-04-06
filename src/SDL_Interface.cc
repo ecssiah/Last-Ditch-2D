@@ -5,10 +5,11 @@
 #include "constants/UIConstants.h"
 
 using namespace Eigen;
-using namespace ld;
 using namespace std;
 using namespace Utils;
 
+namespace ld
+{
 
 SDL_Interface::SDL_Interface()
   : window(nullptr),
@@ -30,12 +31,13 @@ SDL_Interface::SDL_Interface()
   IMG_Init(img_flags);
 
   load_fonts();
-  load_textures();
+  load_surfaces();
 }
 
 
 SDL_Interface::~SDL_Interface()
 {
+  for (auto& kv : surfaces) SDL_FreeSurface(kv.second);
   for (auto& kv : textures) SDL_DestroyTexture(kv.second);
 
   SDL_DestroyWindow(window);
@@ -62,11 +64,11 @@ void SDL_Interface::post_render()
 }
 
 
-SDL_Texture* SDL_Interface::load_texture(string name)
+SDL_Surface* SDL_Interface::load_surface(string name)
 {
   auto path("media/textures/" + name + ".png");
 
-  return IMG_LoadTexture(renderer, path.c_str());
+  return IMG_Load(path.c_str());
 }
 
 
@@ -77,13 +79,13 @@ void SDL_Interface::load_fonts()
 }
 
 
-void SDL_Interface::load_textures()
+void SDL_Interface::load_surfaces()
 {
-  textures["kadijah"] = load_texture("kadijah");
-  textures["chunk_floor1"] = load_texture("chunk_floor1");
-  textures["tileset1"] = load_texture("tileset1");
-  textures["items1"] = load_texture("items1");
-  textures["ui1"] = load_texture("ui1");
+  surfaces["kadijah"] = load_surface("kadijah");
+  surfaces["chunk_floor1"] = load_surface("chunk_floor1");
+  surfaces["tileset1"] = load_surface("tileset1");
+  surfaces["items1"] = load_surface("items1");
+  surfaces["ui1"] = load_surface("ui1");
 }
 
 
@@ -103,81 +105,167 @@ SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
 }
 
 
-void SDL_Interface::generate_text_element(Text& element)
-{
-  generate_texture_from_text(
-    element.text, element.text_texture, element.font, element.color);
-}
-
-
-void SDL_Interface::generate_window_element(Window& element)
-{
-
-}
-
-
-void SDL_Interface::generate_button_element(Button& element)
-{
-
-}
-
-
-void SDL_Interface::generate_list_element(List& element)
-{
-  SDL_Surface* list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
-
-  for (auto i(0); i < element.entries.size(); ++i)
-  {
-    SDL_Color color;
-    if (i == element.index)
-      color = element.selected_entry_color;
-    else
-      color = element.entry_color;
-
-    SDL_Surface* entry_surface(
-      TTF_RenderText_Blended(fonts[element.font], element.entries[i].c_str(), color));
-
-    SDL_Rect dest_rect;
-    dest_rect.x = element.dest_rect.x;
-    dest_rect.y = element.dest_rect.y + i * 20 + element.offset;
-
-    SDL_BlitSurface(entry_surface, nullptr, list_surface, &dest_rect);
-    SDL_FreeSurface(entry_surface);
-  }
-
-  if (textures[element.texture]) SDL_DestroyTexture(textures[element.texture]);
-  textures[element.texture] = SDL_CreateTextureFromSurface(renderer, list_surface);
-
-  SDL_FreeSurface(list_surface);
-}
-
-
-void SDL_Interface::generate_texture_from_text(
-  string text, string texture, string font, SDL_Color color)
-{
-  auto surface(generate_surface_from_text(text, font, color));
-
-  if (textures[texture]) SDL_DestroyTexture(textures[texture]);
-  textures[texture] = SDL_CreateTextureFromSurface(renderer, surface);
-}
-
-
-SDL_Surface* SDL_Interface::generate_surface_from_text(
-  string text, string font, SDL_Color color)
+SDL_Surface* SDL_Interface::generate_text_surface(string text, string font, SDL_Color color)
 {
   return TTF_RenderText_Blended(fonts[font], text.c_str(), color);
 }
 
 
-void SDL_Interface::render_chunk(Chunk& chunk)
+SDL_Surface* SDL_Interface::generate_scalable_surface(Scalable& element)
 {
-  SDL_RenderCopy(renderer, textures[chunk.texture], nullptr, &chunk.dest_rect);
+  auto surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
+
+  SDL_Rect ct_clip_rect, ct_dest_rect;
+  SDL_Rect tt_clip_rect, tt_dest_rect;
+  SDL_Rect tl_clip_rect, tl_dest_rect;
+  SDL_Rect ll_clip_rect, ll_dest_rect;
+  SDL_Rect bl_clip_rect, bl_dest_rect;
+  SDL_Rect bb_clip_rect, bb_dest_rect;
+  SDL_Rect br_clip_rect, br_dest_rect;
+  SDL_Rect rr_clip_rect, rr_dest_rect;
+  SDL_Rect tr_clip_rect, tr_dest_rect;
+
+  ct_clip_rect = Scalable_Data[element.type].clip_rects["ct"];
+  ct_dest_rect.x = element.border;
+  ct_dest_rect.y = element.border;
+  tt_clip_rect = Scalable_Data[element.type].clip_rects["tt"];
+  tt_dest_rect.x = element.border;
+  tt_dest_rect.y = 0;
+  tl_clip_rect = Scalable_Data[element.type].clip_rects["tl"];
+  tl_dest_rect.x = 0;
+  tl_dest_rect.y = 0;
+  ll_clip_rect = Scalable_Data[element.type].clip_rects["ll"];
+  ll_dest_rect.x = 0;
+  ll_dest_rect.y = element.border;
+  bl_clip_rect = Scalable_Data[element.type].clip_rects["bl"];
+  bl_dest_rect.x = 0;
+  bl_dest_rect.y = element.dest_rect.h - element.border;
+  bb_clip_rect = Scalable_Data[element.type].clip_rects["bb"];
+  bb_dest_rect.x = element.border;
+  bb_dest_rect.y = element.dest_rect.h - element.border;
+  br_clip_rect = Scalable_Data[element.type].clip_rects["br"];
+  br_dest_rect.x = element.dest_rect.w - element.border;
+  br_dest_rect.y = element.dest_rect.h - element.border;
+  rr_clip_rect = Scalable_Data[element.type].clip_rects["rr"];
+  rr_dest_rect.x = element.dest_rect.w - element.border;
+  rr_dest_rect.y = element.border;
+  tr_clip_rect = Scalable_Data[element.type].clip_rects["tr"];
+  tr_dest_rect.x = element.dest_rect.w - element.border;
+  tr_dest_rect.y = 0;
+
+  auto source_surface(surfaces[element.texture]);
+
+  SDL_BlitSurface(source_surface, &ct_clip_rect, surface, &ct_dest_rect);
+  SDL_BlitSurface(source_surface, &tt_clip_rect, surface, &tt_dest_rect);
+  SDL_BlitSurface(source_surface, &tl_clip_rect, surface, &tl_dest_rect);
+  SDL_BlitSurface(source_surface, &ll_clip_rect, surface, &ll_dest_rect);
+  SDL_BlitSurface(source_surface, &bl_clip_rect, surface, &bl_dest_rect);
+  SDL_BlitSurface(source_surface, &bb_clip_rect, surface, &bb_dest_rect);
+  SDL_BlitSurface(source_surface, &br_clip_rect, surface, &br_dest_rect);
+  SDL_BlitSurface(source_surface, &rr_clip_rect, surface, &rr_dest_rect);
+  SDL_BlitSurface(source_surface, &tr_clip_rect, surface, &tr_dest_rect);
+
+  return surface;
 }
 
 
-void SDL_Interface::render_item(Item& item)
+void SDL_Interface::generate_text_element(Text& element)
 {
-  SDL_RenderCopy(renderer, textures[item.texture], &item.clip_rect, &item.dest_rect);
+  auto surface(generate_text_surface(element.text, element.font, element.color));
+
+  generate_texture(surface, element.texture);
+
+  SDL_FreeSurface(surface);
+}
+
+
+void SDL_Interface::generate_label_element(Label& element)
+{
+  auto text_surface(
+    generate_text_surface(
+      element.text.text, element.text.font, element.text.color));
+  auto scalable_surface(generate_scalable_surface(element));
+
+  SDL_Rect dest_rect;
+  dest_rect.x = (element.dest_rect.w - text_surface->w) / 2;
+  dest_rect.y = (element.dest_rect.h - text_surface->h) / 2;
+
+  SDL_BlitSurface(text_surface, nullptr, scalable_surface, &dest_rect);
+
+  generate_texture(scalable_surface, element.texture);
+
+  SDL_FreeSurface(text_surface);
+  SDL_FreeSurface(scalable_surface);
+}
+
+
+void SDL_Interface::generate_button_element(Button& element)
+{
+  generate_label_element(element);
+}
+
+
+void SDL_Interface::generate_window_element(Window& element)
+{
+  auto scalable_surface(generate_scalable_surface(element));
+
+  if (element.title.text != "")
+  {
+    auto text_surface(
+      generate_text_surface(element.title.text, element.title.font, element.title.color));
+
+    SDL_Rect dest_rect;
+    dest_rect.x = (element.dest_rect.w - text_surface->w) / 2;
+    dest_rect.y = 8;
+
+    SDL_BlitSurface(text_surface, nullptr, scalable_surface, &dest_rect);
+    SDL_FreeSurface(text_surface);
+  }
+
+  generate_texture(scalable_surface, element.texture);
+
+  SDL_FreeSurface(scalable_surface);
+}
+
+
+void SDL_Interface::generate_list_element(List& element)
+{
+  auto list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
+
+  for (auto i(0); i < element.entries.size(); ++i)
+  {
+    SDL_Color color;
+
+    if (i == element.index) color = element.selected_entry_color;
+    else color = element.entry_color;
+
+    auto entry_surface(
+      generate_text_surface(element.entries[i], element.font, color));
+
+    SDL_Rect dest_rect;
+    dest_rect.x = 0;
+    dest_rect.y = entry_surface->h * i + element.offset;
+
+    SDL_BlitSurface(entry_surface, nullptr, list_surface, &dest_rect);
+    SDL_FreeSurface(entry_surface);
+  }
+
+  generate_texture(list_surface, element.texture);
+
+  SDL_FreeSurface(list_surface);
+}
+
+
+void SDL_Interface::generate_texture(SDL_Surface* surface, std::string texture)
+{
+  if (textures[texture]) SDL_DestroyTexture(textures[texture]);
+  textures[texture] = SDL_CreateTextureFromSurface(renderer, surface);
+}
+
+
+void SDL_Interface::render_entity(Entity& entity)
+{
+  SDL_RenderCopy(renderer, textures[entity.texture], &entity.clip_rect, &entity.dest_rect);
 }
 
 
@@ -186,13 +274,7 @@ void SDL_Interface::render_tile(Tile& tile)
   SDL_RenderCopyEx(
     renderer, textures[tile.texture],
     &tile.clip_rect, &tile.dest_rect,
-    tile.rotation, nullptr, SDL_FLIP_NONE);
-}
-
-
-void SDL_Interface::render_door(Door& door)
-{
-  SDL_RenderCopy(renderer, textures[door.texture], &door.clip_rect, &door.dest_rect);
+    tile.direction * 90, nullptr, SDL_FLIP_NONE);
 }
 
 
@@ -210,36 +292,7 @@ void SDL_Interface::render_user(User& user)
 
 void SDL_Interface::render_element(Element& element)
 {
-  SDL_RenderCopy(
-    renderer, textures[element.texture],
-    &element.clip_rect, &element.dest_rect);
+  SDL_RenderCopy(renderer, textures[element.texture], &element.clip_rect, &element.dest_rect);
 }
-
-
-void SDL_Interface::render_text_element(Text& element)
-{
-  if (element.texture != "") render_element(element);
-
-  SDL_RenderCopy(
-    renderer, textures[element.text_texture],
-    &element.text_clip_rect, &element.text_dest_rect);
-}
-
-
-void SDL_Interface::render_button_element(Button& element)
-{
-
-
-}
-
-
-void SDL_Interface::render_window_element(Window& element)
-{
-  SDL_RenderCopy(renderer, textures[element.texture], nullptr, &element.dest_rect);
-}
-
-
-void SDL_Interface::render_list_element(List& element)
-{
 
 }

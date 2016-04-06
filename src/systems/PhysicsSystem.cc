@@ -5,9 +5,11 @@
 
 #include "../constants/MapConstants.h"
 
-using namespace ld;
 using namespace Eigen;
 using namespace std;
+
+namespace ld
+{
 
 PhysicsSystem::PhysicsSystem(
   vector<User>& _users, MapSystem& _map_system, EntitySystem& _entity_system
@@ -35,7 +37,9 @@ void PhysicsSystem::update(const double& dt)
 {
   for (auto& user : users)
   {
-    b2Vec2 impulse(dt * user.vel.x(), dt * user.vel.y());
+    auto velocity(user.base_speed * user.direction);
+
+    b2Vec2 impulse(dt * velocity.x(), dt * velocity.y());
     user.body->ApplyLinearImpulse(impulse, user.body->GetWorldCenter(), true);
   }
 
@@ -74,7 +78,7 @@ void PhysicsSystem::setup_user_bodies()
     auto body(world->CreateBody(&body_def));
 
     b2CircleShape circle_shape;
-    circle_shape.m_radius = user.radius;
+    circle_shape.m_radius = user.size.x();
 
     b2FixtureDef fixture_def;
     fixture_def.shape = &circle_shape;
@@ -191,4 +195,6 @@ b2Body* PhysicsSystem::create_body(float x, float y, float hw, float hh)
 void PhysicsSystem::destroy_body(b2Body* body)
 {
   world->DestroyBody(body);
+}
+
 }

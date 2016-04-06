@@ -22,15 +22,14 @@ class EntitySystem
   void setup_users();
 
   void apply_user_inputs();
-  void handle_activation();
-
-  void update_users();
-
-  std::string get_random_item_type();
-  void give_random_item(User& user);
+  void update_animations();
+  void handle_activate_event();
 
   bool find_and_interact_door(Eigen::Vector2f& selection_point, Chunk& chunk);
   bool find_and_interact_item(Eigen::Vector2f& selection_point, Chunk& chunk);
+
+  std::string get_random_item_type();
+  void give_random_item(User& user);
 
   std::mt19937& rng;
 

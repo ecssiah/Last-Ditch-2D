@@ -9,8 +9,10 @@
 #include "constants/RenderConstants.h"
 #include "systems/CameraSystem.h"
 
-using namespace ld;
 using namespace std;
+
+namespace ld
+{
 
 class DebugDraw : public b2Draw
 {
@@ -77,5 +79,7 @@ public:
   void DrawSegment(const b2Vec2& p1, const b2Vec2& p2, const b2Color& color) {}
   void DrawTransform(const b2Transform& xf) {}
 };
+
+}
 
 #endif /* DEBUGDRAW_H */

@@ -6,7 +6,6 @@
 #include "components/ui/Element.h"
 
 using namespace Eigen;
-using namespace ld;
 
 namespace Utils
 {
@@ -30,7 +29,7 @@ bool ends_with(const std::string& string, const std::string& suffix)
 }
 
 
-bool point_intersects_element(Vector2i point, Element& element)
+bool point_intersects_element(Vector2i point, ld::Element& element)
 {
   auto hit(
     point.x() >= element.dest_rect.x &&

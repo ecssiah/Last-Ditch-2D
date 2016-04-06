@@ -1,17 +1,18 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <SDL2/SDL.h>
+
+#include "Label.h"
+#include "Text.h"
 #include "Scalable.h"
 
 namespace ld
 {
 
-struct Button : public Scalable
+struct Button : public Label
 {
   Button() = default;
-
-  std::string text;
-  std::string text_texture;
 
   bool clicked;
 };

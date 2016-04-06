@@ -11,13 +11,13 @@ namespace ld
 struct Tile : public Entity
 {
   Tile()
-    : rotation(0.f),
-      solid(false),
+    : solid(false),
+      direction(0),
       body(nullptr)
   {}
 
-  float rotation;
   bool solid;
+  unsigned direction;
 
   b2Body* body;
 };

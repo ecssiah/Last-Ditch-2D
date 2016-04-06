@@ -3,8 +3,10 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 
-using namespace ld;
 using namespace std;
+
+namespace ld
+{
 
 InputSystem::InputSystem(Input& input_)
   : input(input_)
@@ -103,4 +105,6 @@ void InputSystem::update()
 
   if (input.mouse_motion && input.left_mouse_pressed)
     input.mouse_dragged = true;
+}
+
 }

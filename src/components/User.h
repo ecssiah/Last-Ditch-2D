@@ -9,7 +9,6 @@ namespace ld
 struct User : public Character
 {
   User()
-    : Character()
   {}
 };
 

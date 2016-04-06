@@ -13,7 +13,19 @@ namespace ld
 
 struct Item : public Entity
 {
-  Item() = default;
+  Item()
+    : name(std::string()),
+      category(std::string()),
+      contained(false),
+      value(.1f),
+      weight(1.f),
+      volume(1.f),
+      quality(.5f),
+      durability(1.f),
+      effects(),
+      damages(),
+      defenses()
+  {}
 
   std::string name;
   std::string category;
@@ -27,8 +39,8 @@ struct Item : public Entity
   float durability;
 
   std::vector<Effect> effects;
-  std::vector<Damage> damage;
-  std::vector<Defense> defense;
+  std::vector<Damage> damages;
+  std::vector<Defense> defenses;
 };
 
 }

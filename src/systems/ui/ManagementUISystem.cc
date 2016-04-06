@@ -2,7 +2,8 @@
 
 #include "../../constants/UIConstants.h"
 
-using namespace ld;
+namespace ld
+{
 
 ManagementUISystem::ManagementUISystem(
   Input& _input, SDL_Interface& _sdl_interface
@@ -23,6 +24,7 @@ void ManagementUISystem::update()
 
 void ManagementUISystem::render()
 {
+  sdl_interface.render_element(base_window);
 }
 
 
@@ -36,4 +38,6 @@ void ManagementUISystem::setup()
   base_window.dest_rect.h = BASE_WINDOW_SIZE_Y;
 
   sdl_interface.generate_window_element(base_window);
+}
+
 }

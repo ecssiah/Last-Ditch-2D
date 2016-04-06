@@ -21,7 +21,10 @@ struct Chunk : public Entity
       floor_tiles(TILES_PER_CHUNK_X, {TILES_PER_CHUNK_Y, Tile()}),
       items(),
       doors()
-  {}
+  {
+    dest_rect.w = TILES_PER_CHUNK_X * PIXELS_PER_UNIT;
+    dest_rect.h = TILES_PER_CHUNK_Y * PIXELS_PER_UNIT;
+  }
 
   std::vector<std::vector<Tile>> main_tiles;
   std::vector<std::vector<Tile>> floor_tiles;

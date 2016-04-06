@@ -9,10 +9,12 @@
 #include "../constants/RenderConstants.h"
 #include "../constants/UserConstants.h"
 
-using namespace ld;
 using namespace Eigen;
 using namespace std;
 using namespace Utils;
+
+namespace ld
+{
 
 RenderSystem::RenderSystem(
   SDL_Interface& _sdl_interface,
@@ -99,7 +101,7 @@ void RenderSystem::render_chunks(int floor)
 {
   for (int cx(0); cx < NUM_CHUNKS_X; ++cx)
     for (int cy(0); cy < NUM_CHUNKS_Y; ++cy)
-      sdl_interface.render_chunk(map_system.get_chunk(cx, cy, floor));
+      sdl_interface.render_entity(map_system.get_chunk(cx, cy, floor));
 }
 
 
@@ -131,8 +133,7 @@ void RenderSystem::render_items(int floor)
     {
       auto& chunk(map_system.get_chunk(x, y, floor));
 
-      for (auto& item : chunk.items)
-	if (!item.contained) sdl_interface.render_item(item);
+      for (auto& item : chunk.items) sdl_interface.render_entity(item);
     }
   }
 }
@@ -144,11 +145,9 @@ void RenderSystem::render_doors(int floor)
   {
     for (auto cy(0); cy < NUM_CHUNKS_Y; ++cy)
     {
-      auto& chunk(
-	map_system.get_chunk(cx, cy, floor));
+      auto& chunk(map_system.get_chunk(cx, cy, floor));
 
-      for (auto& door : chunk.doors)
-	sdl_interface.render_door(door);
+      for (auto& door : chunk.doors) sdl_interface.render_entity(door);
     }
   }
 }
@@ -157,4 +156,6 @@ void RenderSystem::render_doors(int floor)
 void RenderSystem::render_users(int floor)
 {
   sdl_interface.render_user(entity_system.get_user(0));
+}
+
 }

@@ -4,8 +4,10 @@
 #include <iostream>
 #include <sstream>
 
-using namespace ld;
 using namespace std;
+
+namespace ld
+{
 
 TimeSystem::TimeSystem(Input& _input)
   : start(chrono::steady_clock::now()),
@@ -78,4 +80,6 @@ string TimeSystem::get_string() const
   ss << "/" << get_year();
 
   return ss.str();
+}
+
 }
