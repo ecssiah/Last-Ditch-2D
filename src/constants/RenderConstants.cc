@@ -3,7 +3,7 @@
 namespace ld
 {
 
-const unsigned PIXELS_PER_UNIT(48);
+const unsigned PIXELS_PER_UNIT(64);
 const unsigned HALF_UNIT(PIXELS_PER_UNIT / 2);
 const unsigned SCREEN_SIZE_X(800);
 const unsigned SCREEN_SIZE_Y(600);

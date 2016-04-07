@@ -86,6 +86,8 @@ void SDL_Interface::load_surfaces()
   surfaces["tileset1"] = load_surface("tileset1");
   surfaces["items1"] = load_surface("items1");
   surfaces["ui1"] = load_surface("ui1");
+
+  surfaces["ui-batch"] = generate_surface(512, 512);
 }
 
 

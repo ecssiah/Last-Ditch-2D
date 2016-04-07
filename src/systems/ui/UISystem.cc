@@ -71,8 +71,7 @@ void UISystem::render_base()
 
 void UISystem::render_main()
 {
-  for (auto& button : main_buttons)
-    sdl_interface.render_element(button);
+  for (auto& button : main_buttons) sdl_interface.render_element(button);
 }
 
 
@@ -80,7 +79,6 @@ void UISystem::setup_base()
 {
   date_and_time.text = time_system.get_string();
   date_and_time.texture = "date_and_time";
-
   date_and_time.dest_rect.x = 2;
   date_and_time.dest_rect.y = 2;
   date_and_time.dest_rect.w = 130;
@@ -100,7 +98,6 @@ void UISystem::setup_main()
   inventory_button.texture = "ui1";
   inventory_button.text.text = "Inventory";
   inventory_button.text.texture = "inventory_button";
-
   inventory_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2;
   inventory_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 - vert_offset;
   inventory_button.dest_rect.w = MENU_BUTTON_SIZE_X;
