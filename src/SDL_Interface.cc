@@ -281,6 +281,8 @@ void SDL_Interface::render_chunk(Chunk& chunk)
   SDL_Rect dest_rect;
   dest_rect.x = PIXELS_PER_UNIT * (chunk.pos.x() - camera_position.x());
   dest_rect.y = PIXELS_PER_UNIT * (chunk.pos.y() - camera_position.y());
+  dest_rect.w = PIXELS_PER_UNIT * TILES_PER_CHUNK_X;
+  dest_rect.h = PIXELS_PER_UNIT * TILES_PER_CHUNK_Y;
 
   SDL_RenderCopy(renderer, textures[chunk.texture], nullptr, &dest_rect);
 }
@@ -291,6 +293,8 @@ void SDL_Interface::render_item(Item& item)
   SDL_Rect dest_rect;
   dest_rect.x = PIXELS_PER_UNIT * (item.pos.x() - camera_position.x());
   dest_rect.y = PIXELS_PER_UNIT * (item.pos.y() - camera_position.y());
+  dest_rect.w = HALF_UNIT;
+  dest_rect.h = HALF_UNIT;
 
   SDL_RenderCopy(renderer, textures[item.texture], &item.clip_rect, &dest_rect);
 }
@@ -301,6 +305,8 @@ void SDL_Interface::render_tile(Tile& tile)
   SDL_Rect dest_rect;
   dest_rect.x = PIXELS_PER_UNIT * (tile.pos.x() - camera_position.x());
   dest_rect.y = PIXELS_PER_UNIT * (tile.pos.y() - camera_position.y());
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
 
   SDL_RenderCopyEx(
     renderer, textures[tile.texture],
@@ -314,6 +320,8 @@ void SDL_Interface::render_door(Door& door)
   SDL_Rect dest_rect;
   dest_rect.x = PIXELS_PER_UNIT * (door.pos.x() - camera_position.x());
   dest_rect.y = PIXELS_PER_UNIT * (door.pos.y() - camera_position.y());
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
 
   SDL_RenderCopyEx(
     renderer, textures[door.texture],
@@ -325,8 +333,10 @@ void SDL_Interface::render_door(Door& door)
 void SDL_Interface::render_user(User& user)
 {
   SDL_Rect dest_rect;
-  dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - camera_position.x());
-  dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y());
+  dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - camera_position.x()) + HALF_SCREEN_SIZE_X;
+  dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.w = PIXELS_PER_UNIT;
+  dest_rect.h = PIXELS_PER_UNIT;
 
   SDL_RendererFlip flip(
     ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);

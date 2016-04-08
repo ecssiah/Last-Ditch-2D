@@ -42,16 +42,7 @@ void MapSystem::setup_map()
 	chunk.floor = floor;
 	chunk.type = "chunk1";
 	chunk.texture = "chunk_floor1";
-
 	chunk.pos = {cx * TILES_PER_CHUNK_X, cy * TILES_PER_CHUNK_Y};
-
-	chunk.clip_rect.x = 0;
-	chunk.clip_rect.y = 0;
-	chunk.clip_rect.w = TILES_PER_CHUNK_X * PIXELS_PER_UNIT;
-	chunk.clip_rect.h = TILES_PER_CHUNK_Y * PIXELS_PER_UNIT;
-
-	chunk.dest_rect.x = PIXELS_PER_UNIT * chunk.pos.x();
-	chunk.dest_rect.y = PIXELS_PER_UNIT * chunk.pos.y();
       }
     }
   }
@@ -117,11 +108,7 @@ void MapSystem::set_main_tile(
   tile.solid = solid;
   tile.direction = direction;
   tile.pos = {x, y};
-
   tile.clip_rect = Tile_Data[type].clip_rect;
-
-  tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
-  tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
 }
 
 
@@ -146,11 +133,7 @@ void MapSystem::set_floor_tile(
   tile.pos = {x, y};
   tile.direction = direction;
   tile.floor = floor;
-
   tile.clip_rect = Tile_Data[type].clip_rect;
-
-  tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
-  tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
 }
 
 
@@ -163,11 +146,7 @@ void MapSystem::create_door(
   door.pos = {x, y};
   door.floor = floor;
   door.direction = direction;
-
   door.clip_rect = Tile_Data[type].clip_rect;
-
-  door.dest_rect.x = PIXELS_PER_UNIT * door.pos.x();
-  door.dest_rect.y = PIXELS_PER_UNIT * door.pos.y();
 
   auto& chunk(get_chunk(x / TILES_PER_CHUNK_X, y / TILES_PER_CHUNK_Y, floor));
 

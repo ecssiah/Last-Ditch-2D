@@ -34,7 +34,6 @@ struct Entity
   Eigen::Vector2f size;
 
   SDL_Rect clip_rect;
-  SDL_Rect dest_rect;
 };
 
 }

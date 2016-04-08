@@ -14,7 +14,8 @@ namespace ld
 struct Item : public Entity
 {
   Item()
-    : name(std::string()),
+    : Entity(),
+      name(std::string()),
       category(std::string()),
       contained(false),
       value(.1f),
@@ -25,7 +26,9 @@ struct Item : public Entity
       effects(),
       damages(),
       defenses()
-  {}
+  {
+    size = {.5f, .5f};
+  }
 
   std::string name;
   std::string category;

@@ -98,8 +98,6 @@ void EntitySystem::setup_users()
   user.pos = {3.f, 9.f};
   user.size = {.48f, .48f};
   user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
-  user.dest_rect.x = PIXELS_PER_UNIT * user.pos.x();
-  user.dest_rect.y = PIXELS_PER_UNIT * user.pos.y();
 
   for (auto i(0); i < 10; ++i) give_random_item(user);
 
