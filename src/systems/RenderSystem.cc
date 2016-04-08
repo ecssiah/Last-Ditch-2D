@@ -44,7 +44,6 @@ void RenderSystem::update(const double& dt)
   update_animations(dt);
   update_textures();
 
-
   sdl_interface.pre_render();
 
   render();

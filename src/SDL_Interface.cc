@@ -81,13 +81,22 @@ void SDL_Interface::load_fonts()
 
 void SDL_Interface::load_surfaces()
 {
-  surfaces["kadijah"] = load_surface("kadijah");
-  surfaces["chunk_floor1"] = load_surface("chunk_floor1");
-  surfaces["tileset1"] = load_surface("tileset1");
-  surfaces["items1"] = load_surface("items1");
-  surfaces["ui1"] = load_surface("ui1");
+  load_texture("kadijah");
+  load_texture("chunk_floor1");
+  load_texture("items1");
+  load_texture("tileset1");
+  load_texture("ui1");
 
-  surfaces["ui-batch"] = generate_surface(512, 512);
+  surfaces["ui1"] = load_surface("ui1");
+  surfaces["ui1-batch"] = generate_surface(512, 512);
+}
+
+
+void SDL_Interface::load_texture(std::string texture, std::string filename)
+{
+  if (filename == "") filename = "media/textures/" + texture + ".png";
+
+  textures[texture] = IMG_LoadTexture(renderer, filename.c_str());
 }
 
 

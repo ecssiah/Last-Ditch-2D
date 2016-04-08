@@ -25,15 +25,17 @@ namespace ld
 
 class SDL_Interface
 {
-  SDL_Surface* load_surface(std::string name);
   SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
   SDL_Surface* generate_text_surface(std::string text, std::string font, SDL_Color color);
   SDL_Surface* generate_scalable_surface(Scalable& element);
 
+  void generate_texture(SDL_Surface* surface, std::string texture);
+
   void load_fonts();
   void load_surfaces();
 
-  void generate_texture(SDL_Surface* surface, std::string texture);
+  SDL_Surface* load_surface(std::string name);
+  void load_texture(std::string texture, std::string filename = std::string());
 
   Eigen::Vector2f camera_pos;
 
