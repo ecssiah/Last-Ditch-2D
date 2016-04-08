@@ -1,6 +1,7 @@
 #ifndef SDL_INTERFACE_H
 #define SDL_INTERFACE_H
 
+#include <eigen3/Eigen/Geometry>
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -35,9 +36,9 @@ class SDL_Interface
   void load_surfaces();
 
   SDL_Surface* load_surface(std::string name);
-  void load_texture(std::string texture, std::string filename = std::string());
+  void load_texture(std::string file_name, std::string texture = std::string());
 
-  Eigen::Vector2f camera_pos;
+  Eigen::Vector2f camera_position;
 
 public:
   SDL_Interface();
@@ -55,11 +56,16 @@ public:
   void generate_window_element(Window& element);
   void generate_list_element(List& element);
 
-  void render_entity(Entity& entity);
+  void render_chunk(Chunk& chunk);
+  void render_item(Item& item);
   void render_tile(Tile& tile);
+  void render_door(Door& door);
   void render_user(User& user);
 
   void render_element(Element& element);
+
+  inline void set_camera_position(
+    Eigen::Vector2f _camera_position) { camera_position = _camera_position; }
 
   SDL_Window* window;
   SDL_Renderer* renderer;

@@ -9,8 +9,10 @@ namespace ld
 
 LastDitch::LastDitch()
   : rng(SEED > 0 ? SEED : chrono::high_resolution_clock::now().time_since_epoch().count()),
+    configuration_system(),
     time_system(input),
     input_system(input),
+    map_system(),
     camera_system(sdl_interface, users),
     entity_system(rng, input, users, camera_system, map_system),
     inventory_system(entity_system),

@@ -17,15 +17,8 @@ struct Entity
       texture(std::string()),
       floor(0),
       pos(0, 0),
-      size(0, 0),
-      clip_rect(),
-      dest_rect()
-  {
-    dest_rect.w = PIXELS_PER_UNIT;
-    dest_rect.h = PIXELS_PER_UNIT;
-    clip_rect.w = PIXELS_PER_UNIT;
-    clip_rect.h = PIXELS_PER_UNIT;
-  }
+      size(1.f, 1.f)
+  {}
 
   bool operator <(const Entity& rhs) const
   {

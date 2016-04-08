@@ -100,7 +100,7 @@ void RenderSystem::render_chunks(int floor)
 {
   for (int cx(0); cx < NUM_CHUNKS_X; ++cx)
     for (int cy(0); cy < NUM_CHUNKS_Y; ++cy)
-      sdl_interface.render_entity(map_system.get_chunk(cx, cy, floor));
+      sdl_interface.render_chunk(map_system.get_chunk(cx, cy, floor));
 }
 
 
@@ -132,7 +132,7 @@ void RenderSystem::render_items(int floor)
     {
       auto& chunk(map_system.get_chunk(x, y, floor));
 
-      for (auto& item : chunk.items) sdl_interface.render_entity(item);
+      for (auto& item : chunk.items) sdl_interface.render_item(item);
     }
   }
 }
@@ -146,7 +146,7 @@ void RenderSystem::render_doors(int floor)
     {
       auto& chunk(map_system.get_chunk(cx, cy, floor));
 
-      for (auto& door : chunk.doors) sdl_interface.render_entity(door);
+      for (auto& door : chunk.doors) sdl_interface.render_door(door);
     }
   }
 }

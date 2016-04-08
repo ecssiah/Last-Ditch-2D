@@ -37,10 +37,10 @@ class LastDitch
   TimeSystem time_system;
   InputSystem input_system;
   MapSystem map_system;
+  CameraSystem camera_system;
   EntitySystem entity_system;
   InventorySystem inventory_system;
   PhysicsSystem physics_system;
-  CameraSystem camera_system;
   UISystem ui_system;
   RenderSystem render_system;
 

@@ -92,11 +92,13 @@ void SDL_Interface::load_surfaces()
 }
 
 
-void SDL_Interface::load_texture(std::string texture, std::string filename)
+void SDL_Interface::load_texture(std::string file_name, std::string texture)
 {
-  if (filename == "") filename = "media/textures/" + texture + ".png";
+  if (texture == "") texture = file_name;
 
-  textures[texture] = IMG_LoadTexture(renderer, filename.c_str());
+  auto path("media/textures/" + file_name + ".png");
+
+  textures[texture] = IMG_LoadTexture(renderer, path.c_str());
 }
 
 
@@ -274,29 +276,64 @@ void SDL_Interface::generate_texture(SDL_Surface* surface, std::string texture)
 }
 
 
-void SDL_Interface::render_entity(Entity& entity)
+void SDL_Interface::render_chunk(Chunk& chunk)
 {
-  SDL_RenderCopy(renderer, textures[entity.texture], &entity.clip_rect, &entity.dest_rect);
+  SDL_Rect dest_rect;
+  dest_rect.x = PIXELS_PER_UNIT * (chunk.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (chunk.pos.y() - camera_position.y());
+
+  SDL_RenderCopy(renderer, textures[chunk.texture], nullptr, &dest_rect);
+}
+
+
+void SDL_Interface::render_item(Item& item)
+{
+  SDL_Rect dest_rect;
+  dest_rect.x = PIXELS_PER_UNIT * (item.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (item.pos.y() - camera_position.y());
+
+  SDL_RenderCopy(renderer, textures[item.texture], &item.clip_rect, &dest_rect);
 }
 
 
 void SDL_Interface::render_tile(Tile& tile)
 {
+  SDL_Rect dest_rect;
+  dest_rect.x = PIXELS_PER_UNIT * (tile.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (tile.pos.y() - camera_position.y());
+
   SDL_RenderCopyEx(
     renderer, textures[tile.texture],
-    &tile.clip_rect, &tile.dest_rect,
+    &tile.clip_rect, &dest_rect,
     tile.direction * 90, nullptr, SDL_FLIP_NONE);
+}
+
+
+void SDL_Interface::render_door(Door& door)
+{
+  SDL_Rect dest_rect;
+  dest_rect.x = PIXELS_PER_UNIT * (door.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (door.pos.y() - camera_position.y());
+
+  SDL_RenderCopyEx(
+    renderer, textures[door.texture],
+    &door.clip_rect, &dest_rect,
+    90 * door.direction, nullptr, SDL_FLIP_NONE);
 }
 
 
 void SDL_Interface::render_user(User& user)
 {
+  SDL_Rect dest_rect;
+  dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y());
+
   SDL_RendererFlip flip(
     ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 
   SDL_RenderCopyEx(
     renderer, textures[user.texture],
-    &user.clip_rect, &user.dest_rect,
+    &user.clip_rect, &dest_rect,
     0, nullptr, flip);
 }
 

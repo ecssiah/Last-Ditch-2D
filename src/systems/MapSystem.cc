@@ -52,8 +52,6 @@ void MapSystem::setup_map()
 
 	chunk.dest_rect.x = PIXELS_PER_UNIT * chunk.pos.x();
 	chunk.dest_rect.y = PIXELS_PER_UNIT * chunk.pos.y();
-
-	printf("%f %f\n", chunk.pos.x(), chunk.pos.y());
       }
     }
   }
@@ -119,7 +117,9 @@ void MapSystem::set_main_tile(
   tile.solid = solid;
   tile.direction = direction;
   tile.pos = {x, y};
+
   tile.clip_rect = Tile_Data[type].clip_rect;
+
   tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
   tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
 }
@@ -148,10 +148,9 @@ void MapSystem::set_floor_tile(
   tile.floor = floor;
 
   tile.clip_rect = Tile_Data[type].clip_rect;
+
   tile.dest_rect.x = PIXELS_PER_UNIT * tile.pos.x();
   tile.dest_rect.y = PIXELS_PER_UNIT * tile.pos.y();
-  tile.dest_rect.w = PIXELS_PER_UNIT;
-  tile.dest_rect.h = PIXELS_PER_UNIT;
 }
 
 
@@ -164,6 +163,9 @@ void MapSystem::create_door(
   door.pos = {x, y};
   door.floor = floor;
   door.direction = direction;
+
+  door.clip_rect = Tile_Data[type].clip_rect;
+
   door.dest_rect.x = PIXELS_PER_UNIT * door.pos.x();
   door.dest_rect.y = PIXELS_PER_UNIT * door.pos.y();
 

@@ -21,6 +21,8 @@ CameraSystem::CameraSystem(SDL_Interface& _sdl_interface, vector<User>& _users)
 void CameraSystem::update()
 {
   pos = users[0].pos + Vector2f(.5, .5);
+
+  sdl_interface.set_camera_position(pos);
 }
 
 }
