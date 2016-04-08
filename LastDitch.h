@@ -8,6 +8,7 @@
 #include "src/components/Input.h"
 #include "src/components/User.h"
 #include "src/SDL_Interface.h"
+#include "src/Utils.h"
 #include "src/systems/CameraSystem.h"
 #include "src/systems/ConfigurationSystem.h"
 #include "src/systems/EntitySystem.h"

@@ -3,6 +3,7 @@
 #include <string>
 #include <yaml-cpp/yaml.h>
 
+#include "../Utils.h"
 #include "../constants/ItemConstants.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
@@ -63,7 +64,7 @@ void ConfigurationSystem::load_tile_data()
 
     SDL_Rect clip_rect;
     clip_rect.x = tile_info["uv"][0].as<int>() * PIXELS_PER_UNIT;
-    clip_rect.x = tile_info["uv"][1].as<int>() * PIXELS_PER_UNIT;
+    clip_rect.y = tile_info["uv"][1].as<int>() * PIXELS_PER_UNIT;
     clip_rect.w = PIXELS_PER_UNIT;
     clip_rect.h = PIXELS_PER_UNIT;
 

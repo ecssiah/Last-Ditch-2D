@@ -333,8 +333,8 @@ void SDL_Interface::render_door(Door& door)
 void SDL_Interface::render_user(User& user)
 {
   SDL_Rect dest_rect;
-  dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - camera_position.x()) + HALF_SCREEN_SIZE_X;
-  dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y()) + HALF_SCREEN_SIZE_Y;
+  dest_rect.x = PIXELS_PER_UNIT * (user.pos.x() - camera_position.x());
+  dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y());
   dest_rect.w = PIXELS_PER_UNIT;
   dest_rect.h = PIXELS_PER_UNIT;
 

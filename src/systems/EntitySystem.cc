@@ -95,7 +95,7 @@ void EntitySystem::setup_users()
   user.animation = "idle-front";
   user.floor = 0;
   user.base_speed = 50.f;
-  user.pos = {3.f, 9.f};
+  user.pos = {0.f, 0.f};
   user.size = {.48f, .48f};
   user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
 

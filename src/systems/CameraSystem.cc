@@ -20,7 +20,9 @@ CameraSystem::CameraSystem(SDL_Interface& _sdl_interface, vector<User>& _users)
 
 void CameraSystem::update()
 {
-  pos = users[0].pos + Vector2f(.5, .5);
+  Vector2f offset(.5f - HALF_SCREEN_SIZE_X_WORLD, .5f - HALF_SCREEN_SIZE_Y_WORLD);
+
+  pos = users[0].pos + offset;
 
   sdl_interface.set_camera_position(pos);
 }

@@ -4,6 +4,7 @@
 #include <eigen3/Eigen/Geometry>
 #include <iostream>
 
+#include "../Utils.h"
 #include "../constants/MapConstants.h"
 #include "../constants/RenderConstants.h"
 #include "../components/Door.h"
