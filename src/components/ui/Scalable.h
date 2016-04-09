@@ -9,7 +9,8 @@ namespace ld
 struct Scalable : public Element
 {
   Scalable()
-    : border(3)
+    : Element(),
+      border(3)
   {}
 
   int border;

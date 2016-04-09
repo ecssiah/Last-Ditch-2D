@@ -77,14 +77,17 @@ void UISystem::render_main()
 
 void UISystem::setup_base()
 {
+  date_and_time.type = "label1";
+  date_and_time.source_texture = "ui1";
+  date_and_time.batch_texture = "ui1-batch";
   date_and_time.text = time_system.get_string();
-  date_and_time.texture = "date_and_time";
+  date_and_time.size = {130, 20};
+
+  date_and_time.clip_rect = sdl_interface.batch_element(date_and_time);
   date_and_time.dest_rect.x = 2;
   date_and_time.dest_rect.y = 2;
   date_and_time.dest_rect.w = 130;
   date_and_time.dest_rect.h = 20;
-
-  sdl_interface.generate_text_element(date_and_time);
 }
 
 
@@ -95,66 +98,62 @@ void UISystem::setup_main()
 
   Button inventory_button;
   inventory_button.type = "button1";
-  inventory_button.texture = "ui1";
-  inventory_button.text.text = "Inventory";
-  inventory_button.text.texture = "inventory_button";
+  inventory_button.source_texture = "ui1";
+  inventory_button.batch_texture = "ui1-batch";
+  inventory_button.text = "Inventory";
+
+  inventory_button.clip_rect = sdl_interface.batch_element(inventory_button);
   inventory_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2;
   inventory_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 - vert_offset;
   inventory_button.dest_rect.w = MENU_BUTTON_SIZE_X;
   inventory_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  main_buttons.push_back(inventory_button);
-  sdl_interface.generate_button_element(inventory_button);
-
   Button production_button;
   production_button.type = "button1";
-  production_button.texture = "ui1";
-  production_button.text.text = "Production";
-  production_button.text.texture = "production_button";
+  production_button.source_texture = "ui1";
+  production_button.batch_texture = "ui1-batch";
+  production_button.text = "Production";
 
+  production_button.clip_rect = sdl_interface.batch_element(production_button);
   production_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 + horz_offset;
   production_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2;
   production_button.dest_rect.w = MENU_BUTTON_SIZE_X;
   production_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  main_buttons.push_back(production_button);
-  sdl_interface.generate_button_element(production_button);
-
   Button management_button;
   management_button.type = "button1";
-  management_button.texture = "ui1";
-  management_button.text.text = "Management";
-  management_button.text.texture = "management_button";
+  management_button.source_texture = "ui1";
+  management_button.batch_texture = "ui1-batch";
+  management_button.text = "Management";
 
+  management_button.clip_rect = sdl_interface.batch_element(management_button);
   management_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2;
   management_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2 + vert_offset;
   management_button.dest_rect.w = MENU_BUTTON_SIZE_X;
   management_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
-  main_buttons.push_back(management_button);
-  sdl_interface.generate_button_element(management_button);
-
   Button status_button;
   status_button.type = "button1";
-  status_button.texture = "ui1";
-  status_button.text.text = "Status";
-  status_button.text.texture = "status_button";
+  status_button.source_texture = "ui1";
+  status_button.batch_texture = "ui1-batch";
+  status_button.text = "Status";
 
+  status_button.clip_rect = sdl_interface.batch_element(status_button);
   status_button.dest_rect.x = SCREEN_SIZE_X / 2 - MENU_BUTTON_SIZE_X / 2 - horz_offset;
   status_button.dest_rect.y = SCREEN_SIZE_Y / 2 - MENU_BUTTON_SIZE_Y / 2;
   status_button.dest_rect.w = MENU_BUTTON_SIZE_X;
   status_button.dest_rect.h = MENU_BUTTON_SIZE_Y;
 
+  main_buttons.push_back(inventory_button);
+  main_buttons.push_back(production_button);
+  main_buttons.push_back(management_button);
   main_buttons.push_back(status_button);
-  sdl_interface.generate_button_element(status_button);
 }
 
 
 void UISystem::update_base()
 {
   date_and_time.text = time_system.get_string();
-
-  sdl_interface.generate_text_element(date_and_time);
 }
 
 
@@ -164,22 +163,22 @@ void UISystem::handle_activate_event()
   {
     input.activate = false;
 
-    if (button.text.text == "Inventory")
+    if (button.text == "Inventory")
     {
       main_active = false;
       inventory_ui_system.set_active(true);
     }
-    else if (button.text.text == "Production")
+    else if (button.text == "Production")
     {
       main_active = false;
       production_ui_system.set_active(true);
     }
-    else if (button.text.text == "Management")
+    else if (button.text == "Management")
     {
       main_active = false;
       management_ui_system.set_active(true);
     }
-    else if (button.text.text == "Status")
+    else if (button.text == "Status")
     {
       main_active = false;
       status_ui_system.set_active(true);

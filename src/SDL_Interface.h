@@ -26,12 +26,6 @@ namespace ld
 
 class SDL_Interface
 {
-  SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
-  SDL_Surface* generate_text_surface(std::string text, std::string font, SDL_Color color);
-  SDL_Surface* generate_scalable_surface(Scalable& element);
-
-  void generate_texture(SDL_Surface* surface, std::string texture);
-
   void load_fonts();
   void load_surfaces();
 
@@ -50,11 +44,17 @@ public:
   void generate_tile(Tile& tile);
   void generate_user(User& user);
 
-  void generate_text_element(Text& element);
-  void generate_label_element(Label& element);
-  void generate_button_element(Button& element);
-  void generate_window_element(Window& element);
-  void generate_list_element(List& element);
+  SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
+  SDL_Surface* generate_text_surface(std::string text, std::string font, SDL_Color color);
+  SDL_Surface* generate_scalable_surface(Scalable& element);
+  SDL_Surface* generate_label_surface(Label& element);
+  SDL_Surface* generate_button_surface(Button& element);
+  SDL_Surface* generate_window_surface(Window& element);
+  SDL_Surface* generate_list_surface(List& element);
+
+  SDL_Rect batch_element(Element& element);
+
+  void generate_texture(SDL_Surface* surface, std::string texture);
 
   void render_chunk(Chunk& chunk);
   void render_item(Item& item);

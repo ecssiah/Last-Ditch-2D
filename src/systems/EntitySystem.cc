@@ -60,8 +60,6 @@ void EntitySystem::setup_items()
       item.volume = Item_Data[item.type].volume;
       item.clip_rect = Item_Data[item.type].clip_rect;
 
-      Utils::print_rect(item.clip_rect);
-
       for (auto i(0); i < 1000; ++i)
       {
 	float x(x_dist(rng));

@@ -64,18 +64,18 @@ void SDL_Interface::post_render()
 }
 
 
+void SDL_Interface::load_fonts()
+{
+  fonts["jura-small"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
+  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 20);
+}
+
+
 SDL_Surface* SDL_Interface::load_surface(string name)
 {
   auto path("media/textures/" + name + ".png");
 
   return IMG_Load(path.c_str());
-}
-
-
-void SDL_Interface::load_fonts()
-{
-  fonts["jura-small"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
-  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 20);
 }
 
 
@@ -118,7 +118,8 @@ SDL_Surface* SDL_Interface::generate_surface(unsigned size_x, unsigned size_y)
 }
 
 
-SDL_Surface* SDL_Interface::generate_text_surface(string text, string font, SDL_Color color)
+SDL_Surface* SDL_Interface::generate_text_surface(
+  std::string text, std::string font, SDL_Color color)
 {
   return TTF_RenderText_Blended(fonts[font], text.c_str(), color);
 }
@@ -166,7 +167,7 @@ SDL_Surface* SDL_Interface::generate_scalable_surface(Scalable& element)
   tr_dest_rect.x = element.dest_rect.w - element.border;
   tr_dest_rect.y = 0;
 
-  auto source_surface(surfaces[element.texture]);
+  auto source_surface(surfaces[element.source_texture]);
 
   SDL_BlitSurface(source_surface, &ct_clip_rect, surface, &ct_dest_rect);
   SDL_BlitSurface(source_surface, &tt_clip_rect, surface, &tt_dest_rect);
@@ -182,21 +183,9 @@ SDL_Surface* SDL_Interface::generate_scalable_surface(Scalable& element)
 }
 
 
-void SDL_Interface::generate_text_element(Text& element)
+SDL_Surface* SDL_Interface::generate_label_surface(Label& element)
 {
-  auto surface(generate_text_surface(element.text, element.font, element.color));
-
-  generate_texture(surface, element.texture);
-
-  SDL_FreeSurface(surface);
-}
-
-
-void SDL_Interface::generate_label_element(Label& element)
-{
-  auto text_surface(
-    generate_text_surface(
-      element.text.text, element.text.font, element.text.color));
+  auto text_surface(generate_text_surface(element.text, element.font, element.color));
   auto scalable_surface(generate_scalable_surface(element));
 
   SDL_Rect dest_rect;
@@ -205,27 +194,23 @@ void SDL_Interface::generate_label_element(Label& element)
 
   SDL_BlitSurface(text_surface, nullptr, scalable_surface, &dest_rect);
 
-  generate_texture(scalable_surface, element.texture);
-
-  SDL_FreeSurface(text_surface);
-  SDL_FreeSurface(scalable_surface);
+  return scalable_surface;
 }
 
 
-void SDL_Interface::generate_button_element(Button& element)
+SDL_Surface* SDL_Interface::generate_button_surface(Button& element)
 {
-  generate_label_element(element);
+  return generate_label_surface(element);
 }
 
 
-void SDL_Interface::generate_window_element(Window& element)
+SDL_Surface* SDL_Interface::generate_window_surface(Window& element)
 {
   auto scalable_surface(generate_scalable_surface(element));
 
-  if (element.title.text != "")
+  if (element.title != "")
   {
-    auto text_surface(
-      generate_text_surface(element.title.text, element.title.font, element.title.color));
+    auto text_surface(generate_text_surface(element.title, element.font, element.color));
 
     SDL_Rect dest_rect;
     dest_rect.x = (element.dest_rect.w - text_surface->w) / 2;
@@ -235,13 +220,11 @@ void SDL_Interface::generate_window_element(Window& element)
     SDL_FreeSurface(text_surface);
   }
 
-  generate_texture(scalable_surface, element.texture);
-
-  SDL_FreeSurface(scalable_surface);
+  return scalable_surface;
 }
 
 
-void SDL_Interface::generate_list_element(List& element)
+SDL_Surface* SDL_Interface::generate_list_surface(List& element)
 {
   auto list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
 
@@ -250,7 +233,7 @@ void SDL_Interface::generate_list_element(List& element)
     SDL_Color color;
 
     if (i == element.index) color = element.selected_entry_color;
-    else color = element.entry_color;
+    else color = element.normal_entry_color;
 
     auto entry_surface(
       generate_text_surface(element.entries[i], element.font, color));
@@ -263,9 +246,7 @@ void SDL_Interface::generate_list_element(List& element)
     SDL_FreeSurface(entry_surface);
   }
 
-  generate_texture(list_surface, element.texture);
-
-  SDL_FreeSurface(list_surface);
+  return list_surface;
 }
 
 
@@ -273,6 +254,18 @@ void SDL_Interface::generate_texture(SDL_Surface* surface, std::string texture)
 {
   if (textures[texture]) SDL_DestroyTexture(textures[texture]);
   textures[texture] = SDL_CreateTextureFromSurface(renderer, surface);
+}
+
+
+SDL_Rect SDL_Interface::batch_element(Element& element)
+{
+  SDL_Rect clip_rect;
+  clip_rect.x = 0;
+  clip_rect.y = 0;
+  clip_rect.w = PIXELS_PER_UNIT;
+  clip_rect.h = PIXELS_PER_UNIT;
+
+  return clip_rect;
 }
 
 
@@ -350,7 +343,8 @@ void SDL_Interface::render_user(User& user)
 
 void SDL_Interface::render_element(Element& element)
 {
-  SDL_RenderCopy(renderer, textures[element.texture], &element.clip_rect, &element.dest_rect);
+  SDL_RenderCopy(
+    renderer, textures[element.batch_texture], &element.clip_rect, &element.dest_rect);
 }
 
 }

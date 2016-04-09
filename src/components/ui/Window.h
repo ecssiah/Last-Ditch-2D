@@ -2,16 +2,28 @@
 #define WINDOW_H
 
 #include "Scalable.h"
-#include "Text.h"
 
 namespace ld
 {
 
 struct Window : public Scalable
 {
-  Window() = default;
+  Window()
+    : Scalable(),
+      title(std::string()),
+      font("jura-small"),
+      color()
+  {
+    color.r = 255;
+    color.g = 255;
+    color.b = 255;
+    color.a = 255;
+  }
 
-  Text title;
+  std::string title;
+  std::string font;
+
+  SDL_Color color;
 };
 
 }

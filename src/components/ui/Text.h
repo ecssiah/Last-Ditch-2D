@@ -11,7 +11,10 @@ namespace ld
 struct Text : public Element
 {
   Text()
-    : font("jura-small")
+    : Element(),
+      text(std::string()),
+      font("jura-small"),
+      color()
   {
     color.r = 255;
     color.g = 255;

@@ -33,9 +33,7 @@ void InputSystem::update()
   {
     switch (e.type)
     {
-    case SDL_QUIT:
-      input.exit = true;
-      break;
+    case SDL_QUIT: input.exit = true; break;
     case SDL_KEYDOWN:
       switch (e.key.keysym.sym)
       {
@@ -44,8 +42,7 @@ void InputSystem::update()
       case SDLK_s: input.down = true; break;
       case SDLK_d: input.right = true; break;
       case SDLK_ESCAPE: input.exit = true; break;
-      default:
-	break;
+      default: break;
       }
       break;
     case SDL_KEYUP:
@@ -56,8 +53,7 @@ void InputSystem::update()
       case SDLK_s: input.down = false; break;
       case SDLK_d: input.right = false; break;
       case SDLK_TAB: input.menu = true; break;
-      default:
-	break;
+      default: break;
       }
       break;
     case SDL_MOUSEBUTTONDOWN:
@@ -86,8 +82,7 @@ void InputSystem::update()
 	input.right_mouse_pressed = false;
 	input.right_mouse_released_pos = {e.button.x, e.button.y};
 	break;
-      default:
-	break;
+      default: break;
       }
       break;
     case SDL_MOUSEMOTION:

@@ -14,11 +14,13 @@ namespace ld
 struct List : public Element
 {
   List()
+    : Element(),
+      font("jura-small")
   {
-    entry_color.r = 200;
-    entry_color.g = 200;
-    entry_color.b = 200;
-    entry_color.a = 255;
+    normal_entry_color.r = 200;
+    normal_entry_color.g = 200;
+    normal_entry_color.b = 200;
+    normal_entry_color.a = 255;
 
     selected_entry_color.r = 255;
     selected_entry_color.g = 255;
@@ -30,7 +32,7 @@ struct List : public Element
   unsigned index;
   std::string font;
 
-  SDL_Color entry_color;
+  SDL_Color normal_entry_color;
   SDL_Color selected_entry_color;
 
   std::vector<std::string> entries;

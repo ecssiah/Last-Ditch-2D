@@ -12,7 +12,9 @@ namespace ld
 
 struct Button : public Label
 {
-  Button() = default;
+  Button()
+    : clicked(false)
+  {}
 
   bool clicked;
 };
