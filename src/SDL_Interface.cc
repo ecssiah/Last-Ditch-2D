@@ -311,7 +311,7 @@ void SDL_Interface::render_tile(Tile& tile)
   SDL_RenderCopyEx(
     renderer, textures[tile.texture],
     &tile.clip_rect, &dest_rect,
-    tile.direction * 90, nullptr, SDL_FLIP_NONE);
+    90 * tile.direction, nullptr, SDL_FLIP_NONE);
 }
 
 
@@ -337,9 +337,6 @@ void SDL_Interface::render_user(User& user)
   dest_rect.y = PIXELS_PER_UNIT * (user.pos.y() - camera_position.y());
   dest_rect.w = PIXELS_PER_UNIT;
   dest_rect.h = PIXELS_PER_UNIT;
-
-  Utils::print_rect(user.clip_rect);
-  Utils::print_rect(dest_rect);
 
   SDL_RendererFlip flip(
     ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);

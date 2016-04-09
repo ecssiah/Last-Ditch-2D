@@ -139,8 +139,8 @@ void EntitySystem::apply_user_inputs()
 
     if (direction.x() > 0) animation = "walk-left";
     else if (direction.x() < 0) animation = "walk-right";
-    else if (direction.y() > 0) animation = "walk-up";
-    else if (direction.y() < 0) animation = "walk-down";
+    else if (direction.y() < 0) animation = "walk-up";
+    else if (direction.y() > 0) animation = "walk-down";
   }
 }
 
