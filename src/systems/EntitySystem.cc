@@ -58,6 +58,9 @@ void EntitySystem::setup_items()
       item.quality = Item_Data[item.type].quality;
       item.weight = Item_Data[item.type].weight;
       item.volume = Item_Data[item.type].volume;
+      item.clip_rect = Item_Data[item.type].clip_rect;
+
+      Utils::print_rect(item.clip_rect);
 
       for (auto i(0); i < 1000; ++i)
       {

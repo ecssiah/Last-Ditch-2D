@@ -33,7 +33,7 @@ void ConfigurationSystem::load_item_data()
 
     SDL_Rect clip_rect;
     clip_rect.x = item_info["uv"][0].as<int>() * HALF_UNIT;
-    clip_rect.x = item_info["uv"][1].as<int>() * HALF_UNIT;
+    clip_rect.y = item_info["uv"][1].as<int>() * HALF_UNIT;
     clip_rect.w = HALF_UNIT;
     clip_rect.h = HALF_UNIT;
 
