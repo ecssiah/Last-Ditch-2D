@@ -23,7 +23,7 @@ struct Character : public Entity
       animation(std::string()),
       frame(0),
       frame_time(0),
-      frame_length(.22f),
+      frame_length(.25f),
       base_speed(1.f),
       direction(0, 0),
       inventory(),

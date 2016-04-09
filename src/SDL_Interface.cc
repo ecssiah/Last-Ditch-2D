@@ -338,6 +338,9 @@ void SDL_Interface::render_user(User& user)
   dest_rect.w = PIXELS_PER_UNIT;
   dest_rect.h = PIXELS_PER_UNIT;
 
+  Utils::print_rect(user.clip_rect);
+  Utils::print_rect(dest_rect);
+
   SDL_RendererFlip flip(
     ends_with(user.animation, "left") ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
 

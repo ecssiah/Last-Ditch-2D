@@ -22,7 +22,6 @@ class EntitySystem
   void setup_users();
 
   void apply_user_inputs();
-  void update_animations();
   void handle_activate_event();
 
   bool find_and_interact_door(Eigen::Vector2f& selection_point, Chunk& chunk);

@@ -92,7 +92,7 @@ void EntitySystem::setup_users()
   user.name = "Kadijah";
   user.type = "kadijah";
   user.texture = "kadijah";
-  user.animation = "idle-front";
+  user.animation = "idle-up";
   user.floor = 0;
   user.base_speed = 50.f;
   user.pos = {0.f, 0.f};
@@ -108,8 +108,6 @@ void EntitySystem::setup_users()
 void EntitySystem::update()
 {
   apply_user_inputs();
-
-  update_animations();
 
   if (input.activate) handle_activate_event();
 }
@@ -129,29 +127,21 @@ void EntitySystem::apply_user_inputs()
   {
     users[0].direction = Vector2f::Zero();
 
-    if (animation == "walk-front") animation = "idle-front";
-    else if (animation == "walk-back") animation = "idle-back";
-    else if (animation == "walk-left") animation = "idle-left";
+    if (animation == "walk-left") animation = "idle-left";
     else if (animation == "walk-right") animation = "idle-right";
+    else if (animation == "walk-up") animation = "idle-up";
+    else if (animation == "walk-down") animation = "idle-down";
   }
   else
   {
     direction.normalize();
     users[0].direction = direction;
 
-    if (direction.x() > 0) animation = "walk-right";
-    else if (direction.x() < 0) animation = "walk-left";
-    else if (direction.y() > 0) animation = "walk-front";
-    else if (direction.y() < 0) animation = "walk-back";
+    if (direction.x() > 0) animation = "walk-left";
+    else if (direction.x() < 0) animation = "walk-right";
+    else if (direction.y() > 0) animation = "walk-up";
+    else if (direction.y() < 0) animation = "walk-down";
   }
-}
-
-
-void EntitySystem::update_animations()
-{
-  auto& user(users[0]);
-
-  user.clip_rect = User_Data[user.type].animation_data[user.animation].clip_rect;
 }
 
 

@@ -2,11 +2,11 @@ kadijah:
   name: Kadijah
   texture: kadijah
   animation_data:
-    walk-right: {frames: 8, uv: [0, 0]}
     walk-left: {frames: 8, uv: [0, 0]}
+    walk-right: {frames: 8, uv: [0, 0]}
     walk-up: {frames: 8, uv: [0, 1]}
     walk-down: {frames: 8, uv: [0, 2]}
-    idle-right: {frames: 4, uv: [0, 3]}
     idle-left: {frames: 4, uv: [0, 3]}
+    idle-right: {frames: 4, uv: [0, 3]}
     idle-up: {frames: 4, uv: [0, 4]}
     idle-down: {frames: 4, uv: [4, 4]}
