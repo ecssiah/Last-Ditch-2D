@@ -61,6 +61,10 @@ void UISystem::render()
   else if (production_ui_system.is_active()) production_ui_system.render();
   else if (management_ui_system.is_active()) management_ui_system.render();
   else if (status_ui_system.is_active()) status_ui_system.render();
+
+  sdl_interface.render_text("abcdefghijklmnopqrstuvwxyz", 100, 100);
+  sdl_interface.render_text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", 100, 140);
+  sdl_interface.render_text("!$%()+[]{}<>,.:\"'/?- ", 100, 180);
 }
 
 
