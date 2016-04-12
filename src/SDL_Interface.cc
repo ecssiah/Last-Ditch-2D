@@ -1,5 +1,7 @@
 #include "SDL_Interface.h"
 
+#include <iostream>
+
 #include "Utils.h"
 #include "constants/RenderConstants.h"
 #include "constants/UIConstants.h"
@@ -305,6 +307,20 @@ void SDL_Interface::render_element(Element& element)
 
 void SDL_Interface::render_text(std::string text, unsigned x, unsigned y)
 {
+  for (auto c : text)
+  {
+    SDL_Rect clip_rect;
+    clip_rect = Font_Data[c];
+
+    SDL_Rect dest_rect;
+    dest_rect.x = x;
+    dest_rect.y = y;
+    dest_rect.w = clip_rect.w;
+    dest_rect.h = clip_rect.h;
+
+    SDL_RenderCopy(
+      renderer, textures["Jura"], &clip_rect, &dest_rect);
+  }
 }
 
 

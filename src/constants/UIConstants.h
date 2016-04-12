@@ -20,7 +20,7 @@ extern const float INVENTORY_WHEEL_SCROLL_RATE;
 
 extern std::unordered_map<std::string, ScalableInfo> Scalable_Data;
 
-extern std::unordered_map<std::string, SDL_Rect> Font_Data;
+extern std::unordered_map<char, SDL_Rect> Font_Data;
 
 }
 

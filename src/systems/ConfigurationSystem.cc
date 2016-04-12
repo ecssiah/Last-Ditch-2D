@@ -163,9 +163,7 @@ void ConfigurationSystem::load_font_data()
 
   for (auto kv : font_data)
   {
-    auto character(kv.first.as<std::string>());
-
-    printf("%s\n", character.c_str());
+    auto character(kv.first.as<char>());
 
     SDL_Rect clip_rect;
     clip_rect.x = kv.second[0].as<int>();
@@ -173,11 +171,8 @@ void ConfigurationSystem::load_font_data()
     clip_rect.w = kv.second[2].as<int>();
     clip_rect.h = kv.second[3].as<int>();
 
-    Utils::print_rect(clip_rect);
-
     Font_Data[character] = clip_rect;
   }
-
 }
 
 

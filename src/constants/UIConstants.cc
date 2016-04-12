@@ -13,6 +13,6 @@ const float INVENTORY_WHEEL_SCROLL_RATE(10.f);
 
 std::unordered_map<std::string, ScalableInfo> Scalable_Data;
 
-std::unordered_map<std::string, SDL_Rect> Font_Data;
+std::unordered_map<char, SDL_Rect> Font_Data;
 
 }
