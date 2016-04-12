@@ -19,6 +19,8 @@ ConfigurationSystem::ConfigurationSystem()
   load_tile_data();
   load_user_data();
 
+  load_font_data();
+
   printf("\nConfigurationSystem ready\n");
 }
 
@@ -153,5 +155,28 @@ void ConfigurationSystem::load_element_data()
     Scalable_Data[type] = scalable_info_entry;
   }
 }
+
+
+void ConfigurationSystem::load_font_data()
+{
+  YAML::Node font_data(YAML::LoadFile("media/fonts/Jura.yml"));
+
+  for (auto kv : font_data)
+  {
+    auto character(kv.first.as<std::string>());
+
+    printf("%s\n", character.c_str());
+
+    SDL_Rect clip_rect;
+    clip_rect.x = kv.second[0].as<int>();
+    clip_rect.y = kv.second[1].as<int>();
+    clip_rect.w = kv.second[2].as<int>();
+    clip_rect.h = kv.second[3].as<int>();
+
+    Font_Data[character] = clip_rect;
+  }
+
+}
+
 
 }

@@ -65,7 +65,6 @@ void InventoryUISystem::setup_base()
   base_window.source_texture = "ui1";
   base_window.batch_texture = "ui1-batch";
 
-  base_window.clip_rect = sdl_interface.batch_element(base_window);
   base_window.dest_rect.x = (SCREEN_SIZE_X - BASE_WINDOW_SIZE_X) / 2;
   base_window.dest_rect.y = (SCREEN_SIZE_Y - BASE_WINDOW_SIZE_Y) / 2;
   base_window.dest_rect.w = BASE_WINDOW_SIZE_X;
@@ -92,7 +91,6 @@ void InventoryUISystem::setup_sort_buttons()
   sort_all_button.text = "All";
   sort_all_button.border = 4;
 
-  sort_all_button.clip_rect = sdl_interface.batch_element(sort_all_button);
   sort_all_button.dest_rect.x = base_window.dest_rect.x + x_offset;
   sort_all_button.dest_rect.y = base_window.dest_rect.y + y_offset;
   sort_all_button.dest_rect.w = all_button_width;
@@ -107,7 +105,6 @@ void InventoryUISystem::setup_sort_buttons()
   sort_weapons_button.text = "Weapons";
   sort_weapons_button.border = 4;
 
-  sort_weapons_button.clip_rect = sdl_interface.batch_element(sort_weapons_button);
   sort_weapons_button.dest_rect.x = base_window.dest_rect.x + x_offset;
   sort_weapons_button.dest_rect.y = base_window.dest_rect.y + y_offset;
   sort_weapons_button.dest_rect.w = weapons_button_width;
@@ -122,7 +119,6 @@ void InventoryUISystem::setup_sort_buttons()
   sort_apparel_button.text = "Apparel";
   sort_apparel_button.border = 4;
 
-  sort_apparel_button.clip_rect = sdl_interface.batch_element(sort_apparel_button);
   sort_apparel_button.dest_rect.x = base_window.dest_rect.x + x_offset;
   sort_apparel_button.dest_rect.y = base_window.dest_rect.y + y_offset;
   sort_apparel_button.dest_rect.w = apparel_button_width;
@@ -137,7 +133,6 @@ void InventoryUISystem::setup_sort_buttons()
   sort_utility_button.text = "Utility";
   sort_utility_button.border = 4;
 
-  sort_utility_button.clip_rect = sdl_interface.batch_element(sort_utility_button);
   sort_utility_button.dest_rect.x = base_window.dest_rect.x + x_offset;
   sort_utility_button.dest_rect.y = base_window.dest_rect.y + y_offset;
   sort_utility_button.dest_rect.w = utility_button_width;
@@ -152,7 +147,6 @@ void InventoryUISystem::setup_sort_buttons()
   sort_resource_button.text = "Resource";
   sort_resource_button.border = 4;
 
-  sort_resource_button.clip_rect = sdl_interface.batch_element(sort_resource_button);
   sort_resource_button.dest_rect.x = base_window.dest_rect.x + x_offset;
   sort_resource_button.dest_rect.y = base_window.dest_rect.y + y_offset;
   sort_resource_button.dest_rect.w = resource_button_width;
@@ -178,7 +172,6 @@ void InventoryUISystem::setup_preview_image()
   preview_window.border = 1;
   preview_window.size = {HALF_UNIT + 10, HALF_UNIT + 10};
 
-  preview_window.clip_rect = sdl_interface.batch_element(preview_window);
   preview_window.dest_rect.x = x;
   preview_window.dest_rect.y = y;
   preview_window.dest_rect.w = HALF_UNIT + 10;
@@ -189,7 +182,6 @@ void InventoryUISystem::setup_preview_image()
   preview_image.batch_texture = "ui1-batch";
   preview_image.size = {HALF_UNIT, HALF_UNIT};
 
-  preview_image.clip_rect = sdl_interface.batch_element(preview_image);
   preview_image.dest_rect.x = x + 5;
   preview_image.dest_rect.y = y + 5;
   preview_image.dest_rect.w = HALF_UNIT;
@@ -204,7 +196,6 @@ void InventoryUISystem::setup_inventory_list()
   inventory_list.batch_texture = "ui1-batch";
   inventory_list.size = {360, 300};
 
-  inventory_list.clip_rect = sdl_interface.batch_element(inventory_list);
   inventory_list.dest_rect.x = base_window.dest_rect.x + 16;
   inventory_list.dest_rect.y = base_window.dest_rect.y + 200;
   inventory_list.dest_rect.w = 360;
@@ -227,7 +218,6 @@ void InventoryUISystem::setup_equipment_slots()
   head_slot_window.batch_texture = "ui1-batch";
   head_slot_window.border = 1;
 
-  head_slot_window.clip_rect = sdl_interface.batch_element(head_slot_window);
   head_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   head_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   head_slot_window.dest_rect.w = x_size;
@@ -239,7 +229,6 @@ void InventoryUISystem::setup_equipment_slots()
   head_slot_label.batch_texture = "ui1-batch";
   head_slot_label.text = "Head";
 
-  head_slot_label.clip_rect = sdl_interface.batch_element(head_slot_label);
   head_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   head_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   head_slot_label.dest_rect.w = x_size;
@@ -253,7 +242,6 @@ void InventoryUISystem::setup_equipment_slots()
   torso_slot_window.batch_texture = "ui1-batch";
   torso_slot_window.border = 1;
 
-  torso_slot_window.clip_rect = sdl_interface.batch_element(torso_slot_window);
   torso_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   torso_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   torso_slot_window.dest_rect.w = x_size;
@@ -265,7 +253,6 @@ void InventoryUISystem::setup_equipment_slots()
   torso_slot_label.batch_texture = "ui1-batch";
   torso_slot_label.text = "Torso";
 
-  torso_slot_label.clip_rect = sdl_interface.batch_element(torso_slot_label);
   torso_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   torso_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   torso_slot_label.dest_rect.w = x_size;
@@ -279,7 +266,6 @@ void InventoryUISystem::setup_equipment_slots()
   back_slot_window.batch_texture = "ui1-batch";
   back_slot_window.border = 1;
 
-  back_slot_window.clip_rect = sdl_interface.batch_element(back_slot_window);
   back_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   back_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   back_slot_window.dest_rect.w = x_size;
@@ -291,7 +277,6 @@ void InventoryUISystem::setup_equipment_slots()
   back_slot_label.batch_texture = "ui1-batch";
   back_slot_label.text = "Back";
 
-  back_slot_label.clip_rect = sdl_interface.batch_element(back_slot_label);
   back_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   back_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   back_slot_label.dest_rect.w = x_size;
@@ -305,7 +290,6 @@ void InventoryUISystem::setup_equipment_slots()
   larm_slot_window.batch_texture = "ui1-batch";
   larm_slot_window.border = 1;
 
-  larm_slot_window.clip_rect = sdl_interface.batch_element(larm_slot_window);
   larm_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   larm_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   larm_slot_window.dest_rect.w = x_size;
@@ -317,7 +301,6 @@ void InventoryUISystem::setup_equipment_slots()
   larm_slot_label.batch_texture = "ui1-batch";
   larm_slot_label.text = "L Arm";
 
-  larm_slot_label.clip_rect = sdl_interface.batch_element(larm_slot_label);
   larm_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   larm_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   larm_slot_label.dest_rect.w = x_size;
@@ -331,7 +314,6 @@ void InventoryUISystem::setup_equipment_slots()
   rarm_slot_window.batch_texture = "ui1-batch";
   rarm_slot_window.border = 1;
 
-  rarm_slot_window.clip_rect = sdl_interface.batch_element(rarm_slot_window);
   rarm_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   rarm_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   rarm_slot_window.dest_rect.w = x_size;
@@ -343,7 +325,6 @@ void InventoryUISystem::setup_equipment_slots()
   rarm_slot_label.batch_texture = "ui1-batch";
   rarm_slot_label.text = "R Arm";
 
-  rarm_slot_label.clip_rect = sdl_interface.batch_element(rarm_slot_label);
   rarm_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   rarm_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   rarm_slot_label.dest_rect.w = x_size;
@@ -357,7 +338,6 @@ void InventoryUISystem::setup_equipment_slots()
   lhand_slot_window.batch_texture = "ui1-batch";
   lhand_slot_window.border = 1;
 
-  lhand_slot_window.clip_rect = sdl_interface.batch_element(lhand_slot_window);
   lhand_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   lhand_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   lhand_slot_window.dest_rect.w = x_size;
@@ -369,7 +349,6 @@ void InventoryUISystem::setup_equipment_slots()
   lhand_slot_label.batch_texture = "ui1-batch";
   lhand_slot_label.text = "L Hand";
 
-  lhand_slot_label.clip_rect = sdl_interface.batch_element(lhand_slot_label);
   lhand_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   lhand_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   lhand_slot_label.dest_rect.w = x_size;
@@ -383,7 +362,6 @@ void InventoryUISystem::setup_equipment_slots()
   rhand_slot_window.batch_texture = "ui1-batch";
   rhand_slot_window.border = 1;
 
-  rhand_slot_window.clip_rect = sdl_interface.batch_element(rhand_slot_window);
   rhand_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   rhand_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   rhand_slot_window.dest_rect.w = x_size;
@@ -395,7 +373,6 @@ void InventoryUISystem::setup_equipment_slots()
   rhand_slot_label.batch_texture = "ui1-batch";
   rhand_slot_label.text = "R Hand";
 
-  rhand_slot_label.clip_rect = sdl_interface.batch_element(rhand_slot_label);
   rhand_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   rhand_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   rhand_slot_label.dest_rect.w = x_size;
@@ -409,7 +386,6 @@ void InventoryUISystem::setup_equipment_slots()
   lleg_slot_window.batch_texture = "ui1-batch";
   lleg_slot_window.border = 1;
 
-  lleg_slot_window.clip_rect = sdl_interface.batch_element(lleg_slot_window);
   lleg_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   lleg_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   lleg_slot_window.dest_rect.w = x_size;
@@ -421,7 +397,6 @@ void InventoryUISystem::setup_equipment_slots()
   lleg_slot_label.batch_texture = "ui1-batch";
   lleg_slot_label.text = "L Leg";
 
-  lleg_slot_label.clip_rect = sdl_interface.batch_element(lleg_slot_label);
   lleg_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   lleg_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   lleg_slot_label.dest_rect.w = x_size;
@@ -435,7 +410,6 @@ void InventoryUISystem::setup_equipment_slots()
   rleg_slot_window.batch_texture = "ui1-batch";
   rleg_slot_window.border = 1;
 
-  rleg_slot_window.clip_rect = sdl_interface.batch_element(rleg_slot_window);
   rleg_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   rleg_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   rleg_slot_window.dest_rect.w = x_size;
@@ -447,7 +421,6 @@ void InventoryUISystem::setup_equipment_slots()
   rleg_slot_label.batch_texture = "ui1-batch";
   rleg_slot_label.text = "R Leg";
 
-  rleg_slot_label.clip_rect = sdl_interface.batch_element(rleg_slot_label);
   rleg_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   rleg_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   rleg_slot_label.dest_rect.w = x_size;
@@ -461,7 +434,6 @@ void InventoryUISystem::setup_equipment_slots()
   lfoot_slot_window.batch_texture = "ui1-batch";
   lfoot_slot_window.border = 1;
 
-  lfoot_slot_window.clip_rect = sdl_interface.batch_element(lfoot_slot_window);
   lfoot_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   lfoot_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   lfoot_slot_window.dest_rect.w = x_size;
@@ -473,7 +445,6 @@ void InventoryUISystem::setup_equipment_slots()
   lfoot_slot_label.batch_texture = "ui1-batch";
   lfoot_slot_label.text = "L Foot";
 
-  lfoot_slot_label.clip_rect = sdl_interface.batch_element(lfoot_slot_label);
   lfoot_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   lfoot_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   lfoot_slot_label.dest_rect.w = x_size;
@@ -487,7 +458,6 @@ void InventoryUISystem::setup_equipment_slots()
   rfoot_slot_window.batch_texture = "ui1-batch";
   rfoot_slot_window.border = 1;
 
-  rfoot_slot_window.clip_rect = sdl_interface.batch_element(rfoot_slot_window);
   rfoot_slot_window.dest_rect.x = base_window.dest_rect.x + x_offset;
   rfoot_slot_window.dest_rect.y = base_window.dest_rect.y + y_offset;
   rfoot_slot_window.dest_rect.w = x_size;
@@ -499,7 +469,6 @@ void InventoryUISystem::setup_equipment_slots()
   rfoot_slot_label.batch_texture = "ui1-batch";
   rfoot_slot_label.text = "R Foot";
 
-  rfoot_slot_label.clip_rect = sdl_interface.batch_element(rfoot_slot_label);
   rfoot_slot_label.dest_rect.x = base_window.dest_rect.x + x_offset - label_offset;
   rfoot_slot_label.dest_rect.y = base_window.dest_rect.y + y_offset;
   rfoot_slot_label.dest_rect.w = x_size;

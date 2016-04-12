@@ -30,8 +30,8 @@ class RenderSystem
 
   bool debug;
 
-  SDL_Interface& sdl_interface;
   DebugDraw debug_draw;
+  SDL_Interface& sdl_interface;
 
   MapSystem& map_system;
   EntitySystem& entity_system;

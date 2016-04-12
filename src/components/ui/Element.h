@@ -11,7 +11,8 @@ namespace ld
 struct Element
 {
   Element()
-    : type(std::string()),
+    : name(std::string()),
+      type(std::string()),
       source_texture(std::string()),
       batch_texture(std::string()),
       size(100, 20),
@@ -19,6 +20,7 @@ struct Element
       dest_rect()
   {}
 
+  std::string name;
   std::string type;
   std::string source_texture;
   std::string batch_texture;

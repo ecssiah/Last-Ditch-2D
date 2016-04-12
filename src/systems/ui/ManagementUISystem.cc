@@ -34,7 +34,6 @@ void ManagementUISystem::setup()
   base_window.source_texture = "ui1";
   base_window.batch_texture = "ui1-batch";
 
-  base_window.clip_rect = sdl_interface.batch_element(base_window);
   base_window.dest_rect.x = (SCREEN_SIZE_X - BASE_WINDOW_SIZE_X) / 2;
   base_window.dest_rect.y = (SCREEN_SIZE_Y - BASE_WINDOW_SIZE_Y) / 2;
   base_window.dest_rect.w = BASE_WINDOW_SIZE_X;

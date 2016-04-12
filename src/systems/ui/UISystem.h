@@ -50,7 +50,7 @@ class UISystem
   bool base_active;
   bool main_active;
 
-  Text date_and_time;
+  Label date_and_time;
 
   std::vector<Button> main_buttons;
 

@@ -1,6 +1,7 @@
 #ifndef UICONSTANTS_H
 #define UICONSTANTS_H
 
+#include <SDL2/SDL.h>
 #include <string>
 #include <unordered_map>
 
@@ -18,6 +19,8 @@ extern const float INVENTORY_MOUSE_SCROLL_RATE;
 extern const float INVENTORY_WHEEL_SCROLL_RATE;
 
 extern std::unordered_map<std::string, ScalableInfo> Scalable_Data;
+
+extern std::unordered_map<std::string, SDL_Rect> Font_Data;
 
 }
 

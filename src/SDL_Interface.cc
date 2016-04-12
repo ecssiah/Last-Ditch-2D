@@ -13,7 +13,10 @@ namespace ld
 
 SDL_Interface::SDL_Interface()
   : window(nullptr),
-    renderer(nullptr)
+    renderer(nullptr),
+    fonts(),
+    surfaces(),
+    textures()
 {
   if (SDL_Init(SDL_INIT_VIDEO) != 0)
     cout << "SDL_Init error: " << SDL_GetError() << endl;
@@ -183,48 +186,22 @@ SDL_Surface* SDL_Interface::generate_scalable_surface(Scalable& element)
 }
 
 
-SDL_Surface* SDL_Interface::generate_label_surface(Label& element)
+void SDL_Interface::generate_label(Label& element)
 {
-  auto text_surface(generate_text_surface(element.text, element.font, element.color));
-  auto scalable_surface(generate_scalable_surface(element));
-
-  SDL_Rect dest_rect;
-  dest_rect.x = (element.dest_rect.w - text_surface->w) / 2;
-  dest_rect.y = (element.dest_rect.h - text_surface->h) / 2;
-
-  SDL_BlitSurface(text_surface, nullptr, scalable_surface, &dest_rect);
-
-  return scalable_surface;
 }
 
 
-SDL_Surface* SDL_Interface::generate_button_surface(Button& element)
+void SDL_Interface::generate_button(Button& element)
 {
-  return generate_label_surface(element);
 }
 
 
-SDL_Surface* SDL_Interface::generate_window_surface(Window& element)
+void SDL_Interface::generate_window(Window& element)
 {
-  auto scalable_surface(generate_scalable_surface(element));
-
-  if (element.title != "")
-  {
-    auto text_surface(generate_text_surface(element.title, element.font, element.color));
-
-    SDL_Rect dest_rect;
-    dest_rect.x = (element.dest_rect.w - text_surface->w) / 2;
-    dest_rect.y = 8;
-
-    SDL_BlitSurface(text_surface, nullptr, scalable_surface, &dest_rect);
-    SDL_FreeSurface(text_surface);
-  }
-
-  return scalable_surface;
 }
 
 
-SDL_Surface* SDL_Interface::generate_list_surface(List& element)
+void SDL_Interface::generate_list(List& element)
 {
   auto list_surface(generate_surface(element.dest_rect.w, element.dest_rect.h));
 
@@ -246,7 +223,6 @@ SDL_Surface* SDL_Interface::generate_list_surface(List& element)
     SDL_FreeSurface(entry_surface);
   }
 
-  return list_surface;
 }
 
 
@@ -254,18 +230,6 @@ void SDL_Interface::generate_texture(SDL_Surface* surface, std::string texture)
 {
   if (textures[texture]) SDL_DestroyTexture(textures[texture]);
   textures[texture] = SDL_CreateTextureFromSurface(renderer, surface);
-}
-
-
-SDL_Rect SDL_Interface::batch_element(Element& element)
-{
-  SDL_Rect clip_rect;
-  clip_rect.x = 0;
-  clip_rect.y = 0;
-  clip_rect.w = PIXELS_PER_UNIT;
-  clip_rect.h = PIXELS_PER_UNIT;
-
-  return clip_rect;
 }
 
 

@@ -41,6 +41,20 @@ bool point_intersects_element(Vector2i point, ld::Element& element)
 }
 
 
+bool rect_intersects_rect(SDL_Rect& rect1, SDL_Rect& rect2)
+{
+  auto outside(
+    rect1.x > rect2.x + rect2.w ||
+    rect1.x + rect1.w < rect2.x ||
+    rect1.y > rect2.y + rect2.h ||
+    rect1.y + rect1.h < rect2.y);
+
+  auto hit(!outside);
+
+  return hit;
+}
+
+
 void print_rect(SDL_Rect& rect)
 {
   printf("%d %d %d %d\n", rect.x, rect.y, rect.w, rect.h);

@@ -25,13 +25,13 @@ RenderSystem::RenderSystem(
   PhysicsSystem& _physics_system
 )
   : debug(false),
+    debug_draw(_sdl_interface.renderer, _camera_system),
     sdl_interface(_sdl_interface),
     map_system(_map_system),
     entity_system(_entity_system),
     camera_system(_camera_system),
     ui_system(_ui_system),
-    physics_system(_physics_system),
-    debug_draw(_sdl_interface.renderer, _camera_system)
+    physics_system(_physics_system)
 {
   physics_system.set_debug_draw(debug_draw);
 

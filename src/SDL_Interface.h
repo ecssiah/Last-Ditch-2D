@@ -47,10 +47,11 @@ public:
   SDL_Surface* generate_surface(unsigned size_x, unsigned size_y);
   SDL_Surface* generate_text_surface(std::string text, std::string font, SDL_Color color);
   SDL_Surface* generate_scalable_surface(Scalable& element);
-  SDL_Surface* generate_label_surface(Label& element);
-  SDL_Surface* generate_button_surface(Button& element);
-  SDL_Surface* generate_window_surface(Window& element);
-  SDL_Surface* generate_list_surface(List& element);
+
+  void generate_label(Label& element);
+  void generate_button(Button& element);
+  void generate_window(Window& element);
+  void generate_list(List& element);
 
   SDL_Rect batch_element(Element& element);
 

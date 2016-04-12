@@ -16,6 +16,8 @@ class ConfigurationSystem
   void load_user_data();
   void load_element_data();
 
+  void load_font_data();
+
 public:
   ConfigurationSystem();
 };
