@@ -45,21 +45,23 @@ void UISystem::update()
   if (base_active) update_base();
 
   if (inventory_ui_system.is_active()) inventory_ui_system.update();
-  if (production_ui_system.is_active()) production_ui_system.update();
-  if (management_ui_system.is_active()) management_ui_system.update();
-  if (status_ui_system.is_active()) status_ui_system.update();
+  else if (production_ui_system.is_active()) production_ui_system.update();
+  else if (management_ui_system.is_active()) management_ui_system.update();
+  else if (status_ui_system.is_active()) status_ui_system.update();
+
+  sdl_interface.render_text("Smarty Pants-a-tooley!", 200, 200);
 }
 
 
 void UISystem::render()
 {
   if (base_active) render_base();
-  if (main_active) render_main();
 
-  if (inventory_ui_system.is_active()) inventory_ui_system.render();
-  if (production_ui_system.is_active()) production_ui_system.render();
-  if (management_ui_system.is_active()) management_ui_system.render();
-  if (status_ui_system.is_active()) status_ui_system.render();
+  if (main_active) render_main();
+  else if (inventory_ui_system.is_active()) inventory_ui_system.render();
+  else if (production_ui_system.is_active()) production_ui_system.render();
+  else if (management_ui_system.is_active()) management_ui_system.render();
+  else if (status_ui_system.is_active()) status_ui_system.render();
 }
 
 

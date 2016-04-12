@@ -64,6 +64,7 @@ public:
   void render_user(User& user);
 
   void render_element(Element& element);
+  void render_text(std::string text, unsigned x, unsigned y);
 
   inline void set_camera_position(
     Eigen::Vector2f _camera_position) { camera_position = _camera_position; }

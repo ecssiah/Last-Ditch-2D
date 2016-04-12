@@ -33,7 +33,6 @@ SDL_Interface::SDL_Interface()
   auto img_flags(IMG_INIT_PNG);
   IMG_Init(img_flags);
 
-  load_fonts();
   load_surfaces();
 }
 
@@ -67,13 +66,6 @@ void SDL_Interface::post_render()
 }
 
 
-void SDL_Interface::load_fonts()
-{
-  fonts["jura-small"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 14);
-  fonts["jura-medium"] = TTF_OpenFont("media/fonts/JuraMedium.ttf", 20);
-}
-
-
 SDL_Surface* SDL_Interface::load_surface(string name)
 {
   auto path("media/textures/" + name + ".png");
@@ -90,8 +82,7 @@ void SDL_Interface::load_surfaces()
   load_texture("tileset1");
   load_texture("ui1");
 
-  surfaces["ui1"] = load_surface("ui1");
-  surfaces["ui1-batch"] = generate_surface(512, 512);
+  load_texture("Jura");
 }
 
 
@@ -310,5 +301,11 @@ void SDL_Interface::render_element(Element& element)
   SDL_RenderCopy(
     renderer, textures[element.batch_texture], &element.clip_rect, &element.dest_rect);
 }
+
+
+void SDL_Interface::render_text(std::string text, unsigned x, unsigned y)
+{
+}
+
 
 }

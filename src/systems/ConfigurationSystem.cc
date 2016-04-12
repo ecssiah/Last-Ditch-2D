@@ -173,6 +173,8 @@ void ConfigurationSystem::load_font_data()
     clip_rect.w = kv.second[2].as<int>();
     clip_rect.h = kv.second[3].as<int>();
 
+    Utils::print_rect(clip_rect);
+
     Font_Data[character] = clip_rect;
   }
 
