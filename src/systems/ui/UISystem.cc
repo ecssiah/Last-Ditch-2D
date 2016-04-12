@@ -49,7 +49,6 @@ void UISystem::update()
   else if (management_ui_system.is_active()) management_ui_system.update();
   else if (status_ui_system.is_active()) status_ui_system.update();
 
-  sdl_interface.render_text("Smarty Pants-a-tooley!", 200, 200);
 }
 
 

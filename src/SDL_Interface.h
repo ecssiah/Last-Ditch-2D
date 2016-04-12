@@ -27,7 +27,7 @@ namespace ld
 class SDL_Interface
 {
   void load_fonts();
-  void load_surfaces();
+  void load_textures();
 
   SDL_Surface* load_surface(std::string name);
   void load_texture(std::string file_name, std::string texture = std::string());
